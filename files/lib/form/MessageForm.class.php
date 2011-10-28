@@ -1,5 +1,6 @@
 <?php
 namespace wcf\form;
+use wcf\system\bbcode\URLParser;
 use wcf\system\exception\UserInputException;
 use wcf\system\WCF;
 use wcf\util\MessageUtil;
@@ -81,7 +82,7 @@ abstract class MessageForm extends RecaptchaForm {
 		if (isset($_POST['enableBBCodes'])) $this->enableBBCodes = intval($_POST['enableBBCodes']);
 		if (isset($_POST['showSignature'])) $this->showSignature = intval($_POST['showSignature']);
 		
-		// stop shouting
+		// TODO: stop shouting
 		/*if (StringUtil::length($this->subject) >= MESSAGE_SUBJECT_STOP_SHOUTING && StringUtil::toUpperCase($this->subject) == $this->subject) {
 			$this->subject = StringUtil::wordsToUpperCase(StringUtil::toLowerCase($this->subject));
 		}*/
@@ -122,7 +123,7 @@ abstract class MessageForm extends RecaptchaForm {
 			throw new UserInputException('text', 'tooLong');
 		}
 		
-		/*// search for censored words
+		/*// TODO: search for censored words
 		if (ENABLE_CENSORSHIP) {
 			require_once(WCF_DIR.'lib/data/message/censorship/Censorship.class.php');
 			$result = Censorship::test($this->text);
@@ -141,7 +142,7 @@ abstract class MessageForm extends RecaptchaForm {
 		
 		// parse URLs
 		if ($this->parseURL == 1) {
-			//$this->text = URLParser::parse($this->text);
+			$this->text = URLParser::getInstance()->parse($this->text);
 		}
 	}
 	
