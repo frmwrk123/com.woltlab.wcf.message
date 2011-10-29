@@ -19,54 +19,54 @@ use wcf\util\StringUtil;
 abstract class MessageForm extends RecaptchaForm {
 	/**
 	 * message subject
-	 * @var string
+	 * @var	string
 	 */
 	public $subject = '';
 	
 	/**
 	 * message text
-	 * @var string
+	 * @var	string
 	 */
 	public $text = '';
 	
 	/**
 	 * maximum text length
-	 * @var integer
+	 * @var	integer
 	 */
 	public $maxTextLength = 0;
 	
 	/**
 	 * adds url bbcodes automatically
-	 * @var boolean
+	 * @var	boolean
 	 */
 	public $parseURL = 1;
 	
 	/**
-	 * enables the smilies
-	 * @var boolean
+	 * enables smilies
+	 * @var	boolean
 	 */
 	public $enableSmilies = 1;
 	
 	/**
 	 * enables html
-	 * @var boolean
+	 * @var	boolean
 	 */
 	public $enableHtml = 0;
 	
 	/**
 	 * enables bbcodes
-	 * @var boolean
+	 * @var	boolean
 	 */
 	public $enableBBCodes = 1;
 	
 	/**
 	 * shows the signature
-	 * @var boolean
+	 * @var	boolean
 	 */
 	public $showSignature = 0;
 	
 	/**
-	 * @see wcf\form\IForm::readFormParameters()
+	 * @see	wcf\form\IForm::readFormParameters()
 	 */
 	public function readFormParameters() {
 		parent::readFormParameters();
@@ -89,7 +89,7 @@ abstract class MessageForm extends RecaptchaForm {
 	}
 	
 	/**
-	 * @see wcf\form\IForm::validate()
+	 * @see	wcf\form\IForm::validate()
 	 */
 	public function validate() {
 		// subject
@@ -102,7 +102,7 @@ abstract class MessageForm extends RecaptchaForm {
 	}
 	
 	/**
-	 * Validates message subject.
+	 * Validates the message subject.
 	 */
 	protected function validateSubject() {
 		if (empty($this->subject)) {
@@ -111,7 +111,7 @@ abstract class MessageForm extends RecaptchaForm {
 	}
 	
 	/**
-	 * Validates message text.
+	 * Validates the message text.
 	 */
 	protected function validateText() {
 		if (empty($this->text)) {
@@ -135,7 +135,7 @@ abstract class MessageForm extends RecaptchaForm {
 	}
 	
 	/**
-	 * @see wcf\form\IForm::save()
+	 * @see	wcf\form\IForm::save()
 	 */
 	public function save() {
 		parent::save();
@@ -147,7 +147,7 @@ abstract class MessageForm extends RecaptchaForm {
 	}
 	
 	/**
-	 * @see wcf\page\IPage::readData()
+	 * @see	wcf\page\IPage::readData()
 	 */
 	public function readData() {
 		parent::readData();
@@ -158,7 +158,7 @@ abstract class MessageForm extends RecaptchaForm {
 	}
 	
 	/**
-	 * @see wcf\page\IPage::assignVariables();
+	 * @see	wcf\page\IPage::assignVariables();
 	 */
 	public function assignVariables() {
 		parent::assignVariables();
