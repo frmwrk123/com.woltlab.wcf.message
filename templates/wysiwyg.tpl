@@ -10,7 +10,7 @@ $(function() {
 		toolbar:
 		[
 			['Source', '-', 'Undo', 'Redo'],
-			['Bold', 'Italic', 'Underline'],
+			['Bold', 'Italic', 'Underline', 'Strike'],
 			['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', '-', 'Blockquote'],
 			'/',
 			['Font', 'FontSize'],
