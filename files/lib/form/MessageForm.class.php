@@ -1,5 +1,6 @@
 <?php
 namespace wcf\form;
+use wcf\data\smiley\SmileyCache;
 use wcf\system\bbcode\URLParser;
 use wcf\system\exception\UserInputException;
 use wcf\system\WCF;
@@ -64,6 +65,12 @@ abstract class MessageForm extends RecaptchaForm {
 	 * @var	boolean
 	 */
 	public $showSignature = 0;
+	
+	/**
+	 * list of default smilies
+	 * @var array<wcf\data\smiley\Smiley>
+	 */
+	public $defaultSmilies = array();
 	
 	/**
 	 * @see	wcf\form\IForm::readFormParameters()
@@ -155,6 +162,11 @@ abstract class MessageForm extends RecaptchaForm {
 		if (!count($_POST)) {
 			
 		}
+		
+		// get default smilies
+		if (MODULE_SMILEY) {
+			$this->defaultSmilies = SmileyCache::getInstance()->getCategorySmilies();
+		}
 	}
 	
 	/**
@@ -171,7 +183,8 @@ abstract class MessageForm extends RecaptchaForm {
 			'enableHtml' => $this->enableHtml,
 			'enableBBCodes' => $this->enableBBCodes,
 			'showSignature' => $this->showSignature,
-			'maxTextLength' => $this->maxTextLength
+			'maxTextLength' => $this->maxTextLength,
+			'defaultSmilies' => $this->defaultSmilies
 		));
 	}
 }
