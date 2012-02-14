@@ -6,7 +6,7 @@
 //<![CDATA[
 $(function() {
 	var config = {
-		extraPlugins: 'bbcode',
+		extraPlugins: 'wbbcode',
 		language: '{@$__wcf->language->getFixedLanguageCode()}',
 		toolbar:
 		[
@@ -17,6 +17,12 @@ $(function() {
 			['Font', 'FontSize'],
 			['Link', 'Unlink', 'Image'],
 			['TextColor', '-', 'SpecialChar', '-', 'Maximize']
+		],
+		smiley_images: [
+			{implode from=$defaultSmilies item=smiley}'{$smiley->getURL()|encodeJS}'{/implode}
+		],
+		smiley_descriptions: [
+			{implode from=$defaultSmilies item=smiley}'{$smiley->smileyCode|encodeJS}'{/implode}
 		]
 	};
 	
