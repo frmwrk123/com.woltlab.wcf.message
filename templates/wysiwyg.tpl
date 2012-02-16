@@ -7,7 +7,13 @@
 $(function() {
 	var config = {
 		extraPlugins: 'wbbcode',
+		removePlugins: 'elementspath,contextmenu,menubutton,forms',
 		language: '{@$__wcf->language->getFixedLanguageCode()}',
+		disableObjectResizing: true,
+		toolbarCanCollapse: false,
+		enterMode: CKEDITOR.ENTER_BR,
+		minHeight: 200,
+		forcePasteAsPlainText: true,
 		toolbar:
 		[
 			['Source', '-', 'Undo', 'Redo'],
