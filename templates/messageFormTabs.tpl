@@ -8,6 +8,7 @@
 		{if $additionalTabs|isset}{@$additionalTabs}{/if}
 	</ul>
 </div>
+<!-- ToDo: Please do not use the class or ID "subTabMenu" any more! -->"
 <div class="hidden" id="subTabMenu"><div class="containerHead"><div> </div></div></div>
 <div id="tabContent">
 	{if MODULE_SMILEY && $showSmilies && $canUseSmilies}{include file="messageFormSmileys"}{/if}
