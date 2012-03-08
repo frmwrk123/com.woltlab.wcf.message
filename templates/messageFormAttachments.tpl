@@ -3,11 +3,11 @@
 	<ul></ul>
 </div>
 
-
+<script type="text/javascript" src="{@$__wcf->getPath('wcf')}js/WCF.Attachment.js"></script>
 <script type="text/javascript">
 	//<![CDATA[
 	$(function() {
-		 new WCF.Upload($('#attachments'), $('#attachments ul'), 'wcf\\data\\attachment\\AttachmentAction', { multiple: true });
+		 new WCF.Attachment.Upload($('#attachments'), $('#attachments ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}');
 	});
 	//]]>
 </script>

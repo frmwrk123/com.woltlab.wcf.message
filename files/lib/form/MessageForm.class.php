@@ -2,16 +2,20 @@
 namespace wcf\form;
 use wcf\data\smiley\SmileyCache;
 use wcf\system\bbcode\URLParser;
+use wcf\system\attachment\AttachmentHandler;
 use wcf\system\exception\UserInputException;
 use wcf\system\WCF;
 use wcf\util\MessageUtil;
 use wcf\util\StringUtil;
 
+// TODO: debug; remove later
+if (!defined('MODULE_ATTACHMENT')) define('MODULE_ATTACHMENT', 1);
+
 /**
  * MessageForm is an abstract form implementation for a message with optional captcha suppport.
  * 
  * @author	Marcel Werk
- * @copyright	2001-2011 WoltLab GmbH
+ * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	form
@@ -71,6 +75,45 @@ abstract class MessageForm extends RecaptchaForm {
 	 * @var array<wcf\data\smiley\Smiley>
 	 */
 	public $defaultSmilies = array();
+	
+	/**
+	 * object type for attachments;
+	 * leave blank to disable attachment support
+	 * @var integer
+	 */
+	public $attachmentObjectType = '';
+	
+	/**
+	 * object id for attachments
+	 * @var integer
+	 */
+	public $attachmentObjectID = '';
+	
+	/**
+	 * temp hash
+	 * @var string
+	 */
+	public $tmpHash = '';
+	
+	/**
+	 * attachment handler
+	 * @var wcf\system\attachment\AttachmentHandler
+	 */
+	public $attachmentHandler = null;
+	
+	/**
+	 * @see	wcf\form\IPage::readParameters()
+	 */
+	public function readParameters() {
+		parent::readParameters();
+		
+		if (isset($_REQUEST['tmpHash'])) {
+			$this->tmpHash = $_REQUEST['tmpHash'];
+		}
+		if (empty($this->tmpHash)) {
+			$this->tmpHash = StringUtil::getRandomID();
+		}
+	}
 	
 	/**
 	 * @see	wcf\form\IForm::readFormParameters()
@@ -157,6 +200,11 @@ abstract class MessageForm extends RecaptchaForm {
 	 * @see	wcf\page\IPage::readData()
 	 */
 	public function readData() {
+		// get attachments
+		if (MODULE_ATTACHMENT && $this->attachmentObjectType) {
+			$this->attachmentHandler = new AttachmentHandler($this->attachmentObjectType, $this->attachmentObjectID, $this->tmpHash);
+		}
+		
 		parent::readData();
 		
 		if (!count($_POST)) {
@@ -184,7 +232,10 @@ abstract class MessageForm extends RecaptchaForm {
 			'enableBBCodes' => $this->enableBBCodes,
 			'showSignature' => $this->showSignature,
 			'maxTextLength' => $this->maxTextLength,
-			'defaultSmilies' => $this->defaultSmilies
+			'defaultSmilies' => $this->defaultSmilies,
+			'attachmentObjectType' => $this->attachmentObjectType,
+			'attachmentObjectID' => $this->attachmentObjectID,
+			'tmpHash' => $this->tmpHash
 		));
 	}
 }
