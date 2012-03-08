@@ -1,4 +1,4 @@
-<div id="attachments" class="wcf-border wcf-tabMenuContent hidden">
+<div id="attachments" class="wcf-tabMenuContent wcf-attachmentContent wcf-box wcf-boxPadding hidden">
 	
 	<ul></ul>
 </div>
