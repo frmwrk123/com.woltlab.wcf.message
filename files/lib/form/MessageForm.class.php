@@ -234,7 +234,8 @@ abstract class MessageForm extends RecaptchaForm {
 			'defaultSmilies' => $this->defaultSmilies,
 			'attachmentObjectType' => $this->attachmentObjectType,
 			'attachmentObjectID' => $this->attachmentObjectID,
-			'tmpHash' => $this->tmpHash
+			'tmpHash' => $this->tmpHash,
+			'attachmentHandler' => $this->attachmentHandler
 		));
 	}
 }
