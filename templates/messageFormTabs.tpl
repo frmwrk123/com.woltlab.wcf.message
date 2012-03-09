@@ -28,13 +28,13 @@
 	<nav class="wcf-tabMenu">
 		<ul>
 			{if MODULE_SMILEY}<li><a href="#smilies" title="{lang}wcf.smiley.smilies{/lang}">{lang}wcf.smiley.smilies{/lang}</a></li>{/if}
-			<li><a href="#attachments" title="{lang}wcf.attachment.attachments{/lang}">{lang}wcf.attachment.attachments{/lang}</a></li>
+			{if MODULE_ATTACHMENT && $attachmentHandler !== null}<li><a href="#attachments" title="{lang}wcf.attachment.attachments{/lang}">{lang}wcf.attachment.attachments{/lang}</a></li>{/if}
 			<li><a href="#settings" title="{lang}wcf.message.settings{/lang}">{lang}wcf.message.settings{/lang}</a></li>
 		</ul>
 	</nav>
 	
 	{if MODULE_SMILEY}{include file='messageFormSmilies' sandbox=false}{/if}
-	{include file='messageFormAttachments' sandbox=false}
+	{if MODULE_ATTACHMENT && $attachmentHandler !== null}{include file='messageFormAttachments' sandbox=false}{/if}
 	{include file='messageFormSettings' sandbox=false}
 </div>
 
