@@ -124,9 +124,9 @@ abstract class MessageForm extends RecaptchaForm {
 		// settings
 		$this->enableSmilies = $this->enableHtml = $this->enableBBCodes = $this->parseURL = $this->showSignature = 0;
 		if (isset($_POST['parseURL'])) $this->parseURL = intval($_POST['parseURL']);
-		if (isset($_POST['enableSmilies'])) $this->enableSmilies = intval($_POST['enableSmilies']);
+		if (isset($_POST['enableSmilies']) && WCF::getSession()->getPermission('user.message.canUseSmilies')) $this->enableSmilies = intval($_POST['enableSmilies']);
 		if (isset($_POST['enableHtml']) && WCF::getSession()->getPermission('user.message.canUseHtml')) $this->enableHtml = intval($_POST['enableHtml']);
-		if (isset($_POST['enableBBCodes'])) $this->enableBBCodes = intval($_POST['enableBBCodes']);
+		if (isset($_POST['enableBBCodes']) && WCF::getSession()->getPermission('user.message.canUseBBCodes')) $this->enableBBCodes = intval($_POST['enableBBCodes']);
 		if (isset($_POST['showSignature'])) $this->showSignature = intval($_POST['showSignature']);
 		
 		// TODO: stop shouting
