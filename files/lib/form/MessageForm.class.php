@@ -8,9 +8,6 @@ use wcf\system\WCF;
 use wcf\util\MessageUtil;
 use wcf\util\StringUtil;
 
-// TODO: debug; remove later
-if (!defined('MODULE_ATTACHMENT')) define('MODULE_ATTACHMENT', 1);
-
 /**
  * MessageForm is an abstract form implementation for a message with optional captcha suppport.
  * 
@@ -128,7 +125,7 @@ abstract class MessageForm extends RecaptchaForm {
 		$this->enableSmilies = $this->enableHtml = $this->enableBBCodes = $this->parseURL = $this->showSignature = 0;
 		if (isset($_POST['parseURL'])) $this->parseURL = intval($_POST['parseURL']);
 		if (isset($_POST['enableSmilies'])) $this->enableSmilies = intval($_POST['enableSmilies']);
-		if (isset($_POST['enableHtml'])) $this->enableHtml = intval($_POST['enableHtml']);
+		if (isset($_POST['enableHtml']) && WCF::getSession()->getPermission('user.message.canUseHtml')) $this->enableHtml = intval($_POST['enableHtml']);
 		if (isset($_POST['enableBBCodes'])) $this->enableBBCodes = intval($_POST['enableBBCodes']);
 		if (isset($_POST['showSignature'])) $this->showSignature = intval($_POST['showSignature']);
 		
@@ -208,7 +205,9 @@ abstract class MessageForm extends RecaptchaForm {
 		parent::readData();
 		
 		if (!count($_POST)) {
-			
+			$this->enableBBCodes = (WCF::getSession()->getPermission('user.message.canUseBBCodes')) ? 1 : 0;
+			$this->enableHtml = (WCF::getSession()->getPermission('user.message.canUseHtml')) ? 1 : 0;
+			$this->enableSmilies = (WCF::getSession()->getPermission('user.message.canUseSmilies')) ? 1 : 0;
 		}
 		
 		// get default smilies
