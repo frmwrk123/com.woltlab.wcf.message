@@ -13,13 +13,17 @@
 		{/foreach}
 	
 	</ul>
+	
+	<p>Maximum number of attachments: {#$attachmentHandler->getMaxCount()}<br />
+	Maximum file size: {@$attachmentHandler->getMaxSize()|filesize}<br />
+	Allowed file extensions: {', '|implode:$attachmentHandler->getAllowedExtensions()}</p>
 </div>
 
 <script type="text/javascript" src="{@$__wcf->getPath('wcf')}js/WCF.Attachment.js"></script>
 <script type="text/javascript">
 	//<![CDATA[
 	$(function() {
-		 new WCF.Attachment.Upload($('#attachments'), $('#attachments ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}');
+		 new WCF.Attachment.Upload($('#attachments'), $('#attachments ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}', '{@$attachmentParentObjectID}');
 	});
 	//]]>
 </script>

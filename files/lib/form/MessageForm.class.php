@@ -84,7 +84,13 @@ abstract class MessageForm extends RecaptchaForm {
 	 * object id for attachments
 	 * @var integer
 	 */
-	public $attachmentObjectID = '';
+	public $attachmentObjectID = 0;
+	
+	/**
+	 * parent object id for attachments
+	 * @var integer
+	 */
+	public $attachmentParentObjectID = 0;
 	
 	/**
 	 * temp hash
@@ -234,6 +240,7 @@ abstract class MessageForm extends RecaptchaForm {
 			'defaultSmilies' => $this->defaultSmilies,
 			'attachmentObjectType' => $this->attachmentObjectType,
 			'attachmentObjectID' => $this->attachmentObjectID,
+			'attachmentParentObjectID' => $this->attachmentParentObjectID,
 			'tmpHash' => $this->tmpHash,
 			'attachmentHandler' => $this->attachmentHandler
 		));
