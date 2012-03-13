@@ -105,6 +105,24 @@ abstract class MessageForm extends RecaptchaForm {
 	public $attachmentHandler = null;
 	
 	/**
+	 * required permission to use smilies
+	 * @var	boolean
+	 */
+	public $permissionCanUseSmilies = 'user.message.canUseSmilies';
+	
+	/**
+	 * required permission to use HTML
+	 * @var	boolean
+	 */
+	public $permissionCanUseHtml = 'user.message.canUseHtml';
+	
+	/**
+	 * required permission to use BBCodes
+	 * @var	boolean
+	 */
+	public $permissionCanUseBBCodes = 'user.message.canUseBBCodes';
+	
+	/**
 	 * @see	wcf\form\IPage::readParameters()
 	 */
 	public function readParameters() {
@@ -130,9 +148,9 @@ abstract class MessageForm extends RecaptchaForm {
 		// settings
 		$this->enableSmilies = $this->enableHtml = $this->enableBBCodes = $this->parseURL = $this->showSignature = 0;
 		if (isset($_POST['parseURL'])) $this->parseURL = intval($_POST['parseURL']);
-		if (isset($_POST['enableSmilies']) && WCF::getSession()->getPermission('user.message.canUseSmilies')) $this->enableSmilies = intval($_POST['enableSmilies']);
-		if (isset($_POST['enableHtml']) && WCF::getSession()->getPermission('user.message.canUseHtml')) $this->enableHtml = intval($_POST['enableHtml']);
-		if (isset($_POST['enableBBCodes']) && WCF::getSession()->getPermission('user.message.canUseBBCodes')) $this->enableBBCodes = intval($_POST['enableBBCodes']);
+		if (isset($_POST['enableSmilies']) && WCF::getSession()->getPermission($this->permissionCanUseSmilies)) $this->enableSmilies = intval($_POST['enableSmilies']);
+		if (isset($_POST['enableHtml']) && WCF::getSession()->getPermission($this->permissionCanUseHtml)) $this->enableHtml = intval($_POST['enableHtml']);
+		if (isset($_POST['enableBBCodes']) && WCF::getSession()->getPermission($this->permissionCanUseBBCodes)) $this->enableBBCodes = intval($_POST['enableBBCodes']);
 		if (isset($_POST['showSignature'])) $this->showSignature = intval($_POST['showSignature']);
 		
 		// TODO: stop shouting
