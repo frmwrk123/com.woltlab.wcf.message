@@ -93,13 +93,8 @@ WCF.Message.Preview = Class.extend({
 			return;
 		}
 		
-		var $data = {
-			data: {
-				message: $message
-			}
-		}
 		this._proxy.setOption('data', {
-			actionName: 'preview',
+			actionName: 'getMessagePreview',
 			className: this._className,
 			parameters: this._getParameters($message)
 		});
