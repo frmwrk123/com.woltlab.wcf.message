@@ -3,7 +3,7 @@
 	<ul>
 		{foreach from=$attachmentHandler->getAttachmentList() item=$attachment}
 			<li class="wcf-container jsAttachment" style="margin-bottom: 7px">
-				<p class="wcf-containerIcon"><img src="{link controller='Attachment' object=$attachment}tiny=1{/link}" alt="" style="width: 48px; height: 48px; border-radius: 5px;" /></p>
+				<p class="wcf-containerIcon"><img src="{link controller='Attachment' object=$attachment}tiny=1{/link}" alt="" style="width: 48px; height: 48px; border-radius: 5px;" class="wcf-attachmentImage" /></p>
 				
 				<div class="wcf-containerContent">
 					<p>{$attachment->filename}</p>
