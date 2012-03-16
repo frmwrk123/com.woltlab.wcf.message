@@ -2,12 +2,13 @@
 	
 	<ul>
 		{foreach from=$attachmentHandler->getAttachmentList() item=$attachment}
-			<li class="wcf-container" style="margin-bottom: 7px">
+			<li class="wcf-container jsAttachment" style="margin-bottom: 7px">
 				<p class="wcf-containerIcon"><img src="{link controller='Attachment' object=$attachment}tiny=1{/link}" alt="" style="width: 48px; height: 48px; border-radius: 5px;" /></p>
 				
 				<div class="wcf-containerContent">
 					<p>{$attachment->filename}</p>
 					<p>{@$attachment->filesize|filesize}</p>
+					<p><img src="{icon}delete1{/icon}" alt="" title="{lang}wcf.global.button.delete{/lang}" class="jsDeleteButton jsTooltip" data-object-id="{@$attachment->attachmentID}" data-confirm-message="{lang}wcf.attachment.delete.sure{/lang}" /></p>
 				</div>
 			</li>
 		{/foreach}
@@ -24,6 +25,7 @@
 	//<![CDATA[
 	$(function() {
 		 new WCF.Attachment.Upload($('#attachments'), $('#attachments ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}', '{@$attachmentParentObjectID}');
+		 new WCF.Action.Delete('wcf\\data\\attachment\\AttachmentAction', $('.jsAttachment'));
 	});
 	//]]>
 </script>
