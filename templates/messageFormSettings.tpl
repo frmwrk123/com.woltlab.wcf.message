@@ -1,4 +1,4 @@
-<div id="settings" class="settingsContent tabMenuContent container">
+<div id="settings" class="settingsContent tabMenuContent container containerPadding">
 	<dl>
 		<dd>
 			<label for="parseURL"><input id="parseURL" name="parseURL" type="checkbox" value="1"{if $parseURL} checked="checked"{/if} /> {lang}wcf.message.settings.parseURL{/lang}</label>
@@ -14,7 +14,7 @@
 		</dd>
 		{if $__wcf->getSession()->getPermission('user.message.canUseHtml')}
 			<dd>
-				<label for="enableHtml"><input id="enableSmilies" name="enableHtml" type="checkbox" value="1"{if $enableHtml} checked="checked"{/if} /> {lang}wcf.message.settings.enableHtml{/lang}</label>
+				<label for="enableHtml"><input id="enableHtml" name="enableHtml" type="checkbox" value="1"{if $enableHtml} checked="checked"{/if} /> {lang}wcf.message.settings.enableHtml{/lang}</label>
 				<small>{lang}wcf.message.settings.enableHtml.description{/lang}</small>
 			</dd>
 		{/if}

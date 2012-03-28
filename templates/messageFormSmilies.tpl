@@ -1,4 +1,4 @@
-<div id="smilies" class="smiliesContent tabMenuContent container">
+<div id="smilies" class="smiliesContent tabMenuContent container containerPadding">
 	<ul>
 		{foreach from=$defaultSmilies item=smiley}
 			<li><img src="{$smiley->getURL()}" alt="" title="{lang}{$smiley->smileyTitle}{/lang}" class="icon24 jsTooltip" /></li>

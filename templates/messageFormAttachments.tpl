@@ -1,11 +1,11 @@
-<div id="attachments" class="attachmentContent tabMenuContent container">
+<div id="attachments" class="attachmentContent tabMenuContent container containerPadding">
 	
 	<ul>
 		{foreach from=$attachmentHandler->getAttachmentList() item=$attachment}
-			<li class="wcf-container jsAttachment" style="margin-bottom: 7px">
-				<p class="wcf-containerIcon"><img src="{link controller='Attachment' object=$attachment}tiny=1{/link}" alt="" style="width: 48px; height: 48px; border-radius: 5px;" class="wcf-attachmentImage" /></p>
+			<li class="box48 jsAttachment" style="margin-bottom: 7px">
+				<img src="{link controller='Attachment' object=$attachment}tiny=1{/link}" alt="" style="width: 48px; height: 48px; border-radius: 5px;" class="wcf-attachmentImage" />
 				
-				<div class="wcf-containerContent">
+				<div>
 					<p>{$attachment->filename}</p>
 					<p>{@$attachment->filesize|filesize}</p>
 					<p><img src="{icon}delete1{/icon}" alt="" title="{lang}wcf.global.button.delete{/lang}" class="jsDeleteButton jsTooltip" data-object-id="{@$attachment->attachmentID}" data-confirm-message="{lang}wcf.attachment.delete.sure{/lang}" /></p>
