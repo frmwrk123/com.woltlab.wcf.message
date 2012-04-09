@@ -32,8 +32,8 @@ Allowed file extensions: {', '|implode:$attachmentHandler->getAllowedExtensions(
 <script type="text/javascript">
 	//<![CDATA[
 	$(function() {
-		 new WCF.Attachment.Upload($('#attachments > dl > dd > div'), $('#attachments > ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}', '{@$attachmentParentObjectID}');
-		 new WCF.Action.Delete('wcf\\data\\attachment\\AttachmentAction', $('.formAttachmentList'));
+		new WCF.Attachment.Upload($('#attachments > dl > dd > div'), $('#attachments > ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}', '{@$attachmentParentObjectID}');
+		new WCF.Action.Delete('wcf\\data\\attachment\\AttachmentAction', $('.formAttachmentList > li'));
 	});
 	//]]>
 </script>
