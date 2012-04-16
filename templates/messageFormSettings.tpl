@@ -1,5 +1,5 @@
-<div id="settings" class="settingsContent tabMenuContent container containerPadding">
-	<dl>
+<fieldset id="settings" class="settingsContent tabMenuContent container containerPadding">
+	<dl class="wide">
 		<dd>
 			<label for="parseURL"><input id="parseURL" name="parseURL" type="checkbox" value="1"{if $parseURL} checked="checked"{/if} /> {lang}wcf.message.settings.parseURL{/lang}</label>
 			<small>{lang}wcf.message.settings.parseURL.description{/lang}</small>
@@ -19,4 +19,4 @@
 			</dd>
 		{/if}
 	</dl>
-</div>
+</fieldset>
