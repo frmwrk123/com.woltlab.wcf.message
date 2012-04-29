@@ -106,6 +106,7 @@ WCF.Message.Preview = Class.extend({
 		
 		// poke event
 		event.stopPropagation();
+		return false;
 	},
 	
 	/**
