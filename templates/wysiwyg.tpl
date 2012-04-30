@@ -34,7 +34,8 @@ $(function() {
 	
 	{event name='additionalJS'}
 	
-	$('#text').ckeditor(config);
+	$('{if $wysiwygSelector|isset}{$wysiwygSelector|encodeJS}{else}#text{/if}').ckeditor(config);
 });
 //]]>
 </script>
+
