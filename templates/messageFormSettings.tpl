@@ -18,5 +18,6 @@
 				<small>{lang}wcf.message.settings.enableHtml.description{/lang}</small>
 			</dd>
 		{/if}
+		{event name='settings'}
 	</dl>
 </fieldset>
