@@ -4,6 +4,7 @@ use wcf\data\smiley\SmileyCache;
 use wcf\system\bbcode\URLParser;
 use wcf\system\attachment\AttachmentHandler;
 use wcf\system\exception\UserInputException;
+use wcf\system\language\LanguageFactory;
 use wcf\system\WCF;
 use wcf\util\MessageUtil;
 use wcf\util\StringUtil;
@@ -20,16 +21,71 @@ use wcf\util\StringUtil;
  */
 abstract class MessageForm extends RecaptchaForm {
 	/**
-	 * message subject
-	 * @var	string
+	 * attachment handler
+	 * @var wcf\system\attachment\AttachmentHandler
 	 */
-	public $subject = '';
+	public $attachmentHandler = null;
 	
 	/**
-	 * message text
-	 * @var	string
+	 * object id for attachments
+	 * @var integer
 	 */
-	public $text = '';
+	public $attachmentObjectID = 0;
+	
+	/**
+	 * object type for attachments;
+	 * leave blank to disable attachment support
+	 * @var integer
+	 */
+	public $attachmentObjectType = '';
+	
+	/**
+	 * parent object id for attachments
+	 * @var integer
+	 */
+	public $attachmentParentObjectID = 0;
+	
+	/**
+	 * list of available content languages
+	 * @var	array<wcf\data\language\Language>
+	 */
+	public $availableContentLanguages = array();
+	
+	/**
+	 * list of default smilies
+	 * @var array<wcf\data\smiley\Smiley>
+	 */
+	public $defaultSmilies = array();
+	
+	/**
+	 * enables bbcodes
+	 * @var	boolean
+	 */
+	public $enableBBCodes = 1;
+	
+	/**
+	 * enables html
+	 * @var	boolean
+	 */
+	public $enableHtml = 0;
+	
+	/**
+	 * enables multilingualism
+	 * @var	boolean
+	 */
+	public $enableMultilingualism = false;
+	
+	/**
+	 * enables smilies
+	 * @var	boolean
+	 */
+	public $enableSmilies = 1;
+	
+	/**
+	 * content language id
+	 * @var	integer
+	 */
+	public $languageID = null;
 	
 	/**
 	 * maximum text length
@@ -44,71 +100,10 @@ abstract class MessageForm extends RecaptchaForm {
 	public $parseURL = 1;
 	
 	/**
-	 * enables smilies
+	 * required permission to use BBCodes
 	 * @var	boolean
 	 */
-	public $enableSmilies = 1;
-	
-	/**
-	 * enables html
-	 * @var	boolean
-	 */
-	public $enableHtml = 0;
-	
-	/**
-	 * enables bbcodes
-	 * @var	boolean
-	 */
-	public $enableBBCodes = 1;
-	
-	/**
-	 * shows the signature
-	 * @var	boolean
-	 */
-	public $showSignature = 0;
-	
-	/**
-	 * list of default smilies
-	 * @var array<wcf\data\smiley\Smiley>
-	 */
-	public $defaultSmilies = array();
-	
-	/**
-	 * object type for attachments;
-	 * leave blank to disable attachment support
-	 * @var integer
-	 */
-	public $attachmentObjectType = '';
-	
-	/**
-	 * object id for attachments
-	 * @var integer
-	 */
-	public $attachmentObjectID = 0;
-	
-	/**
-	 * parent object id for attachments
-	 * @var integer
-	 */
-	public $attachmentParentObjectID = 0;
-	
-	/**
-	 * temp hash
-	 * @var string
-	 */
-	public $tmpHash = '';
-	
-	/**
-	 * attachment handler
-	 * @var wcf\system\attachment\AttachmentHandler
-	 */
-	public $attachmentHandler = null;
-	
-	/**
-	 * required permission to use smilies
-	 * @var	boolean
-	 */
-	public $permissionCanUseSmilies = 'user.message.canUseSmilies';
+	public $permissionCanUseBBCodes = 'user.message.canUseBBCodes';
 	
 	/**
 	 * required permission to use HTML
@@ -117,10 +112,34 @@ abstract class MessageForm extends RecaptchaForm {
 	public $permissionCanUseHtml = 'user.message.canUseHtml';
 	
 	/**
-	 * required permission to use BBCodes
+	 * required permission to use smilies
 	 * @var	boolean
 	 */
-	public $permissionCanUseBBCodes = 'user.message.canUseBBCodes';
+	public $permissionCanUseSmilies = 'user.message.canUseSmilies';
+	
+	/**
+	 * shows the signature
+	 * @var	boolean
+	 */
+	public $showSignature = 0;
+	
+	/**
+	 * message subject
+	 * @var	string
+	 */
+	public $subject = '';
+	
+	/**
+	 * message text
+	 * @var	string
+	 */
+	public $text = '';
+	
+	/**
+	 * temp hash
+	 * @var string
+	 */
+	public $tmpHash = '';
 	
 	/**
 	 * @see	wcf\form\IPage::readParameters()
@@ -133,6 +152,10 @@ abstract class MessageForm extends RecaptchaForm {
 		}
 		if (empty($this->tmpHash)) {
 			$this->tmpHash = StringUtil::getRandomID();
+		}
+		
+		if ($this->enableMultilingualism) {
+			$this->availableContentLanguages = LanguageFactory::getInstance()->getContentLanguages();
 		}
 	}
 	
@@ -157,6 +180,9 @@ abstract class MessageForm extends RecaptchaForm {
 		/*if (StringUtil::length($this->subject) >= MESSAGE_SUBJECT_STOP_SHOUTING && StringUtil::toUpperCase($this->subject) == $this->subject) {
 			$this->subject = StringUtil::wordsToUpperCase(StringUtil::toLowerCase($this->subject));
 		}*/
+		
+		// multilingualism
+		if (isset($_POST['languageID'])) $this->languageID = intval($_POST['languageID']);
 	}
 	
 	/**
@@ -168,6 +194,9 @@ abstract class MessageForm extends RecaptchaForm {
 		
 		// text
 		$this->validateText();
+		
+		// multilingualism
+		$this->validateContentLanguage();
 		
 		parent::validate();
 	}
@@ -203,6 +232,20 @@ abstract class MessageForm extends RecaptchaForm {
 				throw new UserInputException('text', 'censoredWordsFound');
 			}
 		}*/
+	}
+	
+	/**
+	 * Validates content language id.
+	 */
+	protected function validateContentLanguage() {
+		if (!$this->languageID || !$this->enableMultilingualism || count($this->availableContentLanguages) < 2) {
+			$this->languageID = null;
+			return;
+		}
+		
+		if (!isset($this->availableContentLanguages[$this->languageID])) {
+			throw new UserInputException('languageID', 'notValid');
+		}
 	}
 	
 	/**
@@ -247,20 +290,22 @@ abstract class MessageForm extends RecaptchaForm {
 		parent::assignVariables();
 		
 		WCF::getTPL()->assign(array(
+			'attachmentHandler' => $this->attachmentHandler,
+			'attachmentObjectID' => $this->attachmentObjectID,
+			'attachmentObjectType' => $this->attachmentObjectType,
+			'attachmentParentObjectID' => $this->attachmentParentObjectID,
+			'availableContentLanguages' => $this->availableContentLanguages,
+			'defaultSmilies' => $this->defaultSmilies,
+			'enableBBCodes' => $this->enableBBCodes,
+			'enableHtml' => $this->enableHtml,
+			'enableSmilies' => $this->enableSmilies,
+			'languageID' => ($this->languageID ?: 0),
+			'maxTextLength' => $this->maxTextLength,
+			'parseURL' => $this->parseURL,
+			'showSignature' => $this->showSignature,
 			'subject' => $this->subject,
 			'text' => $this->text,
-			'parseURL' => $this->parseURL,
-			'enableSmilies' => $this->enableSmilies,
-			'enableHtml' => $this->enableHtml,
-			'enableBBCodes' => $this->enableBBCodes,
-			'showSignature' => $this->showSignature,
-			'maxTextLength' => $this->maxTextLength,
-			'defaultSmilies' => $this->defaultSmilies,
-			'attachmentObjectType' => $this->attachmentObjectType,
-			'attachmentObjectID' => $this->attachmentObjectID,
-			'attachmentParentObjectID' => $this->attachmentParentObjectID,
-			'tmpHash' => $this->tmpHash,
-			'attachmentHandler' => $this->attachmentHandler
+			'tmpHash' => $this->tmpHash
 		));
 	}
 }

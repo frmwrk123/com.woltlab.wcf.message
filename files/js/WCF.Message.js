@@ -170,3 +170,92 @@ WCF.Message.Preview = Class.extend({
 	 */
 	_handleResponse: function(data) { }
 });
+
+/**
+ * Handles multilingualism for messages.
+ * 
+ * @param	integer		languageID
+ * @param	object		availableLanguages
+ * @param	boolean		forceSelection
+ */
+WCF.Message.Multilingualism = Class.extend({
+	/**
+	 * list of available languages
+	 * @var	object
+	 */
+	_availableLanguages: { },
+	
+	/**
+	 * language id
+	 * @var	integer
+	 */
+	_languageID: 0,
+	
+	/**
+	 * language input element
+	 * @var	jQuery
+	 */
+	_languageInput: null,
+	
+	/**
+	 * Initializes WCF.Message.Multilingualism
+	 * 
+	 * @param	integer		languageID
+	 * @param	object		availableLanguages
+	 * @param	boolean		forceSelection
+	 */
+	init: function(languageID, availableLanguages, forceSelection) {
+		this._availableLanguages = availableLanguages;
+		this._languageID = languageID || 0;
+		
+		this._languageInput = $('#languageID');
+		
+		// preselect current language id
+		this._updateLabel();
+		
+		// register event listener
+		this._languageInput.find('.dropdownMenu > li').click($.proxy(this._click, this));
+		
+		// add element to disable multilingualism
+		if (!forceSelection) {
+			var $dropdownMenu = this._languageInput.find('.dropdownMenu');
+			$('<li class="dropdownDivider" />').appendTo($dropdownMenu);
+			$('<li><span><span class="badge">' + this._availableLanguages[0] + '</span></span></li>').click($.proxy(this._disable, this)).appendTo($dropdownMenu);
+		}
+		
+		// bind submit event
+		this._languageInput.parents('form').submit($.proxy(this._submit, this));
+	},
+	
+	/**
+	 * Handles language selections.
+	 * 
+	 * @param	object		event
+	 */
+	_click: function(event) {
+		this._languageID = $(event.currentTarget).data('languageID');
+		this._updateLabel();
+	},
+	
+	/**
+	 * Disables language selection.
+	 */
+	_disable: function() {
+		this._languageID = 0;
+		this._updateLabel();
+	},
+	
+	/**
+	 * Updates selected language.
+	 */
+	_updateLabel: function() {
+		this._languageInput.find('.dropdownToggle > span').text(this._availableLanguages[this._languageID]);
+	},
+	
+	/**
+	 * Sets language id upon submit.
+	 */
+	_submit: function() {
+		this._languageInput.next('input[name=languageID]').prop('value', this._languageID);
+	}
+});
