@@ -52,12 +52,6 @@ abstract class MessageForm extends RecaptchaForm {
 	public $availableContentLanguages = array();
 	
 	/**
-	 * list of default smilies
-	 * @var array<wcf\data\smiley\Smiley>
-	 */
-	public $defaultSmilies = array();
-	
-	/**
 	 * enables bbcodes
 	 * @var	boolean
 	 */
@@ -122,6 +116,12 @@ abstract class MessageForm extends RecaptchaForm {
 	 * @var	boolean
 	 */
 	public $showSignature = 0;
+	
+	/**
+	 * list of smiley categories
+	 * @var array<wcf\data\smiley\category\SmileyCategory>
+	 */
+	public $smileyCategories = array();
 	
 	/**
 	 * message subject
@@ -279,7 +279,15 @@ abstract class MessageForm extends RecaptchaForm {
 		
 		// get default smilies
 		if (MODULE_SMILEY) {
-			$this->defaultSmilies = SmileyCache::getInstance()->getCategorySmilies();
+			$this->smileyCategories = SmileyCache::getInstance()->getCategories();
+			foreach ($this->smileyCategories as $index => $category) {
+				$category->loadSmilies();
+				
+				// remove empty categories
+				if (!count($category)) {
+					unset($this->smileyCategories[$index]);
+				}
+			}
 		}
 	}
 	
@@ -295,7 +303,6 @@ abstract class MessageForm extends RecaptchaForm {
 			'attachmentObjectType' => $this->attachmentObjectType,
 			'attachmentParentObjectID' => $this->attachmentParentObjectID,
 			'availableContentLanguages' => $this->availableContentLanguages,
-			'defaultSmilies' => $this->defaultSmilies,
 			'enableBBCodes' => $this->enableBBCodes,
 			'enableHtml' => $this->enableHtml,
 			'enableSmilies' => $this->enableSmilies,
@@ -303,6 +310,7 @@ abstract class MessageForm extends RecaptchaForm {
 			'maxTextLength' => $this->maxTextLength,
 			'parseURL' => $this->parseURL,
 			'showSignature' => $this->showSignature,
+			'smileyCategories' => $this->smileyCategories,
 			'subject' => $this->subject,
 			'text' => $this->text,
 			'tmpHash' => $this->tmpHash
