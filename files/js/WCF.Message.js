@@ -259,3 +259,63 @@ WCF.Message.Multilingualism = Class.extend({
 		this._languageInput.next('input[name=languageID]').prop('value', this._languageID);
 	}
 });
+
+/**
+ * Loads smiley categories upon user request.
+ */
+WCF.Message.Smilies = Class.extend({
+	/**
+	 * list of already loaded category ids
+	 * @var	array<integer>
+	 */
+	_cache: [ ],
+	
+	/**
+	 * action proxy
+	 * @var	WCF.Action.Proxy
+	 */
+	_proxy: null,
+	
+	/**
+	 * Initializes the smiley loader.
+	 */
+	init: function() {
+		this._cache = [ ];
+		this._proxy = new WCF.Action.Proxy({
+			success: $.proxy(this._success, this)
+		});
+		
+		$('#smilies > .menu > a').click($.proxy(this._click, this));
+	},
+	
+	/**
+	 * Handles tab menu clicks.
+	 * 
+	 * @param	object		event
+	 */
+	_click: function(event) {
+		var $categoryID = $(event.currentTarget).data('smileyCategoryID');
+		
+		if ($categoryID && !WCF.inArray($categoryID, this._cache)) {
+			this._proxy.setOption('data', {
+				actionName: 'getSmilies',
+				className: 'wcf\\data\\smiley\\category\\SmileyCategoryAction',
+				objectIDs: [ $categoryID ]
+			});
+			this._proxy.sendRequest();
+		}
+	},
+	
+	/**
+	 * Handles successful AJAX requests.
+	 * 
+	 * @param	object		data
+	 * @param	string		textStatus
+	 * @param	jQuery		jqXHR
+	 */
+	_success: function(data, textStatus, jqXHR) {
+		this._cache.push(data.returnValues.smileyCategoryID);
+		
+		$('#smilies-' + data.returnValues.smileyCategoryID).html(data.returnValues.template);
+	}
+});

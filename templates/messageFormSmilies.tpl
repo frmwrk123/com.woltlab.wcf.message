@@ -1,27 +1,36 @@
-<div id="smilies" class="smiliesContent tabMenuContent container containerPadding{if $smileyCategories|count > 1} tabMenuContainer{/if}">
-	{if $smileyCategories|count > 1}
+<div id="smilies" class="smiliesContent tabMenuContent container containerPadding{if $smileyCategories|count} tabMenuContainer{/if}">
+	{capture assign=__defaultSmilies}
+		<ul>
+			{include file='__messageFormSmilies' smilies=$defaultSmilies}
+		</ul>
+	{/capture}
+	
+	{if $smileyCategories|count}
 		<nav class="menu">
 			<ul>
+				<li><a href="#smilies-0">{lang}wcf.smilies.default{/lang}</a></li>
 				{foreach from=$smileyCategories item=smileyCategory}
-					<li><a href="#smilies-{@$smileyCategory->smileyCategoryID}">{$smileyCategory->title|language}</a></li>
+					<li><a href="#smilies-{@$smileyCategory->smileyCategoryID}" data-smiley-category-id="{@$smileyCategory->smileyCategoryID}">{$smileyCategory->title|language}</a></li>
 				{/foreach}
 			</ul>
 		</nav>
 		
+		<div id="smilies-0" class="hidden">
+			{@$__defaultSmilies}
+		</div>
+		
 		{foreach from=$smileyCategories item=smileyCategory}
-			<div id="smiles-{@$smileyCategory->smileyCategoryID}" class="hidden">
-				<ul>
-					{foreach from=$smileyCategory item=smiley}
-						<li><img src="{$smiley->getURL()}" alt="" title="{lang}{$smiley->smileyTitle}{/lang}" class="icon24 jsTooltip" /></li>
-					{/foreach}
-				</ul>
-			</div>
+			<div id="smiles-{@$smileyCategory->smileyCategoryID}" class="hidden"></div>
 		{/foreach}
+		
+		<script type="text/javascript">
+			//<![CDATA[
+			$(function() {
+				new WCF.Message.Smilies();
+			});
+			//]]>
+		</script>
 	{else}
-		{foreach from=$smileyCategories item=smileyCategory}
-			{foreach from=$smileyCategory item=smiley}
-				<li><img src="{$smiley->getURL()}" alt="" title="{lang}{$smiley->smileyTitle}{/lang}" class="icon24 jsTooltip" /></li>
-			{/foreach}
-		{/foreach}
+		{@$__defaultSmilies}
 	{/if}
 </div>

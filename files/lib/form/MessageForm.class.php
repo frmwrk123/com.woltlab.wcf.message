@@ -52,6 +52,12 @@ abstract class MessageForm extends RecaptchaForm {
 	public $availableContentLanguages = array();
 	
 	/**
+	 * list of default smilies
+	 * @var	array<wcf\data\smiley\Smiley>
+	 */
+	public $defaultSmilies = array();
+	
+	/**
 	 * enables bbcodes
 	 * @var	boolean
 	 */
@@ -303,6 +309,7 @@ abstract class MessageForm extends RecaptchaForm {
 			'attachmentObjectType' => $this->attachmentObjectType,
 			'attachmentParentObjectID' => $this->attachmentParentObjectID,
 			'availableContentLanguages' => $this->availableContentLanguages,
+			'defaultSmilies' => $this->defaultSmilies,
 			'enableBBCodes' => $this->enableBBCodes,
 			'enableHtml' => $this->enableHtml,
 			'enableSmilies' => $this->enableSmilies,
