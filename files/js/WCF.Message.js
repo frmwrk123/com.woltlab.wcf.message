@@ -285,7 +285,7 @@ WCF.Message.Smilies = Class.extend({
 			success: $.proxy(this._success, this)
 		});
 		
-		$('#smilies > .menu > a').click($.proxy(this._click, this));
+		$('#smilies > .menu a').click($.proxy(this._click, this));
 	},
 	
 	/**
@@ -294,7 +294,7 @@ WCF.Message.Smilies = Class.extend({
 	 * @param	object		event
 	 */
 	_click: function(event) {
-		var $categoryID = $(event.currentTarget).data('smileyCategoryID');
+		var $categoryID = parseInt($(event.currentTarget).data('smileyCategoryID'));
 		
 		if ($categoryID && !WCF.inArray($categoryID, this._cache)) {
 			this._proxy.setOption('data', {
@@ -314,8 +314,9 @@ WCF.Message.Smilies = Class.extend({
 	 * @param	jQuery		jqXHR
 	 */
 	_success: function(data, textStatus, jqXHR) {
-		this._cache.push(data.returnValues.smileyCategoryID);
+		var $categoryID = parseInt(data.returnValues.smileyCategoryID);
+		this._cache.push($categoryID);
 		
-		$('#smilies-' + data.returnValues.smileyCategoryID).html(data.returnValues.template);
+		$('#smilies-' + $categoryID).html(data.returnValues.template);
 	}
 });

@@ -285,6 +285,7 @@ abstract class MessageForm extends RecaptchaForm {
 		
 		// get default smilies
 		if (MODULE_SMILEY) {
+			$this->defaultSmilies = SmileyCache::getInstance()->getCategorySmilies();
 			$this->smileyCategories = SmileyCache::getInstance()->getCategories();
 			foreach ($this->smileyCategories as $index => $category) {
 				$category->loadSmilies();

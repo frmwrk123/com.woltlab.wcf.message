@@ -1,8 +1,6 @@
 <div id="smilies" class="smiliesContent tabMenuContent container containerPadding{if $smileyCategories|count} tabMenuContainer{/if}">
 	{capture assign=__defaultSmilies}
-		<ul>
-			{include file='__messageFormSmilies' smilies=$defaultSmilies}
-		</ul>
+		{include file='__messageFormSmilies' smilies=$defaultSmilies}
 	{/capture}
 	
 	{if $smileyCategories|count}
@@ -20,7 +18,7 @@
 		</div>
 		
 		{foreach from=$smileyCategories item=smileyCategory}
-			<div id="smiles-{@$smileyCategory->smileyCategoryID}" class="hidden"></div>
+			<div id="smilies-{@$smileyCategory->smileyCategoryID}" class="hidden"></div>
 		{/foreach}
 		
 		<script type="text/javascript">
