@@ -3,8 +3,28 @@
 	<channel>
 		<title><![CDATA[{@PAGE_TITLE|language|escapeCDATA}]]></title>
 		<link><![CDATA[{@PAGE_URL|escapeCDATA}]]></link>
-		<description><![CDATA[{@META_DESCRIPTION|escapeCDATA}]]></description>
+		<description><![CDATA[{@PAGE_DESCRIPTION|escapeCDATA}]]></description>
 		<language>{@$__wcf->language->getFixedLanguageCode()}</language>
 		<pubDate>{'r'|gmdate:TIME_NOW}</pubDate>
+		<lastBuildDate>{'r'|gmdate:TIME_NOW}</lastBuildDate>
+		<ttl>60</ttl>
+		<generator><![CDATA[WoltLab® Community Framework™ {@WCF_VERSION}]]></generator>
+{*		*}{foreach from=$items item='item'}
+		<item>
+			<title>{$item->getTitle()}</title>
+			
+		</item>
+{*		*}{/foreach}
 	</channel>
+{if ENABLE_BENCHMARK}
+	<!-- 
+		Execution time: {@$__wcf->getBenchmark()->getExecutionTime()}s ({#($__wcf->getBenchmark()->getExecutionTime()-$__wcf->getBenchmark()->getQueryExecutionTime())/$__wcf->getBenchmark()->getExecutionTime()*100}% PHP, {#$__wcf->getBenchmark()->getQueryExecutionTime()/$__wcf->getBenchmark()->getExecutionTime()*100}% SQL) | SQL queries: {#$__wcf->getBenchmark()->getQueryCount()} | Memory-Usage: {$__wcf->getBenchmark()->getMemoryUsage()}
+	
+{*	*}{if ENABLE_DEBUG_MODE}
+{*		*}{foreach from=$__wcf->getBenchmark()->getItems() item=item}
+{*	*}			{if $item.type == 1}(SQL Query) {/if}{$item.text} ({@$item.use}s)
+{*		*}{/foreach}
+{*	*}{/if}
+	-->
+{/if}
 </rss>
