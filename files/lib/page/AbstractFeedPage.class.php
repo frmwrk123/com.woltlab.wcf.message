@@ -1,6 +1,7 @@
 <?php
 namespace wcf\page;
 use wcf\system\exception\IllegalLinkException;
+use wcf\system\WCF;
 use wcf\util\ArrayUtil;
 
 /**
@@ -16,6 +17,18 @@ use wcf\util\ArrayUtil;
 abstract class AbstractFeedPage extends AbstractAuthedPage {
 	public $templateName = 'rssFeed';
 	public $objectIDs = array();
+	public $items = null;
+	
+	/**
+	 * @see wcf\page\IPage::assignVariables()
+	 */
+	public function assignVariables() {
+		parent::assignVariables();
+		
+		WCF::getTPL()->assign(array(
+			'items' => $this->items
+		));
+	}
 	
 	/**
 	 * @see wcf\page\IPage::readParameters()
@@ -39,6 +52,7 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	 * @see wcf\page\IPage::show()
 	 */
 	public function show() {
+		// set correct content-type
 		@header('Content-Type: application/rss+xml');
 		
 		parent::show();
