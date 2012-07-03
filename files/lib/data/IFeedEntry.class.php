@@ -14,4 +14,6 @@ namespace wcf\data;
 interface IFeedEntry {
 	public function getTitle();
 	public function getLink();
+	public function getMessage();
+	public function getTime();
 }

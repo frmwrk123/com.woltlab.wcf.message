@@ -11,8 +11,11 @@
 		<generator><![CDATA[WoltLab® Community Framework™ {@WCF_VERSION}]]></generator>
 {*		*}{foreach from=$items item='item'}
 		<item>
-			<title>{$item->getTitle()}</title>
-			
+			<title><![CDATA[{@$item->getTitle()|escapeCDATA}]]></title>
+			<link><![CDATA[{@PAGE_URL|escapeCDATA}{@$item->getLink()|escapeCDATA}]]></link>
+			<description><![CDATA[{@$item->getMessage()|escapeCDATA}]]></description>
+			<pubDate>{'r'|gmdate:$item->getTime()}</pubDate>
+			<guid><![CDATA[{@PAGE_URL|escapeCDATA}{@$item->getLink()|escapeCDATA}]]></guid>
 		</item>
 {*		*}{/foreach}
 	</channel>
