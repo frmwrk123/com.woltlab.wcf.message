@@ -12,8 +12,31 @@ namespace wcf\data;
  * @category 	Community Framework
  */
 interface IFeedEntry {
+	/**
+	 * Returns the title of the feed-entry.
+	 * 
+	 * @return string
+	 */
 	public function getTitle();
+	
+	/**
+	 * Returns the permalink of the feed-entry.
+	 * 
+	 * @return string
+	 */
 	public function getLink();
+	
+	/**
+	 * Returns the content of the feed-entry.
+	 * 
+	 * @return string
+	 */
 	public function getMessage();
+	
+	/**
+	 * Returns the creationtime of the feed-entry as an unix-timestamp.
+	 * 
+	 * @return integer
+	 */
 	public function getTime();
 }

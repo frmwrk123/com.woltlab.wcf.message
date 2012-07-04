@@ -15,8 +15,23 @@ use wcf\util\ArrayUtil;
  * @category 	Community Framework
  */
 abstract class AbstractFeedPage extends AbstractAuthedPage {
+	/**
+	 * @see wcf\page\AbstractPage::$templateName
+	 */
 	public $templateName = 'rssFeed';
+	
+	/**
+	 * The parsed contents of $_REQUEST['id'].
+	 * 
+	 * @var array<integer>
+	 */
 	public $objectIDs = array();
+	
+	/**
+	 * The list of feed-entry for the current page.
+	 * 
+	 * @var wcf\data\DatabaseObjectList
+	 */
 	public $items = null;
 	
 	/**
