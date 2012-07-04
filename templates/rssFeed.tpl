@@ -15,6 +15,7 @@
 			<link><![CDATA[{@PAGE_URL|escapeCDATA}{@$item->getLink()|escapeCDATA}]]></link>
 			<description><![CDATA[{@$item->getMessage()|escapeCDATA}]]></description>
 			<pubDate>{'r'|gmdate:$item->getTime()}</pubDate>
+			<author><![CDATA[{@$item->getUsername()|escapeCDATA}]]></author>
 			<guid><![CDATA[{@PAGE_URL|escapeCDATA}{@$item->getLink()|escapeCDATA}]]></guid>
 		</item>
 {*		*}{/foreach}

@@ -39,4 +39,11 @@ interface IFeedEntry {
 	 * @return integer
 	 */
 	public function getTime();
+	
+	/**
+	 * Returns the username of the author of this feed-entry.
+	 * 
+	 * @return string
+	 */
+	public function getUsername();
 }
