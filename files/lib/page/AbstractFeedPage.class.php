@@ -21,15 +21,13 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	public $templateName = 'rssFeed';
 	
 	/**
-	 * The parsed contents of $_REQUEST['id'].
-	 * 
+	 * parsed contents of $_REQUEST['id']
 	 * @var array<integer>
 	 */
 	public $objectIDs = array();
 	
 	/**
-	 * The list of feed-entry for the current page.
-	 * 
+	 * list of feed-entries for the current page
 	 * @var wcf\data\DatabaseObjectList
 	 */
 	public $items = null;
