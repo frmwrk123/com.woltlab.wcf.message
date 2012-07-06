@@ -6,8 +6,7 @@
 		<description><![CDATA[{@PAGE_DESCRIPTION|escapeCDATA}]]></description>
 		<language>{@$__wcf->language->getFixedLanguageCode()}</language>
 		<pubDate>{'r'|gmdate:TIME_NOW}</pubDate>
-{*		*}{assign var='__dummy' value=$items->rewind()}
-		<lastBuildDate>{if $items->valid()}{'r'|gmdate:$items->current()->getTime()}{else}{'r'|gmdate:TIME_NOW}{/if}</lastBuildDate>
+		<lastBuildDate>{if $items|count}{'r'|gmdate:$items->current()->getTime()}{else}{'r'|gmdate:TIME_NOW}{/if}</lastBuildDate>
 		<ttl>60</ttl>
 		<generator><![CDATA[WoltLab® Community Framework™ {@WCF_VERSION}]]></generator>
 {*		*}{foreach from=$items item='item'}
