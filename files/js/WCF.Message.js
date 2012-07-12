@@ -285,17 +285,28 @@ WCF.Message.Smilies = Class.extend({
 			success: $.proxy(this._success, this)
 		});
 		
-		$('#smilies > .menu a').click($.proxy(this._click, this));
+		$('#smilies').on('wcftabsselect', $.proxy(this._click, this));
+		
+		// handle onload
+		var self = this;
+		new WCF.PeriodicalExecuter(function(pe) {
+			pe.stop();
+			
+			self._click({ }, { tab: $('#smilies > .menu li.ui-state-active a') });
+		}, 100);
 	},
 	
 	/**
 	 * Handles tab menu clicks.
 	 * 
 	 * @param	object		event
+	 * @param	object		ui
 	 */
-	_click: function(event) {
-		var $categoryID = parseInt($(event.currentTarget).data('smileyCategoryID'));
-		
+	_click: function(event, ui) {
+		console.debug('_click()');
+		var $categoryID = parseInt($(ui.tab).data('smileyCategoryID'));
+		console.debug($categoryID);
+		console.debug(ui);
 		if ($categoryID && !WCF.inArray($categoryID, this._cache)) {
 			this._proxy.setOption('data', {
 				actionName: 'getSmilies',
