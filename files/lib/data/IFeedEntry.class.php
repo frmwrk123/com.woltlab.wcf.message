@@ -2,7 +2,7 @@
 namespace wcf\data;
 
 /**
- * Everything feed entry should implement this interface.
+ * Every feed entry should implement this interface.
  * 
  * @author	Tim Düsterhus
  * @copyright	2001-2012 WoltLab GmbH
