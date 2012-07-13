@@ -2,7 +2,7 @@
 namespace wcf\data;
 
 /**
- * Everything feed-entry should implement this interface.
+ * Everything feed entry should implement this interface.
  * 
  * @author	Tim Düsterhus
  * @copyright	2001-2012 WoltLab GmbH
@@ -11,39 +11,25 @@ namespace wcf\data;
  * @subpackage	data
  * @category 	Community Framework
  */
-interface IFeedEntry {
+interface IFeedEntry extends ILinkableDatabaseObject, ITitledDatabaseObject {
 	/**
-	 * Returns the title of the feed-entry.
+	 * Returns the content of the feed entry.
 	 * 
-	 * @return string
-	 */
-	public function getTitle();
-	
-	/**
-	 * Returns the permalink of the feed-entry.
-	 * 
-	 * @return string
-	 */
-	public function getLink();
-	
-	/**
-	 * Returns the content of the feed-entry.
-	 * 
-	 * @return string
+	 * @return	string
 	 */
 	public function getMessage();
 	
 	/**
-	 * Returns the creationtime of the feed-entry as an unix-timestamp.
+	 * Returns the creation time of the feed entry as an unix timestamp.
 	 * 
-	 * @return integer
+	 * @return	integer
 	 */
 	public function getTime();
 	
 	/**
-	 * Returns the username of the author of this feed-entry.
+	 * Returns the username of the author of this feed entry.
 	 * 
-	 * @return string
+	 * @return	string
 	 */
 	public function getUsername();
 }
