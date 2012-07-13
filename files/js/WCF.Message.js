@@ -303,10 +303,8 @@ WCF.Message.Smilies = Class.extend({
 	 * @param	object		ui
 	 */
 	_click: function(event, ui) {
-		console.debug('_click()');
 		var $categoryID = parseInt($(ui.tab).data('smileyCategoryID'));
-		console.debug($categoryID);
-		console.debug(ui);
+		
 		if ($categoryID && !WCF.inArray($categoryID, this._cache)) {
 			this._proxy.setOption('data', {
 				actionName: 'getSmilies',
