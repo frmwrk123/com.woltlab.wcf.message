@@ -8,9 +8,11 @@
 		</ul>
 	</nav>
 	
-	{if MODULE_SMILEY}{include file='messageFormSmilies' sandbox=false}{/if}
-	{if MODULE_ATTACHMENT && $attachmentHandler !== null}{include file='messageFormAttachments' sandbox=false}{/if}
-	{include file='messageFormSettings' sandbox=false}
+	{if MODULE_SMILEY}{include file='messageFormSmilies'}{/if}
+	{if MODULE_ATTACHMENT && $attachmentHandler !== null}{include file='messageFormAttachments'}{/if}
+	
+	{include file='messageFormSettings'}
+	
 	{event name='tabMenuContent'}
 </div>
 
