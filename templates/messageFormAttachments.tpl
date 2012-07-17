@@ -37,3 +37,5 @@ Allowed file extensions: {', '|implode:$attachmentHandler->getAllowedExtensions(
 	});
 	//]]>
 </script>
+
+<input type="hidden" name="tmpHash" value="{$tmpHash}" />
