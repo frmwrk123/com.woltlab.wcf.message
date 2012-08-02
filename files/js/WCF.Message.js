@@ -5,6 +5,10 @@
  * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  */
+
+/**
+ * Namespace for message-related functions.
+ */
 WCF.Message = { };
 
 /**
@@ -14,7 +18,8 @@ WCF.Message = { };
  * @param	string		messageFieldID
  * @param	string		previewButtonID
  */
-WCF.Message.Preview = Class.extend({
+WCF.Message.Preview = function(className, messageFieldID, previewButtonID) { this.init(className, messageFieldID, previewButtonID); };
+WCF.Message.Preview.prototype = {
 	/**
 	 * class name
 	 * @var	string
@@ -169,21 +174,27 @@ WCF.Message.Preview = Class.extend({
 	 * @param	object		data
 	 */
 	_handleResponse: function(data) { }
-});
+};
 
 /**
  * Default implementation for message previews.
  * 
  * @see	WCF.Message.Preview
  */
-WCF.Message.DefaultPreview = WCF.Message.Preview.extend({
+WCF.Message.DefaultPreview = function() { this.init(); };
+WCF.Message.DefaultPreview.prototype = {
 	/**
-	 * @see	WCF.Message.Preview.init()
+	 * the parent object
+	 */
+	_parent: null,
+
+	/**
+	 * @see WCF.Message.Preview.init()
 	 */
 	init: function() {
-		this._super('wcf\\data\\bbcode\\MessagePreviewAction', 'text', 'previewButton');
+		this._parent = new WCF.Message.Preview('wcf\\data\\bbcode\\MessagePreviewAction', 'text', 'previewButton');
 	},
-	
+
 	/**
 	 * @see	WCF.Message.Preview._handleResponse()
 	 */
@@ -192,11 +203,9 @@ WCF.Message.DefaultPreview = WCF.Message.Preview.extend({
 		if (!$preview.length) {
 			$preview = $('<div class="container containerPadding marginTop shadow" id="previewContainer"><fieldset><legend>' + WCF.Language.get('wcf.global.preview') + '</legend><div></div></fieldset>').prependTo($('#messageContainer')).wcfFadeIn();
 		}
-		
 		$preview.find('div:eq(0)').html(data.returnValues.message);
 	}
-});
-
+};
 
 /**
  * Handles multilingualism for messages.
@@ -205,7 +214,8 @@ WCF.Message.DefaultPreview = WCF.Message.Preview.extend({
  * @param	object		availableLanguages
  * @param	boolean		forceSelection
  */
-WCF.Message.Multilingualism = Class.extend({
+WCF.Message.Multilingualism = function(languageID, availableLanguages, forceSelection) { this.init(languageID, availableLanguages, forceSelection); };
+WCF.Message.Multilingualism.prototype = {
 	/**
 	 * list of available languages
 	 * @var	object
@@ -285,12 +295,13 @@ WCF.Message.Multilingualism = Class.extend({
 	_submit: function() {
 		this._languageInput.next('input[name=languageID]').prop('value', this._languageID);
 	}
-});
+};
 
 /**
  * Loads smiley categories upon user request.
  */
-WCF.Message.Smilies = Class.extend({
+WCF.Message.Smilies = function() { this.init(); };
+WCF.Message.Smilies.prototype = {
 	/**
 	 * list of already loaded category ids
 	 * @var	array<integer>
@@ -355,4 +366,4 @@ WCF.Message.Smilies = Class.extend({
 		
 		$('#smilies-' + $categoryID).html(data.returnValues.template);
 	}
-});
+};
