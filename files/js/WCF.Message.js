@@ -329,3 +329,221 @@ WCF.Message.Smilies = Class.extend({
 		$('#smilies-' + $categoryID).html(data.returnValues.template);
 	}
 });
+
+/**
+ * Provides an AJAX-based quick reply for messages.
+ */
+WCF.Message.QuickReply = Class.extend({
+	/**
+	 * quick reply container
+	 * @var	jQuery
+	 */
+	_container: null,
+	
+	/**
+	 * message field
+	 * @var	jQuery
+	 */
+	_messageField: null,
+	
+	/**
+	 * notification object
+	 * @var	WCF.System.Notification
+	 */
+	_notification: null,
+	
+	/**
+	 * action proxy
+	 * @var	WCF.Action.Proxy
+	 */
+	_proxy: null,
+	
+	/**
+	 * scroll handler
+	 * @var	WCF.Effect.Scroll
+	 */
+	_scrollHandler: null,
+	
+	/**
+	 * submit button
+	 * @var	jQuery
+	 */
+	_submitButton: null,
+	
+	/**
+	 * Initializes a new WBB.Thread.QuickReply object.
+	 * 
+	 * @param	boolean		supportExtendedForm
+	 */
+	init: function(supportExtendedForm) {
+		this._container = $('#messageQuickReply');
+		this._messageField = $('#text');
+		if (!this._container || !this._messageField) {
+			return;
+		}
+		
+		// button actions
+		var $formSubmit = this._container.find('.formSubmit');
+		$formSubmit.find('button[data-type=save]').click($.proxy(this._save, this));
+		if (supportExtendedForm) $formSubmit.find('button[data-type=extended]').click($.proxy(this._prepareExtended, this));
+		$formSubmit.find('button[data-type=cancel]').click($.proxy(this._cancel, this));
+		
+		$('.jsQuickReply').click($.proxy(this._click, this));
+		
+		this._proxy = new WCF.Action.Proxy({
+			failure: $.proxy(this._failure, this),
+			showLoadingOverlay: false,
+			success: $.proxy(this._success, this)
+		});
+		this._scroll = new WCF.Effect.Scroll();
+		this._notification = new WCF.System.Notification(WCF.Language.get('wcf.global.form.add.success'));
+	},
+	
+	/**
+	 * Handles clicks on reply button.
+	 * 
+	 * @param	object		event
+	 */
+	_click: function(event) {
+		this._container.toggle();
+		
+		if (this._container.is(':visible')) {
+			this._scroll.scrollTo(this._container, true);
+		}
+		
+		// discard event
+		event.stopPropagation();
+		return false;
+	},
+	
+	/**
+	 * Saves post.
+	 */
+	_save: function() {
+		var $ckEditor = this._messageField.ckeditorGet();
+		var $message = $ckEditor.getData();
+		
+		this._proxy.setOption('data', {
+			actionName: 'quickReply',
+			className: this._getClassName(),// 'wcf\\data\\conversation\\message\\ConversationMessageAction',
+			parameters: {
+				objectID: this._getObjectID(),// this._container.data('conversationID'),
+				data: {
+					message: $message
+				},
+				lastPostTime: this._container.data('lastPostTime'),
+				pageNo: this._container.data('pageNo')
+			}
+		});
+		this._proxy.sendRequest();
+		
+		// show spinner and hide CKEditor
+		this._container.find('.messageQuickReplyContent .messageBody').addClass('messageQuickReplyLoading').children('#cke_text').hide().end().next().hide();
+	},
+	
+	/**
+	 * Cancels quick reply.
+	 */
+	_cancel: function() {
+		this._revertQuickReply(true);
+		
+		// revert ckEditor
+		this._messageField.ckeditorGet().setData('');
+	},
+	
+	/**
+	 * Reverts quick reply to original state and optionally hiding it.
+	 * 
+	 * @param	boolean		hide
+	 */
+	_revertQuickReply: function(hide) {
+		if (hide) {
+			this._container.hide();
+		}
+		
+		var $messageBody = this._container.find('.messageQuickReplyContent .messageBody');
+		
+		// display CKEditor
+		$messageBody.removeClass('messageQuickReplyLoading').children('#cke_text').show();
+		
+		// display form submit
+		$messageBody.next().show();
+	},
+	
+	/**
+	 * Prepares jump to extended post add form.
+	 */
+	_prepareExtended: function() {
+		var $ckEditor = this._messageField.ckeditorGet();
+		var $message = $ckEditor.getData();
+		
+		new WCF.Action.Proxy({
+			autoSend: true,
+			data: {
+				actionName: 'jumpToExtended',
+				className: this._getClassName(),// 'wcf\\data\\conversation\\message\\ConversationMessageAction',
+				parameters: {
+					objectID: this._getObjectID(),//this._container.data('conversationID'),
+					message: $message
+				}
+			},
+			success: function(data, textStatus, jqXHR) {
+				window.location = data.returnValues.url;
+			}
+		});
+	},
+	
+	/**
+	 * Handles successful AJAX calls.
+	 * 
+	 * @param	object		data
+	 * @param	string		textStatus
+	 * @param	jQuery		jqXHR
+	 */
+	_success: function(data, textStatus, jqXHR) {
+		// redirect to new page
+		if (data.returnValues.url) {
+			window.location = data.returnValues.url;
+		}
+		else {
+			// insert HTML
+			$('' + data.returnValues.template).insertBefore(this._container);
+			
+			// remove CKEditor contents
+			this._messageField.ckeditorGet().setData('');
+			
+			// update last post time
+			this._container.data('lastPostTime', data.returnValues.lastPostTime);
+			
+			// hide quick reply and revert it
+			this._revertQuickReply(true);
+			
+			this._notification.show();
+		}
+	},
+	
+	/**
+	 * Reverts quick reply on failure to preserve entered message.
+	 */
+	_failure: function() {
+		this._revertQuickReply(false);
+	},
+	
+	/**
+	 * Returns action class name.
+	 * 
+	 * @return	string
+	 */
+	_getClassName: function() {
+		return '';
+	},
+	
+	/**
+	 * Returns object id.
+	 * 
+	 * @return	integer
+	 */
+	_getObjectID: function() {
+		return 0;
+	}
+});
