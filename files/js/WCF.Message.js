@@ -172,6 +172,33 @@ WCF.Message.Preview = Class.extend({
 });
 
 /**
+ * Default implementation for message previews.
+ * 
+ * @see	WCF.Message.Preview
+ */
+WCF.Message.DefaultPreview = WCF.Message.Preview.extend({
+	/**
+	 * @see	WCF.Message.Preview.init()
+	 */
+	init: function() {
+		this._super('wcf\\data\\bbcode\\MessagePreviewAction', 'text', 'previewButton');
+	},
+	
+	/**
+	 * @see	WCF.Message.Preview._handleResponse()
+	 */
+	_handleResponse: function(data) {
+		var $preview = $('#previewContainer');
+		if (!$preview.length) {
+			$preview = $('<div class="container containerPadding marginTop shadow" id="previewContainer"><fieldset><legend>' + WCF.Language.get('wcf.global.preview') + '</legend><div></div></fieldset>').prependTo($('#messageContainer')).wcfFadeIn();
+		}
+		
+		$preview.find('div:eq(0)').html(data.returnValues.message);
+	}
+});
+
+
+/**
  * Handles multilingualism for messages.
  * 
  * @param	integer		languageID
