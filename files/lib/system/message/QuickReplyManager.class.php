@@ -128,8 +128,8 @@ class QuickReplyManager extends SingletonFactory {
 		// we're still on current page
 		if ($pageNo == $parameters['pageNo']) {
 			// check for additional messages
-			$messageList = new $messageList;
-			$messageList->getConditionBuilder()->add($tableAlias.".".$tableIndexName." = ?", array($this->container->$containerIndexName));
+			$messageList = new $messageListClassName();
+			$messageList->getConditionBuilder()->add($tableAlias.".".$tableIndexName." = ?", array($this->container->$tableIndexName));
 			$messageList->getConditionBuilder()->add($tableAlias.".time > ?", array($parameters['lastPostTime']));
 			$messageList->sqlLimit = 0;
 			$messageList->sqlOrderBy = $tableAlias.".time ".$sortOrder;
