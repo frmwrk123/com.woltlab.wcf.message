@@ -1,10 +1,14 @@
 <?php
 namespace wcf\system\message;
+use wcf\data\DatabaseObject;
+use wcf\data\DatabaseObjectDecorator;
 use wcf\system\event\EventHandler;
 use wcf\system\exception\UserInputException;
+use wcf\system\exception\SystemException;
 use wcf\system\Callback;
 use wcf\system\SingletonFactory;
 use wcf\system\WCF;
+use wcf\util\ClassUtil;
 
 /**
  * Manages quick replies and stored messages.
@@ -70,8 +74,9 @@ class QuickReplyManager extends SingletonFactory {
 	 * @param	wcf\system\message\IMessageQuickReplyAction	$object
 	 * @param	array<array>					$parameters
 	 * @param	string						$containerClassName
+	 * @param	string						$containerDecoratorClassName
 	 */
-	public function validateParameters(IMessageQuickReplyAction $object, array &$parameters, $containerClassName) {
+	public function validateParameters(IMessageQuickReplyAction $object, array &$parameters, $containerClassName, $containerDecoratorClassName = '') {
 		if (!isset($parameters['data']['message']) || empty($parameters['data']['message'])) {
 			throw new UserInputException('message');
 		}
@@ -92,6 +97,13 @@ class QuickReplyManager extends SingletonFactory {
 		}
 		else {
 			$this->container = new $containerClassName($parameters['objectID']);
+			if (!empty($containerDecoratorClassName)) {
+				if (!ClassUtil::isInstanceOf($containerDecoratorClassName, 'wcf\data\DatabaseObjectDecorator')) {
+					throw new SystemException($containerDecoratorClassName . " must extend 'wcf\data\DatabaseObjectDecorator'");
+				}
+				
+				$this->container = new $containerDecoratorClassName($this->container);
+			}
 			$object->validateContainer($this->container);
 		}
 	}
@@ -147,7 +159,7 @@ class QuickReplyManager extends SingletonFactory {
 			));
 			
 			// update visit time (messages shouldn't occur as new upon next visit)
-			$conversationAction = new $containerActionClassName(array($this->container), 'markAsRead');
+			$conversationAction = new $containerActionClassName(array(($this->container instanceof DatabaseObjectDecorator ? $this->container->getDecoratedObject() : $this->container)), 'markAsRead');
 			$conversationAction->executeAction();
 			
 			return array(
