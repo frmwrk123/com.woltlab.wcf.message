@@ -12,7 +12,7 @@ use wcf\data\DatabaseObject;
  * @subpackage	system.message
  * @category 	Community Framework
  */
-interface IMessageQuickReply {
+interface IMessageQuickReplyAction {
 	/**
 	 * Creates a new message object.
 	 * 

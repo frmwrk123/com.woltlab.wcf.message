@@ -508,9 +508,9 @@ WCF.Message.QuickReply = Class.extend({
 			autoSend: true,
 			data: {
 				actionName: 'jumpToExtended',
-				className: this._getClassName(),// 'wcf\\data\\conversation\\message\\ConversationMessageAction',
+				className: this._getClassName(),
 				parameters: {
-					objectID: this._getObjectID(),//this._container.data('conversationID'),
+					containerID: this._getObjectID(),
 					message: $message
 				}
 			},
@@ -572,5 +572,264 @@ WCF.Message.QuickReply = Class.extend({
 	 */
 	_getObjectID: function() {
 		return 0;
+	}
+});
+
+/**
+ * Provides an inline message editor.
+ * 
+ * @param	integer		containerID
+ */
+WCF.Message.InlineEditor = Class.extend({
+	/**
+	 * currently active message
+	 * @var	string
+	 */
+	_activeElementID: '',
+	
+	/**
+	 * message cache
+	 * @var	string
+	 */
+	_cache: '',
+	
+	/**
+	 * list of messages
+	 * @var	object
+	 */
+	_container: { },
+	
+	/**
+	 * container id
+	 * @var	integer
+	 */
+	_containerID: 0,
+	
+	/**
+	 * notification object
+	 * @var	WCF.System.Notification
+	 */
+	_notification: null,
+	
+	/**
+	 * proxy object
+	 * @var	WCF.Action.Proxy
+	 */
+	_proxy: null,
+	
+	/**
+	 * Initializes a new WCF.Message.InlineEditor object.
+	 * 
+	 * @param	integer		containerID
+	 */
+	init: function(containerID) {
+		this._containerID = parseInt(containerID);
+		this._proxy = new WCF.Action.Proxy({
+			failure: $.proxy(this._cancel, this),
+			showLoadingOverlay: false,
+			success: $.proxy(this._success, this)
+		});
+		this._notification = new WCF.System.Notification(WCF.Language.get('wcf.global.form.edit.success'));
+		
+		this.initContainers();
+		
+		WCF.DOMNodeInsertedHandler.addCallback('WCF.Message.InlineEditor', $.proxy(this.initContainers, this));
+	},
+	
+	/**
+	 * Initializes editing capability for all messages.
+	 */
+	initContainers: function() {
+		$('.jsMessage').each($.proxy(function(index, container) {
+			var $container = $(container);
+			var $containerID = $container.wcfIdentify();
+			
+			if (!this._container[$containerID]) {
+				this._container[$containerID] = $container;
+				
+				if ($container.data('canEdit')) {
+					$container.find('.jsMessageEditButton:eq(0)').data('containerID', $containerID).click($.proxy(this._click, this));
+				}
+			}
+		}, this));
+	},
+	
+	/**
+	 * Loads WYSIWYG editor for selected message.
+	 * 
+	 * @param	object		event
+	 */
+	_click: function(event) {
+		var $containerID = $(event.currentTarget).data('containerID');
+		
+		if (this._activeElementID === '') {
+			this._activeElementID = $containerID;
+			this._prepare();
+			
+			this._proxy.setOption('data', {
+				actionName: 'beginEdit',
+				className: this._getClassName(),
+				parameters: {
+					containerID: this._containerID,
+					objectID: this._containers[$containerID].data('objectID')
+				}
+			});
+			this._proxy.sendRequest();
+		}
+		
+		event.stopPropagation();
+		return false;
+	},
+	
+	/**
+	 * Prepares message for WYSIWYG display.
+	 */
+	_prepare: function() {
+		var $content = this._container[this._activeElementID].find('.messageBody').addClass('jsMessageLoading').find('.messageText');
+		this._cache = $content.html();
+		$content.empty();
+	},
+	
+	/**
+	 * Cancels editing and reverts to original message.
+	 */
+	_cancel: function() {
+		var $container = this._container[this._activeElementID];
+		
+		// remove ckEditor
+		var $ckEditor = $('#messageEditor' + $container.data('objectID')).ckeditorGet();
+		$ckEditor.destroy();
+		
+		// restore message
+		$container.find('.messageBody').removeClass('jsMessageLoading').find('.messageText').html(this._cache);
+		
+		this._activeElementID = '';
+	},
+	
+	/**
+	 * Handles successful AJAX calls.
+	 * 
+	 * @param	object		data
+	 * @param	string		textStatus
+	 * @param	jQuery		jqXHR
+	 */
+	_success: function(data, textStatus, jqXHR) {
+		switch (data.returnValues.actionName) {
+			case 'beginEdit':
+				this._showEditor(data);
+			break;
+			
+			case 'save':
+				this._showMessage(data);
+			break;
+		}
+	},
+	
+	/**
+	 * Shows WYSIWYG editor for active message.
+	 * 
+	 * @param	object		data
+	 */
+	_showEditor: function(data) {
+		var $container = this._container[this._activeElementID];
+		var $content = $container.find('.messageBody').removeClass('jsMessageLoading').find('.messageText');
+		
+		// insert wysiwyg
+		$('' + data.returnValues.template).appendTo($content);
+		
+		// bind buttons
+		var $formSubmit = $content.find('.formSubmit');
+		$formSubmit.find('button[data-type=save]').click($.proxy(this._save, this));
+		$formSubmit.find('button[data-type=extended]').click($.proxy(this._prepareExtended, this));
+		$formSubmit.find('button[data-type=cancel]').click($.proxy(this._cancel, this));
+	},
+	
+	/**
+	 * Saves editor contents.
+	 */
+	_save: function() {
+		var $container = this._container[this._activeElementID];
+		var $objectID = $container.data('objectID');
+		var $ckEditor = $('#messageEditor' + $objectID).ckeditorGet();
+		
+		this._proxy.setOption('data', {
+			actionName: 'save',
+			className: this._getClassName(),
+			parameters: {
+				containerID: this._containerID,
+				data: {
+					message: $ckEditor.getData()
+				},
+				objectID: $objectID
+			}
+		});
+		this._proxy.sendRequest();
+		
+		this._hideEditor();
+		
+		this._notification.show();
+	},
+	
+	/**
+	 * Prepares jumping to extended editing mode.
+	 */
+	_prepareExtended: function() {
+		var $container = this._container[this._activeElementID];
+		var $objectID = $container.data('objectID');
+		
+		var $ckEditor = $('#messageEditor' + $objectID).ckeditorGet();
+		var $message = $ckEditor.getData();
+		
+		new WCF.Action.Proxy({
+			autoSend: true,
+			data: {
+				actionName: 'jumpToExtended',
+				className: this._getClassName(),
+				parameters: {
+					containerID: this._containerID,
+					message: $message,
+					objectID: $objectID
+				}
+			},
+			success: function(data, textStatus, jqXHR) {
+				window.location = data.returnValues.url;
+			}
+		});
+	},
+	
+	/**
+	 * Hides WYSIWYG editor.
+	 */
+	_hideEditor: function() {
+		this._container[this._activeElementID].find('.messageBody').addClass('jsMessageLoading').find('.messageText').children().hide();
+	},
+	
+	/**
+	 * Shows rendered message.
+	 * 
+	 * @param	object		data
+	 */
+	_showMessage: function(data) {
+		var $container = this._container[this._activeElementID];
+		var $content = $container.find('.messageBody').removeClass('jsMessageLoading').find('.messageText');
+		
+		// remove editor
+		var $ckEditor = $('#messageEditor' + $container.data('objectID')).ckeditorGet();
+		$ckEditor.destroy();
+		$content.empty();
+		
+		// insert new message
+		$content.html(data.returnValues.message);
+		
+		this._activeElementID = '';
+	},
+	
+	/**
+	 * Returns message action class name.
+	 * 
+	 * @return	string
+	 */
+	_getClassName: function() {
+		return '';
 	}
 });
