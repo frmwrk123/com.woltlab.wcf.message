@@ -67,11 +67,11 @@ class QuickReplyManager extends SingletonFactory {
 	/**
 	 * Validates parameters for current request.
 	 * 
-	 * @param	wcf\system\message\IMessageQuickReply	$object
-	 * @param	array<array>				$parameters
-	 * @param	string					$containerClassName
+	 * @param	wcf\system\message\IMessageQuickReplyAction	$object
+	 * @param	array<array>					$parameters
+	 * @param	string						$containerClassName
 	 */
-	public function validateParameters(IMessageQuickReply $object, array &$parameters, $containerClassName) {
+	public function validateParameters(IMessageQuickReplyAction $object, array &$parameters, $containerClassName) {
 		if (!isset($parameters['data']['message']) || empty($parameters['data']['message'])) {
 			throw new UserInputException('message');
 		}
@@ -99,15 +99,15 @@ class QuickReplyManager extends SingletonFactory {
 	/**
 	 * Creates a new message and returns the parsed template.
 	 * 
-	 * @param	wcf\system\message\IMessageQuickReply	$object
-	 * @param	array<array>				$parameters
-	 * @param	string					$containerActionClassName
-	 * @param	string					$messageListClassName
-	 * @param	string					$templateName
-	 * @param	string					$sortOrder
+	 * @param	wcf\system\message\IMessageQuickReplyAction	$object
+	 * @param	array<array>					$parameters
+	 * @param	string						$containerActionClassName
+	 * @param	string						$messageListClassName
+	 * @param	string						$templateName
+	 * @param	string						$sortOrder
 	 * @return	array
 	 */
-	public function createMessage(IMessageQuickReply $object, array &$parameters, $containerActionClassName, $messageListClassName, $templateName, $sortOrder) {
+	public function createMessage(IMessageQuickReplyAction $object, array &$parameters, $containerActionClassName, $messageListClassName, $templateName, $sortOrder) {
 		$tableIndexName = call_user_func(array($this->container, 'getDatabaseTableIndexName'));
 		
 		$parameters['data'][$tableIndexName] = $parameters['objectID'];

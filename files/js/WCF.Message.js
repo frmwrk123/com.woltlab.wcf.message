@@ -398,7 +398,7 @@ WCF.Message.QuickReply = Class.extend({
 	_submitButton: null,
 	
 	/**
-	 * Initializes a new WBB.Thread.QuickReply object.
+	 * Initializes a new WCF.Message.QuickReply object.
 	 * 
 	 * @param	boolean		supportExtendedForm
 	 */
@@ -618,12 +618,23 @@ WCF.Message.InlineEditor = Class.extend({
 	_proxy: null,
 	
 	/**
+	 * support for extended editing form
+	 * @var	boolean
+	 */
+	_supportExtendedForm: false,
+	
+	/**
 	 * Initializes a new WCF.Message.InlineEditor object.
 	 * 
 	 * @param	integer		containerID
+	 * @param	boolean		supportExtendedForm
 	 */
-	init: function(containerID) {
+	init: function(containerID, supportExtendedForm) {
+		this._activeElementID = '';
+		this._cache = '';
+		this._container = { };
 		this._containerID = parseInt(containerID);
+		this._supportExtendedForm = (supportExtendedForm) ? true : false;
 		this._proxy = new WCF.Action.Proxy({
 			failure: $.proxy(this._cancel, this),
 			showLoadingOverlay: false,
@@ -671,7 +682,7 @@ WCF.Message.InlineEditor = Class.extend({
 				className: this._getClassName(),
 				parameters: {
 					containerID: this._containerID,
-					objectID: this._containers[$containerID].data('objectID')
+					objectID: this._container[$containerID].data('objectID')
 				}
 			});
 			this._proxy.sendRequest();
@@ -697,8 +708,13 @@ WCF.Message.InlineEditor = Class.extend({
 		var $container = this._container[this._activeElementID];
 		
 		// remove ckEditor
-		var $ckEditor = $('#messageEditor' + $container.data('objectID')).ckeditorGet();
-		$ckEditor.destroy();
+		try {
+			var $ckEditor = $('#messageEditor' + $container.data('objectID')).ckeditorGet();
+			$ckEditor.destroy();
+		}
+		catch (e) {
+			// CKEditor might be not initialized yet, ignore
+		}
 		
 		// restore message
 		$container.find('.messageBody').removeClass('jsMessageLoading').find('.messageText').html(this._cache);
@@ -740,7 +756,7 @@ WCF.Message.InlineEditor = Class.extend({
 		// bind buttons
 		var $formSubmit = $content.find('.formSubmit');
 		$formSubmit.find('button[data-type=save]').click($.proxy(this._save, this));
-		$formSubmit.find('button[data-type=extended]').click($.proxy(this._prepareExtended, this));
+		if (this._supportExtendedForm) $formSubmit.find('button[data-type=extended]').click($.proxy(this._prepareExtended, this));
 		$formSubmit.find('button[data-type=cancel]').click($.proxy(this._cancel, this));
 	},
 	
