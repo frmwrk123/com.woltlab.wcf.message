@@ -849,3 +849,288 @@ WCF.Message.InlineEditor = Class.extend({
 		return '';
 	}
 });
+
+/**
+ * Handles message quotes.
+ * 
+ * @param	string		objectType
+ * @param	string		containerSelector
+ * @param	string		messageBodySelector
+ */
+WCF.Message.QuoteManager = Class.extend({
+	/**
+	 * active container id
+	 * @var	string
+	 */
+	_activeContainerID: '',
+	
+	/**
+	 * action class name
+	 * @var	string
+	 */
+	_className: '',
+	
+	/**
+	 * list of message containers
+	 * @var	object
+	 */
+	_containers: { },
+	
+	/**
+	 * container selector
+	 * @var	string
+	 */
+	_containerSelector: '',
+	
+	/**
+	 * 'copy quote' overlay
+	 * @var	jQuery
+	 */
+	_copyQuote: null,
+	
+	/**
+	 * marked message
+	 * @var	string
+	 */
+	_message: '',
+	
+	/**
+	 * message body selector
+	 * @var	string
+	 */
+	_messageBodySelector: '',
+	
+	/**
+	 * object id
+	 * @var	integer
+	 */
+	_objectID: 0,
+	
+	/**
+	 * object type name
+	 * @var	string
+	 */
+	_objectType: '',
+	
+	/**
+	 * action proxy
+	 * @var	WCF.Action.Proxy
+	 */
+	_proxy: null,
+	
+	/**
+	 * Initializes the quote manager for given object type.
+	 * 
+	 * @param	string		objectType
+	 * @param	string		containerSelector
+	 * @param	string		messageBodySelector
+	 */
+	init: function(objectType, containerSelector, messageBodySelector) {
+		this._className = '';
+		this._containerSelector = containerSelector;
+		this._message = '';
+		this._messageBodySelector = (messageBodySelector) ? messageBodySelector : null;
+		this._objectID = 0;
+		this._objectType = objectType;
+		this._proxy = new WCF.Action.Proxy({
+			success: $.proxy(this._success, this)
+		});
+		
+		this._initContainers();
+		this._initCopyQuote();
+		
+		$(document).mouseup($.proxy(this._mouseUp, this));
+	},
+	
+	/**
+	 * Initializes message containers.
+	 */
+	_initContainers: function() {
+		var self = this;
+		$(this._containerSelector).each(function(index, container) {
+			var $container = $(container);
+			var $containerID = $container.wcfIdentify();
+			
+			if (!self._containers[$containerID]) {
+				self._containers[$containerID] = $container;
+				if (self._messageBodySelector != null) {
+					$container = $container.find(self._messageBodySelector).data('containerID', $containerID);
+				}
+				
+				$container.mousedown($.proxy(self._mouseDown, self));
+			}
+		});
+	},
+	
+	/**
+	 * Handles mouse down event.
+	 * 
+	 * @param	object		event
+	 */
+	_mouseDown: function(event) {
+		// hide copy quote
+		this._copyQuote.hide();
+		
+		// store container ID
+		var $container = $(event.currentTarget);
+		if (this._messageBodySelector) {
+			$container = this._containers[$container.data('containerID')];
+		}
+		this._activeContainerID = $container.wcfIdentify();
+		
+		var self = this;
+		$container.mouseout(function() { self._activeContainerID = ''; });
+	},
+	
+	/**
+	 * Handles the mouse up event.
+	 * 
+	 * @param	object		event
+	 */
+	_mouseUp: function(event) {
+		// ignore event
+		if (this._activeContainerID == '') {
+			this._copyQuote.hide();
+			
+			return;
+		}
+		
+		var $selection = this._getSelectedText();
+		var $text = $.trim($selection);
+		if ($text == '') {
+			this._copyQuote.hide();
+			
+			return;
+		}
+		
+		var $container = $(event.currentTarget);
+		if (this._messageBodySelector) {
+			$container = this._containers[$container.data('containerID')];
+		}
+		
+		// ignore mouseUp-event if containerID does not match
+		if (!this._containers[this._activeContainerID]) {
+			return;
+		}
+		
+		this._copyQuote.show();
+		
+		var $coordinates = this._getBoundingRectangle($selection);
+		var $left = (($coordinates.right - $coordinates.left) / 2) - (this._copyQuote.outerWidth() / 2) + $coordinates.left;
+		this._copyQuote.css({
+			bottom: ($(document).height() - $coordinates.top) + 7 + 'px',
+			left: $left + 'px'
+		});
+		this._copyQuote.hide();
+		
+		// reset containerID
+		this._activeContainerID = '';
+		
+		// show element after a delay, to prevent display if text was unmarked again (clicking into marked text)
+		var self = this;
+		new WCF.PeriodicalExecuter(function(pe) {
+			pe.stop();
+			
+			var $text = $.trim(self._getSelectedText());
+			if ($text != '') {
+				self._copyQuote.show();
+				self._message = $text;
+				self._objectID = $container.data('objectID');
+			}
+		}, 10);
+	},
+	
+	/**
+	 * Returns the offsets of the selection's bounding rectangle.
+	 * 
+	 * @return	object
+	 */
+	_getBoundingRectangle: function(selection) {
+		var $coordinates = null;
+		
+		if (document.createRange && typeof document.createRange().getBoundingClientRect != "undefined") { // Opera, Firefox, Safari, Chrome
+			if (selection.rangeCount > 0) {
+				var $rect = selection.getRangeAt(0).getBoundingClientRect();
+				$coordinates = {
+					bottom: $rect.bottom,
+					left: $rect.left,
+					right: $rect.right,
+					top: $rect.top
+				};
+			}
+		}
+		else if (document.selection && document.selection.type != "Control") { // IE
+			var $range = document.selection.createRange();
+			$coordinates = {
+				bottom: $range.boundingBottom,
+				left: $range.boundingLeft,
+				right: $range.boundingRight,
+				top: $range.boundingTop
+			}
+		}
+		
+		return $coordinates;
+	},
+	
+	/**
+	 * Initializes the 'copy quote' element.
+	 */
+	_initCopyQuote: function() {
+		this._copyQuote = $('#quoteManagerCopy');
+		if (!this._copyQuote.length) {
+			this._copyQuote = $('<div id="quoteManagerCopy" class="balloonTooltip">' + WCF.Language.get('wcf.message.quote.quoteSelected') + '</div>').hide().appendTo(document.body);
+			this._copyQuote.click($.proxy(this._saveQuote, this));
+		}
+	},
+	
+	/**
+	 * Returns the text selection.
+	 * 
+	 * @return	object
+	 */
+	_getSelectedText: function() {
+		if (window.getSelection) { // Opera, Firefox, Safari, Chrome, IE 9+
+			return window.getSelection();
+		}
+		else if (document.getSelection) { // Opera, Firefox, Safari, Chrome, IE 9+
+			return document.getSelection();
+		}
+		else if (document.selection) { // IE 8
+			return document.selection.createRange().text;
+		}
+		
+		return '';
+	},
+	
+	/**
+	 * Saves a quote.
+	 */
+	_saveQuote: function() {
+		if (this._className == '') {
+			console.debug("[WCF.Message.QuoteManager] Empty class name given, aborting.");
+			return;
+		}
+		
+		this._proxy.setOption('data', {
+			actionName: 'saveQuote',
+			className: this._className,
+			objectIDs: [ this._objectID ],
+			parameters: {
+				message: this._message
+			}
+		});
+		this._proxy.sendRequest();
+	},
+	
+	/**
+	 * Handles successful AJAX requests.
+	 * 
+	 * @param	object		data
+	 * @param	string		textStatus
+	 * @param	jQuery		jqXHR
+	 */
+	_success: function(data, textStatus, jqXHR) {
+		console.debug("_success(): IMPLEMENT ME!");
+		console.debug(data);
+	}
+});
