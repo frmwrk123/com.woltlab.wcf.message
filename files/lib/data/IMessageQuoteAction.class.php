@@ -13,6 +13,18 @@ namespace wcf\data;
  */
 interface IMessageQuoteAction {
 	/**
+	 * Validates parameters to remove a quote from storage.
+	 */
+	public function validateRemoveQuote();
+	
+	/**
+	 * Removes a quote from storage.
+	 * 
+	 * @return	array
+	 */
+	public function removeQuote();
+	
+	/**
 	 * Validates parameters to save a quote.
 	 */
 	public function validateSaveQuote();

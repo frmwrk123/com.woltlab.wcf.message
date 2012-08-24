@@ -90,6 +90,38 @@ class MessageQuoteManager extends SingletonFactory {
 	}
 	
 	/**
+	 * Removes a quote from storage.
+	 * 
+	 * @param	string		$quoteID
+	 */
+	public function removeQuote($quoteID) {
+		if (!isset($this->quoteData[$quoteID])) {
+			return;
+		}
+		
+		foreach ($this->quotes as $objectType => $objectIDs) {
+			foreach ($objectIDs as $objectID => $quoteIDs) {
+				foreach ($quoteIDs as $key => $qID) {
+					if ($qID == $quoteID) {
+						unset($this->quotes[$objectType][$objectID][$qID]);
+						
+						// clean-up structure
+						if (empty($this->quotes[$objectType][$objectID])) {
+							unset($this->quotes[$objectType][$objectID]);
+							
+							if (empty($this->quotes[$objectType])) {
+								unset($this->quotes[$objectType]);
+							}
+						}
+						
+						break 3;
+					}
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Returns a list of quotes.
 	 * 
 	 * @param	string		$objectType
