@@ -48,9 +48,12 @@ class MessageQuoteManager extends SingletonFactory {
 		$this->packageID = ApplicationHandler::getInstance()->getPrimaryApplication()->packageID;
 		
 		// load stored quotes from session
-		$this->quotes = WCF::getSession()->getVar('__messageQuotes'.$this->packageID);
-		if ($this->quotes === null) {
-			$this->quotes = array();
+		$messageQuotes = WCF::getSession()->getVar('__messageQuotes'.$this->packageID);
+		if (is_array($messageQuotes)) {
+			if (isset($messageQuotes['quotes']) && isset($messageQuotes['data'])) {
+				$this->quotes = $messageQuotes['quotes'];
+				$this->quoteData = $messageQuotes['data'];
+			}
 		}
 		
 		// load object types
@@ -85,7 +88,10 @@ class MessageQuoteManager extends SingletonFactory {
 			$this->quotes[$objectType][$objectID][] = $quoteID;
 			$this->quoteData[$quoteID] = $message;
 			
-			WCF::getSession()->register('__messageQuotes'.$this->packageID, $this->quotes);
+			WCF::getSession()->register('__messageQuotes'.$this->packageID, array(
+				'quotes' => $this->quotes,
+				'data' => $this->quoteData
+			));
 		}
 	}
 	

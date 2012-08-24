@@ -853,6 +853,7 @@ WCF.Message.InlineEditor = Class.extend({
 /**
  * Handles message quotes.
  * 
+ * @param	string		className
  * @param	string		objectType
  * @param	string		containerSelector
  * @param	string		messageBodySelector
@@ -921,17 +922,28 @@ WCF.Message.QuoteManager = Class.extend({
 	/**
 	 * Initializes the quote manager for given object type.
 	 * 
+	 * @param	string		className
 	 * @param	string		objectType
 	 * @param	string		containerSelector
 	 * @param	string		messageBodySelector
 	 */
-	init: function(objectType, containerSelector, messageBodySelector) {
-		this._className = '';
+	init: function(className, objectType, containerSelector, messageBodySelector) {
+		this._className = className;
+		if (this._className == '') {
+			console.debug("[WCF.Message.QuoteManager] Empty class name given, aborting.");
+			return;
+		}
+		
+		this._objectType = objectType;
+		if (this._objectType == '') {
+			console.debug("[WCF.Message.QuoteManager] Empty object type name given, aborting.");
+			return;
+		}
+		
 		this._containerSelector = containerSelector;
 		this._message = '';
 		this._messageBodySelector = (messageBodySelector) ? messageBodySelector : null;
 		this._objectID = 0;
-		this._objectType = objectType;
 		this._proxy = new WCF.Action.Proxy({
 			success: $.proxy(this._success, this)
 		});
@@ -995,21 +1007,12 @@ WCF.Message.QuoteManager = Class.extend({
 			return;
 		}
 		
+		var $container = this._containers[this._activeContainerID];
 		var $selection = this._getSelectedText();
 		var $text = $.trim($selection);
 		if ($text == '') {
 			this._copyQuote.hide();
 			
-			return;
-		}
-		
-		var $container = $(event.currentTarget);
-		if (this._messageBodySelector) {
-			$container = this._containers[$container.data('containerID')];
-		}
-		
-		// ignore mouseUp-event if containerID does not match
-		if (!this._containers[this._activeContainerID]) {
 			return;
 		}
 		
@@ -1106,17 +1109,28 @@ WCF.Message.QuoteManager = Class.extend({
 	 * Saves a quote.
 	 */
 	_saveQuote: function() {
-		if (this._className == '') {
-			console.debug("[WCF.Message.QuoteManager] Empty class name given, aborting.");
-			return;
-		}
-		
 		this._proxy.setOption('data', {
 			actionName: 'saveQuote',
 			className: this._className,
 			objectIDs: [ this._objectID ],
 			parameters: {
 				message: this._message
+			}
+		});
+		this._proxy.sendRequest();
+	},
+	
+	/**
+	 * Removes a quote.
+	 * 
+	 * @param	string		quoteID
+	 */
+	_removeQuote: function(quoteID) {
+		this._proxy.setOption('data', {
+			actionName: 'removeQuote',
+			className: this._className,
+			parameters: {
+				quoteID: quoteID
 			}
 		});
 		this._proxy.sendRequest();
