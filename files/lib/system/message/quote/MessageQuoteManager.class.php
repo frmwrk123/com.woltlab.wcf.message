@@ -120,6 +120,11 @@ class MessageQuoteManager extends SingletonFactory {
 							}
 						}
 						
+						WCF::getSession()->register('__messageQuotes'.$this->packageID, array(
+							'quotes' => $this->quotes,
+							'data' => $this->quoteData
+						));
+						
 						break 3;
 					}
 				}
@@ -137,7 +142,7 @@ class MessageQuoteManager extends SingletonFactory {
 		
 		if (!empty($this->quoteData)) {
 			foreach ($this->quotes as $objectType => $objectData) {
-				$quoteHandler = new $this->objectTypes[$objectType]->classname();
+				$quoteHandler = call_user_func(array($this->objectTypes[$objectType]->className, 'getInstance'));
 				$template .= $quoteHandler->render($objectData);
 			}
 		}
@@ -169,10 +174,8 @@ class MessageQuoteManager extends SingletonFactory {
 		if (isset($this->quoteData[$quoteID])) {
 			foreach ($this->quotes as $objectIDs) {
 				foreach ($objectIDs as $objectID => $quoteIDs) {
-					foreach ($quoteIDs as $qID) {
-						if ($quoteID == $qID) {
-							return $objectID;
-						}
+					if (in_array($quoteID, $quoteIDs)) {
+						return $objectID;
 					}
 				}
 			}

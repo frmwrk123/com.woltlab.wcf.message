@@ -25,16 +25,16 @@ interface IMessageQuoteAction {
 	public function getQuotes();
 	
 	/**
-	 * Validates parameters to remove a quote from storage.
+	 * Validates parameters to remove quotes from storage.
 	 */
-	public function validateRemoveQuote();
+	public function validateRemoveQuotes();
 	
 	/**
-	 * Removes a quote from storage.
+	 * Removes quotes from storage.
 	 * 
 	 * @return	array
 	 */
-	public function removeQuote();
+	public function removeQuotes();
 	
 	/**
 	 * Validates parameters to save a quote.

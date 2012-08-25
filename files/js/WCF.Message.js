@@ -1137,16 +1137,16 @@ WCF.Message.Quote.Handler = Class.extend({
 	},
 	
 	/**
-	 * Removes a quote.
+	 * Removes given quotes.
 	 * 
-	 * @param	string		quoteID
+	 * @param	array<string>	quoteIDs
 	 */
-	_removeQuote: function(quoteID) {
+	_removeQuotes: function(quoteIDs) {
 		this._proxy.setOption('data', {
 			actionName: 'removeQuote',
 			className: this._className,
 			parameters: {
-				quoteID: quoteID
+				quoteIDs: quoteIDs
 			}
 		});
 		this._proxy.sendRequest();
@@ -1296,9 +1296,46 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * @param	string		template
 	 */
 	renderDialog: function(template) {
-		this._dialog.html(template).wcfDialog({
+		// create dialog if not exists
+		if (this._dialog === null) {
+			this._dialog = $('#messageQuoteList');
+			if (!this._dialog.length) {
+				this._dialog = $('<div id="messageQuoteList" />').hide().appendTo(document.body);
+			}
+		}
+		
+		// add template
+		this._dialog.html(template);
+		
+		// add 'delete marked' button
+		var $formSubmit = $('<div class="formSubmit" />').appendTo(this._dialog);
+		$('<button>' + WCF.Language.get('wcf.message.quote.deleteSelectedQuotes') + '</button>').click($.proxy(this._removeSelected, this)).appendTo($formSubmit);
+		
+		// show dialog
+		this._dialog.wcfDialog({
 			title: WCF.Language.get('wcf.message.quote.manageQuotes')
 		});
+		this._dialog.wcfDialog('render');
 		this._hasTemplate = true;
+	},
+	
+	/**
+	 * Removes selected quotes.
+	 */
+	_removeSelected: function() {
+		var $quoteIDs = [ ];
+		this._dialog.find('input.jsRemoveQuote:checked').each(function(index, input) {
+			$quoteIDs.push($(input).parents('dl').data('quoteID'));
+		});
+		
+		if ($quoteIDs.length) {
+			// select first handler to remove
+			for (var $objectType in this._handlers) {
+				this._handlers[$objectType].removeQuotes($quoteIDs);
+				break;
+			}
+			
+			this._dialog.wcfDialog('close');
+		}
 	}
 });
