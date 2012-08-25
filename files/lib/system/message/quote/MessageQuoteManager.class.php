@@ -133,7 +133,16 @@ class MessageQuoteManager extends SingletonFactory {
 	 * @param	string		$objectType
 	 */
 	public function getQuotes($objectType = '') {
-		throw new SystemException("IMPLEMENT ME!");
+		$template = '';
+		
+		if (!empty($this->quoteData)) {
+			foreach ($this->quotes as $objectType => $objectData) {
+				$quoteHandler = new $this->objectTypes[$objectType]->classname();
+				$template .= $quoteHandler->render($objectData);
+			}
+		}
+		
+		return $template;
 	}
 	
 	/**
@@ -178,6 +187,6 @@ class MessageQuoteManager extends SingletonFactory {
 	 * @return	integer
 	 */
 	public function countQuotes() {
-		return count($this->quotes);
+		return count($this->quoteData);
 	}
 }

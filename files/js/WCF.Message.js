@@ -851,6 +851,11 @@ WCF.Message.InlineEditor = Class.extend({
 });
 
 /**
+ * Namespace for message quotes.
+ */
+WCF.Message.Quote = { };
+
+/**
  * Handles message quotes.
  * 
  * @param	string		className
@@ -858,7 +863,7 @@ WCF.Message.InlineEditor = Class.extend({
  * @param	string		containerSelector
  * @param	string		messageBodySelector
  */
-WCF.Message.QuoteManager = Class.extend({
+WCF.Message.Quote.Handler = Class.extend({
 	/**
 	 * active container id
 	 * @var	string
@@ -920,14 +925,21 @@ WCF.Message.QuoteManager = Class.extend({
 	_proxy: null,
 	
 	/**
-	 * Initializes the quote manager for given object type.
-	 * 
-	 * @param	string		className
-	 * @param	string		objectType
-	 * @param	string		containerSelector
-	 * @param	string		messageBodySelector
+	 * quote manager
+	 * @var	WCF.Message.Quote.Manager
 	 */
-	init: function(className, objectType, containerSelector, messageBodySelector) {
+	_quoteManager: null,
+	
+	/**
+	 * Initializes the quote handler for given object type.
+	 * 
+	 * @param	WCF.Message.Quote.Manager	quoteManager
+	 * @param	string				className
+	 * @param	string				objectType
+	 * @param	string				containerSelector
+	 * @param	string				messageBodySelector
+	 */
+	init: function(quoteManager, className, objectType, containerSelector, messageBodySelector) {
 		this._className = className;
 		if (this._className == '') {
 			console.debug("[WCF.Message.QuoteManager] Empty class name given, aborting.");
@@ -952,6 +964,10 @@ WCF.Message.QuoteManager = Class.extend({
 		this._initCopyQuote();
 		
 		$(document).mouseup($.proxy(this._mouseUp, this));
+		
+		// register with quote manager
+		this._quoteManager = quoteManager;
+		this._quoteManager.register(this._objectType, this);
 	},
 	
 	/**
@@ -1144,7 +1160,145 @@ WCF.Message.QuoteManager = Class.extend({
 	 * @param	jQuery		jqXHR
 	 */
 	_success: function(data, textStatus, jqXHR) {
-		console.debug("_success(): IMPLEMENT ME!");
-		console.debug(data);
+		if (data.returnValues.count) {
+			this._quoteManager.updateCount(data.returnValues.count);
+		}
+		
+		if (data.returnValues.template) {
+			this._quoteManager.renderDialog(data.returnValues.template);
+		}
+	},
+	
+	/**
+	 * Requests a list of stored quotes.
+	 */
+	getQuotes: function() {
+		this._proxy.setOption('data', {
+			actionName: 'getQuotes',
+			className: this._className
+		});
+		this._proxy.sendRequest();
+	}
+});
+
+/**
+ * Manages stored quotes.
+ * 
+ * @param	integer		count
+ */
+WCF.Message.Quote.Manager = Class.extend({
+	/**
+	 * number of stored quotes
+	 * @var	integer
+	 */
+	_count: 0,
+	
+	/**
+	 * dialog overlay
+	 * @var	jQuery
+	 */
+	_dialog: null,
+	
+	/**
+	 * list of quote handlers
+	 * @var	object
+	 */
+	_handlers: { },
+	
+	/**
+	 * true, if an up-to-date template exists
+	 * @var	boolean
+	 */
+	_hasTemplate: false,
+	
+	/**
+	 * show quotes element
+	 * @var	jQuery
+	 */
+	_showQuotes: null,
+	
+	/**
+	 * Initializes the quote manager.
+	 * 
+	 * @param	integer		count
+	 */
+	init: function(count) {
+		this._count = parseInt(count) || 0;
+		this._handlers = { };
+		
+		this._toggleShowQuotes();
+	},
+	
+	/**
+	 * Registers a quote handler.
+	 * 
+	 * @param	string				objectType
+	 * @param	WCF.Message.Quote.Handler	handler
+	 */
+	register: function(objectType, handler) {
+		this._handlers[objectType] = handler;
+	},
+	
+	/**
+	 * Updates number of stored quotes.
+	 * 
+	 * @param	integer		count
+	 */
+	updateCount: function(count) {
+		this._count = parseInt(count) || 0;
+		
+		this._toggleShowQuotes();
+	},
+	
+	/**
+	 * Toggles the display of the 'Show quotes' button
+	 */
+	_toggleShowQuotes: function() {
+		if (this._count == 0) {
+			if (this._showQuotes !== null) {
+				this._showQuotes.hide();
+			}
+		}
+		else {
+			if (this._showQuotes === null) {
+				this._showQuotes = $('#showQuotes');
+				if (!this._showQuotes.length) {
+					this._showQuotes = $('<div id="showQuotes" class="balloonTooltip" />').click($.proxy(this._click, this)).appendTo(document.body);
+				}
+			}
+			
+			var $text = WCF.Language.get('wcf.message.quote.showQuotes').replace(/#count#/, this._count);
+			this._showQuotes.text($text).show();
+		}
+		
+		this._hasTemplate = false;
+	},
+	
+	/**
+	 * Handles clicks on 'Show quotes'.
+	 */
+	_click: function() {
+		if (this._hasTemplate) {
+			this._dialog.wcfDialog('show');
+		}
+		else {
+			// select first handler to fetch template
+			for (var $objectType in this._handlers) {
+				this._handlers[$objectType].getQuotes();
+				break;
+			}
+		}
+	},
+	
+	/**
+	 * Renders the dialog.
+	 * 
+	 * @param	string		template
+	 */
+	renderDialog: function(template) {
+		this._dialog.html(template).wcfDialog({
+			title: WCF.Language.get('wcf.message.quote.manageQuotes')
+		});
+		this._hasTemplate = true;
 	}
 });

@@ -13,10 +13,18 @@ namespace wcf\system\message\quote;
  */
 interface IMessageQuoteHandler {
 	/**
-	 * Returns a permanent link to given quote id.
+	 * Returns a permanent link to given quote ids.
 	 * 
-	 * @param	string		$quoteID
+	 * @param	array<string>	$quoteIDs
+	 * @return	array
+	 */
+	public function getLinks(array $quoteIDs);
+	
+	/**
+	 * Renders a template for given quotes.
+	 * 
+	 * @param	array		$data
 	 * @return	string
 	 */
-	public function getLink($quoteID);
+	public function render(array $data);
 }
