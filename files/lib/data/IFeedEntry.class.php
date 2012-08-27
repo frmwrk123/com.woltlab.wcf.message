@@ -11,25 +11,11 @@ namespace wcf\data;
  * @subpackage	data
  * @category 	Community Framework
  */
-interface IFeedEntry extends ILinkableDatabaseObject, ITitledDatabaseObject {
+interface IFeedEntry extends IMessage {
 	/**
 	 * Returns the content of the feed entry.
 	 * 
 	 * @return	string
 	 */
 	public function getMessage();
-	
-	/**
-	 * Returns the creation time of the feed entry as an unix timestamp.
-	 * 
-	 * @return	integer
-	 */
-	public function getTime();
-	
-	/**
-	 * Returns the username of the author of this feed entry.
-	 * 
-	 * @return	string
-	 */
-	public function getUsername();
 }
