@@ -48,9 +48,9 @@ interface IMessage extends ILinkableDatabaseObject, ITitledDatabaseObject {
 	public function getUsername();
 	
 	/**
-	 * Returns message text.
+	 * Returns formatted message text.
 	 * 
-	 * @see	wcf\data\ITitledDatabaseObject::getTitle()
+	 * @see	wcf\data\IMessage::getFormattedMessage()
 	 */
 	public function __toString();
 }
