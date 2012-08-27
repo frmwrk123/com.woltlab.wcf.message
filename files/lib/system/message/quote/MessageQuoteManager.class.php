@@ -102,14 +102,14 @@ class MessageQuoteManager extends SingletonFactory {
 	 */
 	public function removeQuote($quoteID) {
 		if (!isset($this->quoteData[$quoteID])) {
-			return;
+			return false;
 		}
 		
 		foreach ($this->quotes as $objectType => $objectIDs) {
 			foreach ($objectIDs as $objectID => $quoteIDs) {
 				foreach ($quoteIDs as $key => $qID) {
 					if ($qID == $quoteID) {
-						unset($this->quotes[$objectType][$objectID][$qID]);
+						unset($this->quotes[$objectType][$objectID][$key]);
 						
 						// clean-up structure
 						if (empty($this->quotes[$objectType][$objectID])) {
@@ -120,16 +120,20 @@ class MessageQuoteManager extends SingletonFactory {
 							}
 						}
 						
+						unset($this->quoteData[$quoteID]);
+						
 						WCF::getSession()->register('__messageQuotes'.$this->packageID, array(
 							'quotes' => $this->quotes,
 							'data' => $this->quoteData
 						));
 						
-						break 3;
+						return true;
 					}
 				}
 			}
 		}
+		
+		return false;
 	}
 	
 	/**

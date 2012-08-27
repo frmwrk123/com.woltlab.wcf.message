@@ -21,25 +21,27 @@ abstract class AbstractMessageQuoteHandler extends SingletonFactory implements I
 	public $templateName = 'messageQuoteList';
 	
 	/**
+	 * list of quoted message
+	 * @var	array<wcf\system\message\quote\QuotedMessage>
+	 */
+	public $quotedMessages = array();
+	
+	/**
 	 * @see	wcf\system\message\quote\IMessageQuoteHandler::render()
 	 */
 	public function render(array $data) {
-		$template = '';
-		
-		$links = $this->getLinks(array_keys($data));
-		$quotes = array();
-		foreach ($data as $quoteIDs) {
-			foreach ($quoteIDs as $quoteID) {
-				$quotes[$quoteID] = MessageQuoteManager::getInstance()->getQuote($quoteID); 
-			}
-		}
-		
 		WCF::getTPL()->assign(array(
-			'data' => $data,
-			'links' => $links,
-			'quotes' => $quotes
+			'messages' => $this->getMessages($data)
 		));
 		
 		return WCF::getTPL()->fetch($this->templateName);
 	}
+	
+	/**
+	 * Returns a list of QuotedMessage objects.
+	 * 
+	 * @param	array<array>	$data
+	 * @return	array<wcf\system\message\quote\QuotedMessage>
+	 */
+	abstract protected function getMessages(array $data);
 }

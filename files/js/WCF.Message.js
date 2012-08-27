@@ -1141,9 +1141,9 @@ WCF.Message.Quote.Handler = Class.extend({
 	 * 
 	 * @param	array<string>	quoteIDs
 	 */
-	_removeQuotes: function(quoteIDs) {
+	removeQuotes: function(quoteIDs) {
 		this._proxy.setOption('data', {
-			actionName: 'removeQuote',
+			actionName: 'removeQuotes',
 			className: this._className,
 			parameters: {
 				quoteIDs: quoteIDs
@@ -1279,7 +1279,7 @@ WCF.Message.Quote.Manager = Class.extend({
 	 */
 	_click: function() {
 		if (this._hasTemplate) {
-			this._dialog.wcfDialog('show');
+			this._dialog.wcfDialog('open');
 		}
 		else {
 			// select first handler to fetch template
@@ -1325,7 +1325,7 @@ WCF.Message.Quote.Manager = Class.extend({
 	_removeSelected: function() {
 		var $quoteIDs = [ ];
 		this._dialog.find('input.jsRemoveQuote:checked').each(function(index, input) {
-			$quoteIDs.push($(input).parents('dl').data('quoteID'));
+			$quoteIDs.push($(input).parents('dl').attr('data-quote-id'));
 		});
 		
 		if ($quoteIDs.length) {
