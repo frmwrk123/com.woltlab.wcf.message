@@ -13,6 +13,20 @@ namespace wcf\data;
  */
 interface IMessage extends ILinkableDatabaseObject, ITitledDatabaseObject {
 	/**
+	 * Returns formatted message text.
+	 * 
+	 * @return	string
+	 */
+	public function getFormattedMessage();
+	
+	/**
+	 * Returns message text.
+	 * 
+	 * @return	string
+	 */
+	public function getMessage();
+	
+	/**
 	 * Returns message creation timestamp.
 	 * 
 	 * @return	integer
@@ -34,7 +48,7 @@ interface IMessage extends ILinkableDatabaseObject, ITitledDatabaseObject {
 	public function getUsername();
 	
 	/**
-	 * Returns message subject.
+	 * Returns message text.
 	 * 
 	 * @see	wcf\data\ITitledDatabaseObject::getTitle()
 	 */
