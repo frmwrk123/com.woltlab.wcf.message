@@ -1,6 +1,6 @@
 <?php
 namespace wcf\system\message\quote;
-use wcf\data\IQuotableDatabaseObject;
+use wcf\data\IMessage;
 
 /**
  * Wrapper class for quoted messages.
@@ -40,9 +40,9 @@ class QuotedMessage implements \Countable, \Iterator {
 	/**
 	 * Creates a new QuotedMessage object.
 	 * 
-	 * @param	wcf\data\IQuotableDatabaseObject	$object
+	 * @param	wcf\data\IMessage	$object
 	 */
-	public function __construct(IQuotableDatabaseObject $object) {
+	public function __construct(IMessage $object) {
 		$this->object = $object;
 	}
 	
