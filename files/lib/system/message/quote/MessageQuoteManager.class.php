@@ -1,5 +1,7 @@
 <?php
 namespace wcf\system\message\quote;
+use wcf\util\ArrayUtil;
+
 use wcf\data\object\type\ObjectTypeCache;
 use wcf\system\application\ApplicationHandler;
 use wcf\system\exception\SystemException;
@@ -40,6 +42,12 @@ class MessageQuoteManager extends SingletonFactory {
 	 * @var	array<string>
 	 */
 	protected $quoteData = array();
+	
+	/**
+	 * list of quote ids to be removed
+	 * @var	array<string>
+	 */
+	protected $removeQuoteIDs = array();
 	
 	/**
 	 * @see	wcf\system\SingletonFactory::init()
@@ -195,5 +203,42 @@ class MessageQuoteManager extends SingletonFactory {
 	 */
 	public function countQuotes() {
 		return count($this->quoteData);
+	}
+	
+	/**
+	 * Reads a list of quote ids to remove.
+	 */
+	public function readFormParameters() {
+		if (isset($_REQUEST['__removeQuoteIDs']) && is_array($_REQUEST['__removeQuoteIDs'])) {
+			$quoteIDs = ArrayUtil::trim($_REQUEST['__removeQuoteIDs']);
+			foreach ($quoteIDs as $index => $quoteID) {
+				if (!isset($this->quoteData[$quoteID])) {
+					unset($quoteIDs[$index]);
+				}
+			}
+			
+			if (!empty($quoteIDs)) {
+				$this->removeQuoteIDs = $quoteIDs;
+			}
+		}
+	}
+	
+	/**
+	 * Removes quotes after saving current message.
+	 */
+	public function saved() {
+		foreach ($this->removeQuoteIDs as $quoteID) {
+			$this->removeQuote($quoteID);
+		}
+	}
+	
+	/**
+	 * Assigns variables on page load.
+	 */
+	public function assignVariables() {
+		WCF::getTPL()->assign(array(
+			'__quoteCount' => $this->countQuotes(),
+			'__quoteRemove' => $this->removeQuoteIDs
+		));
 	}
 }

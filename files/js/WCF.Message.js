@@ -1211,6 +1211,12 @@ WCF.Message.Quote.Manager = Class.extend({
 	_dialog: null,
 	
 	/**
+	 * form element
+	 * @var	jQuery
+	 */
+	_form: null,
+	
+	/**
 	 * list of quote handlers
 	 * @var	object
 	 */
@@ -1245,16 +1251,34 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * 
 	 * @param	integer		count
 	 * @param	string		ckEditorID
+	 * @param	array<string>	removeOnSubmit
 	 */
-	init: function(count, ckEditorID) {
+	init: function(count, ckEditorID, removeOnSubmit) {
+		this._ckEditor = '';
 		this._count = parseInt(count) || 0;
+		this._dialog = 0;
+		this._form = null;
 		this._handlers = { };
+		this._hasTemplate = false;
 		this._removeOnSubmit = [ ];
+		this._showQuotes = null;
+		this._supportPaste = false;
 		
 		if (ckEditorID) {
 			this._ckEditor = $('#' + ckEditorID);
 			if (this._ckEditor.length) {
 				this._supportPaste = true;
+				
+				// get surrounding form-tag
+				this._form = this._ckEditor.parents('form:eq(0)');
+				if (this._form.length) {
+					this._form.submit($.proxy(this._submit, this));
+					this._removeOnSubmit = removeOnSubmit || [ ];
+				}
+				else {
+					this._form = null;
+					this._supportPaste = false;
+				}
 			}
 		}
 		
@@ -1412,6 +1436,18 @@ WCF.Message.Quote.Manager = Class.extend({
 			}
 			
 			this._dialog.wcfDialog('close');
+		}
+	},
+	
+	/**
+	 * Appends list of quote ids to remove after successful submit.
+	 */
+	_submit: function() {
+		if (this._supportPaste && this._removeOnSubmit.length > 0) {
+			var $formSubmit = this._form.find('.formSubmit');
+			for (var $i in this._removeOnSubmit) {
+				$('<input type="hidden" name="__removeQuoteIDs[]" value="' + this._removeOnSubmit[$i] + '" />').appendTo($formSubmit);
+			}
 		}
 	}
 });
