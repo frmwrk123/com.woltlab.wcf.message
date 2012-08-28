@@ -1,6 +1,6 @@
-{if !$allowInsert|isset}{assign var=allowInsert value=false}{/if}
+{if !$supportPaste|isset}{assign var=supportPaste value=false}{/if}
 {foreach from=$messages item=message}
-	<article class="message messageReduced">
+	<article class="message messageReduced" data-link="{@$message->getLink()}" data-username="{$message->getUsername()}">
 		<div>
 			<section class="messageContent">
 				<div>
@@ -27,7 +27,7 @@
 										<li data-quote-id="{@$quoteID}">
 											<span>
 												<input type="checkbox" value="1" class="jsRemoveQuote" />
-												<img src="{icon size='S'}add{/icon}" alt="" class="jsTooltip icon16 jsInsertQuote" title="{lang}wcf.message.quote.insertQuote{/lang}" />
+												{if $supportPaste}<img src="{icon size='S'}add{/icon}" alt="" class="jsTooltip icon16 jsInsertQuote" title="{lang}wcf.message.quote.insertQuote{/lang}" />{/if}
 											</span>
 											
 											<div>

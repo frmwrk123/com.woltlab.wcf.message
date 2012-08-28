@@ -13,7 +13,7 @@ namespace wcf\data;
  */
 interface IMessageQuoteAction {
 	/**
-	 * Does nothing.
+	 * Validates parameters to load quotes.
 	 */
 	public function validateGetQuotes();
 	

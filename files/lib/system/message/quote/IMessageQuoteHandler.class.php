@@ -16,7 +16,8 @@ interface IMessageQuoteHandler {
 	 * Renders a template for given quotes.
 	 * 
 	 * @param	array		$data
+	 * @param	boolean		$supportPaste
 	 * @return	string
 	 */
-	public function render(array $data);
+	public function render(array $data, $supportPaste = false);
 }

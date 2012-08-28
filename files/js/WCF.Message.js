@@ -1171,11 +1171,16 @@ WCF.Message.Quote.Handler = Class.extend({
 	
 	/**
 	 * Requests a list of stored quotes.
+	 * 
+	 * @param	boolean		supportPaste
 	 */
-	getQuotes: function() {
+	getQuotes: function(supportPaste) {
 		this._proxy.setOption('data', {
 			actionName: 'getQuotes',
-			className: this._className
+			className: this._className,
+			parameters: {
+				supportPaste: (supportPaste ? 1 : 0)
+			}
 		});
 		this._proxy.sendRequest();
 	}
@@ -1187,6 +1192,12 @@ WCF.Message.Quote.Handler = Class.extend({
  * @param	integer		count
  */
 WCF.Message.Quote.Manager = Class.extend({
+	/**
+	 * ckEditor element
+	 * @var	jQuery
+	 */
+	_ckEditor: '',
+	
 	/**
 	 * number of stored quotes
 	 * @var	integer
@@ -1212,19 +1223,40 @@ WCF.Message.Quote.Manager = Class.extend({
 	_hasTemplate: false,
 	
 	/**
+	 * list of quotes to remove upon submit
+	 * @var	array<string>
+	 */
+	_removeOnSubmit: [ ],
+	
+	/**
 	 * show quotes element
 	 * @var	jQuery
 	 */
 	_showQuotes: null,
 	
 	/**
+	 * allow pasting
+	 * @var	boolean
+	 */
+	_supportPaste: false,
+	
+	/**
 	 * Initializes the quote manager.
 	 * 
 	 * @param	integer		count
+	 * @param	string		ckEditorID
 	 */
-	init: function(count) {
+	init: function(count, ckEditorID) {
 		this._count = parseInt(count) || 0;
 		this._handlers = { };
+		this._removeOnSubmit = [ ];
+		
+		if (ckEditorID) {
+			this._ckEditor = $('#' + ckEditorID);
+			if (this._ckEditor.length) {
+				this._supportPaste = true;
+			}
+		}
 		
 		this._toggleShowQuotes();
 	},
@@ -1284,7 +1316,7 @@ WCF.Message.Quote.Manager = Class.extend({
 		else {
 			// select first handler to fetch template
 			for (var $objectType in this._handlers) {
-				this._handlers[$objectType].getQuotes();
+				this._handlers[$objectType].getQuotes(this._supportPaste);
 				break;
 			}
 		}
@@ -1317,6 +1349,50 @@ WCF.Message.Quote.Manager = Class.extend({
 		});
 		this._dialog.wcfDialog('render');
 		this._hasTemplate = true;
+		
+		// bind event listener
+		if (this._supportPaste) {
+			this._dialog.find('.jsInsertQuote').click($.proxy(this._insertQuote, this));
+		}
+	},
+	
+	/**
+	 * Inserts a quote.
+	 * 
+	 * @param	object		event
+	 */
+	_insertQuote: function(event) {
+		var $listItem = $(event.currentTarget).parents('li');
+		var $quote = $.trim($listItem.children('div:eq(0)').html());
+		var $message = $listItem.parents('article.message');
+		
+		// build quote tag
+		$quote = "[quote='" + $message.attr('data-username') + "','" + $message.data('link') + "']" + $quote + "[/quote]";
+		
+		// insert into ckEditor
+		var $ckEditor = this._ckEditor.ckeditorGet();
+		if ($ckEditor.mode === 'wysiwyg') {
+			// in design mode
+			$ckEditor.insertText($quote);
+		}
+		else {
+			// in source mode
+			var $textarea = this._ckEditor.next('.cke_editor_text').find('textarea');
+			var $value = $textarea.val();
+			if ($value.length == 0) {
+				$textarea.val($quote);
+			}
+			else {
+				var $position = $textarea.getCaret();
+				$textarea.val( $value.substr(0, $position) + $quote + $value.substr($position) );
+			}
+		}
+		
+		// remove quote upon submit
+		this._removeOnSubmit.push($listItem.attr('data-quote-id'));
+		
+		// close dialog
+		this._dialog.wcfDialog('close');
 	},
 	
 	/**

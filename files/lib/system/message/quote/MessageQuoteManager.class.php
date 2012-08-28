@@ -139,15 +139,15 @@ class MessageQuoteManager extends SingletonFactory {
 	/**
 	 * Returns a list of quotes.
 	 * 
-	 * @param	string		$objectType
+	 * @param	boolean		supportPaste
 	 */
-	public function getQuotes($objectType = '') {
+	public function getQuotes($supportPaste = false) {
 		$template = '';
 		
 		if (!empty($this->quoteData)) {
 			foreach ($this->quotes as $objectType => $objectData) {
 				$quoteHandler = call_user_func(array($this->objectTypes[$objectType]->className, 'getInstance'));
-				$template .= $quoteHandler->render($objectData);
+				$template .= $quoteHandler->render($objectData, $supportPaste);
 			}
 		}
 		

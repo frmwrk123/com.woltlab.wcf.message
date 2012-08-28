@@ -30,7 +30,7 @@ abstract class AbstractMessageQuoteHandler extends SingletonFactory implements I
 	/**
 	 * @see	wcf\system\message\quote\IMessageQuoteHandler::render()
 	 */
-	public function render(array $data) {
+	public function render(array $data, $supportPaste = false) {
 		$messages = $this->getMessages($data);
 		$userIDs = $userProfiles = array();
 		foreach ($messages as $message) {
@@ -47,6 +47,7 @@ abstract class AbstractMessageQuoteHandler extends SingletonFactory implements I
 		
 		WCF::getTPL()->assign(array(
 			'messages' => $this->getMessages($data),
+			'supportPaste' => $supportPaste,
 			'userProfiles' => $userProfiles
 		));
 		
