@@ -1,5 +1,6 @@
 <?php
 namespace wcf\system\message\quote;
+use wcf\data\user\UserProfile;
 use wcf\system\SingletonFactory;
 use wcf\system\WCF;
 
@@ -30,8 +31,23 @@ abstract class AbstractMessageQuoteHandler extends SingletonFactory implements I
 	 * @see	wcf\system\message\quote\IMessageQuoteHandler::render()
 	 */
 	public function render(array $data) {
+		$messages = $this->getMessages($data);
+		$userIDs = $userProfiles = array();
+		foreach ($messages as $message) {
+			$userID = $message->getUserID();
+			if ($userID) {
+				$userIDs[] = $userID;
+			}
+		}
+		
+		if (!empty($userIDs)) {
+			$userIDs = array_unique($userIDs);
+			$userProfiles = UserProfile::getUserProfiles($userIDs);
+		}
+		
 		WCF::getTPL()->assign(array(
-			'messages' => $this->getMessages($data)
+			'messages' => $this->getMessages($data),
+			'userProfiles' => $userProfiles
 		));
 		
 		return WCF::getTPL()->fetch($this->templateName);
