@@ -1,2 +1,2 @@
 {if !$wysiwygSelector|isset}{assign var=wysiwygSelector value=''}{/if}
-var $quoteManager = new WCF.Message.Quote.Manager({@$__quoteCount}, '{$wysiwygSelector}', [ {implode from=__quoteRemove item=quoteID}'{$quoteID}'{/implode} ]);
+var $quoteManager = new WCF.Message.Quote.Manager({@$__quoteCount}, '{$wysiwygSelector}', [ {implode from=$__quoteRemove item=quoteID}'{$quoteID}'{/implode} ]);

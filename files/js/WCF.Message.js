@@ -1183,6 +1183,28 @@ WCF.Message.Quote.Handler = Class.extend({
 			}
 		});
 		this._proxy.sendRequest();
+	},
+	
+	/**
+	 * Marks quote ids for removal.
+	 * 
+	 * @param	array<integer>	quoteIDs
+	 */
+	markQuotesForRemoval: function(quoteIDs) {
+		// disable spinner
+		this._proxy.setOption('showLoadingOverlay', false);
+		
+		this._proxy.setOption('data', {
+			actionName: 'markQuotesForRemoval',
+			className: this._className,
+			parameters: {
+				quoteIDs: quoteIDs
+			}
+		});
+		this._proxy.sendRequest();
+		
+		// enable spinner again
+		this._proxy.setOption('showLoadingOverlay', true);
 	}
 });
 
@@ -1251,12 +1273,13 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * 
 	 * @param	integer		count
 	 * @param	string		ckEditorID
+	 * @param	boolean		supportPaste
 	 * @param	array<string>	removeOnSubmit
 	 */
-	init: function(count, ckEditorID, removeOnSubmit) {
+	init: function(count, ckEditorID, supportPaste, removeOnSubmit) {
 		this._ckEditor = '';
 		this._count = parseInt(count) || 0;
-		this._dialog = 0;
+		this._dialog = null;
 		this._form = null;
 		this._handlers = { };
 		this._hasTemplate = false;
@@ -1277,7 +1300,9 @@ WCF.Message.Quote.Manager = Class.extend({
 				}
 				else {
 					this._form = null;
-					this._supportPaste = false;
+					
+					// allow override
+					this._supportPaste = (suportPaste === true) ? true : false;
 				}
 			}
 		}
@@ -1378,6 +1403,41 @@ WCF.Message.Quote.Manager = Class.extend({
 		if (this._supportPaste) {
 			this._dialog.find('.jsInsertQuote').click($.proxy(this._insertQuote, this));
 		}
+		
+		// mark quotes for removal
+		if (this._removeOnSubmit.length) {
+			var self = this;
+			this._dialog.find('input.jsRemoveQuote').each(function(index, input) {
+				var $input = $(input).change($.proxy(this._change, this));
+				
+				// mark for deletion
+				if (WCF.inArray($input.parent('li').attr('data-quote-id'), self._removeOnSubmit)) {
+					$input.attr('checked', 'checked');
+				}
+			});
+		}
+	},
+	
+	/**
+	 * Checks for change event on delete-checkboxes.
+	 * 
+	 * @param	object		event
+	 */
+	_change: function(event) {
+		var $input = $(event.currentTarget);
+		var $quoteID = $input.parent('li').attr('data-quote-id');
+		
+		if ($input.prop('checked')) {
+			this._removeOnSubmit.push($quoteID);
+		}
+		else {
+			for (var $index in this._removeOnSubmit) {
+				if (this._removeOnSubmit[$index] == $quoteID) {
+					delete this._removeOnSubmit[$index];
+					break;
+				}
+			}
+		}
 	},
 	
 	/**
@@ -1412,7 +1472,7 @@ WCF.Message.Quote.Manager = Class.extend({
 			}
 		}
 		
-		// remove quote upon submit
+		// remove quote upon submit or upon request
 		this._removeOnSubmit.push($listItem.attr('data-quote-id'));
 		
 		// close dialog
@@ -1447,6 +1507,18 @@ WCF.Message.Quote.Manager = Class.extend({
 			var $formSubmit = this._form.find('.formSubmit');
 			for (var $i in this._removeOnSubmit) {
 				$('<input type="hidden" name="__removeQuoteIDs[]" value="' + this._removeOnSubmit[$i] + '" />').appendTo($formSubmit);
+			}
+		}
+	},
+	
+	/**
+	 * Marks quote ids for removal.
+	 */
+	markQuotesForRemoval: function() {
+		if (this._removeOnSubmit.length) {
+			// select first handler for marking
+			for (var $objectType in this._handlers) {
+				this._handlers[$objectType].markForRemoval(this._removeOnSubmit);
 			}
 		}
 	}

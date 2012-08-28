@@ -197,6 +197,52 @@ class MessageQuoteManager extends SingletonFactory {
 	}
 	
 	/**
+	 * Marks quote ids for removal.
+	 * 
+	 * @param	array<string>	$quoteIDs
+	 */
+	public function markQuotesForRemoval(array $quoteIDs) {
+		$oldQuoteIDs = $this->getQuotesMarkedForRemoval();
+		foreach ($quoteIDs as $index => $quoteID) {
+			if (!isset($this->quoteData[$index]) || in_array($quoteID, $oldQuoteIDs)) {
+				unset($quoteIDs[$index]);
+			}
+		}
+		
+		if (!empty($quoteIDs)) {
+			$quoteIDs = array_merge($oldQuoteIDs, $quoteIDs);
+			WCF::getSession()->register('__messageQuotesPending'.$this->packageID, $quoteIDs);
+		}
+	}
+	
+	/**
+	 * Returns a list of quote ids previously marked for removal.
+	 * 
+	 * @return	array<string>
+	 */
+	public function getQuotesMarkedForRemoval() {
+		$quoteIDs = WCF::getSession()->getVar('__messageQuotesPending'.$this->packageID);
+		if ($quoteIDs === null) {
+			$quoteIDs = array();
+		}
+		
+		return $quoteIDs;
+	}
+	
+	/**
+	 * Removes quotes marked for removal.
+	 */
+	public function removeMarkedQuotes() {
+		$quoteIDs = $this->getQuotesMarkedForRemoval();
+		foreach ($quoteIDs as $quoteID) {
+			$this->removeQuote($quoteID);
+		}
+		
+		// remove session variable
+		WCF::getSession()->unregister('__messageQuotesPending'.$this->packageID);
+	}
+	
+	/**
 	 * Returns the number of stored quotes.
 	 * 
 	 * @return	integer

@@ -25,6 +25,16 @@ interface IMessageQuoteAction {
 	public function getQuotes();
 	
 	/**
+	 * Validates parameters to mark quote ids for removal.
+	 */
+	public function validateMarkQuotesForRemoval();
+	
+	/**
+	 * Marks quote ids for removal.
+	 */
+	public function markQuotesForRemoval();
+	
+	/**
 	 * Validates parameters to remove quotes from storage.
 	 */
 	public function validateRemoveQuotes();
