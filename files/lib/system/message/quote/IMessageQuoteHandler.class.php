@@ -20,4 +20,12 @@ interface IMessageQuoteHandler {
 	 * @return	string
 	 */
 	public function render(array $data, $supportPaste = false);
+	
+	/**
+	 * Renders a list of quotes for insertation.
+	 * 
+	 * @param	array<array>	$data
+	 * @return	array<string>
+	 */
+	public function renderQuotes(array $data);
 }

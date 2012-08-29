@@ -163,6 +163,48 @@ class MessageQuoteManager extends SingletonFactory {
 	}
 	
 	/**
+	 * Returns a list of quotes by object type and id.
+	 * 
+	 * @param	string		$objectType
+	 * @param	array<integer>	$objectIDs
+	 * @param	boolean		$markForRemoval
+	 * @return	array<string>
+	 */
+	public function getQuotesByObjectIDs($objectType, array $objectIDs, $markForRemoval = true) {
+		if (!isset($this->quotes[$objectType])) {
+			return array();
+		}
+		
+		$data = array();
+		$quoteIDs = array();
+		foreach ($this->quotes[$objectType] as $objectID => $quoteIDs) {
+			if (in_array($objectID, $objectIDs)) {
+				$data[$objectID] = $quoteIDs;
+				
+				// mark quotes for removal
+				if ($markForRemoval) {
+					foreach ($quoteIDs as $quoteID) {
+						$quoteIDs[] = $quoteID;
+					}
+				}
+			}
+		}
+		
+		// no quotes found
+		if (empty($data)) {
+			return array();
+		}
+		
+		// mark quotes for removal
+		if (!empty($quoteIDs)) {
+			$this->markQuotesForRemoval($quoteIDs);
+		}
+		
+		$quoteHandler = call_user_func(array($this->objectTypes[$objectType]->className, 'getInstance'));
+		return $quoteHandler->renderQuotes($data);
+	}
+	
+	/**
 	 * Returns a quote by id.
 	 * 
 	 * @param	string		$quoteID
