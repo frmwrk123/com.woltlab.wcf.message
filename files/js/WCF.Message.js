@@ -386,6 +386,12 @@ WCF.Message.QuickReply = Class.extend({
 	_proxy: null,
 	
 	/**
+	 * quote manager object
+	 * @var	WCF.Message.Quote.Manager
+	 */
+	_quoteManager: null,
+	
+	/**
 	 * scroll handler
 	 * @var	WCF.Effect.Scroll
 	 */
@@ -400,9 +406,10 @@ WCF.Message.QuickReply = Class.extend({
 	/**
 	 * Initializes a new WCF.Message.QuickReply object.
 	 * 
-	 * @param	boolean		supportExtendedForm
+	 * @param	boolean				supportExtendedForm
+	 * @param	WCF.Message.Quote.Manager	quoteManager
 	 */
-	init: function(supportExtendedForm) {
+	init: function(supportExtendedForm, quoteManager) {
 		this._container = $('#messageQuickReply');
 		this._messageField = $('#text');
 		if (!this._container || !this._messageField) {
@@ -414,6 +421,8 @@ WCF.Message.QuickReply = Class.extend({
 		$formSubmit.find('button[data-type=save]').click($.proxy(this._save, this));
 		if (supportExtendedForm) $formSubmit.find('button[data-type=extended]').click($.proxy(this._prepareExtended, this));
 		$formSubmit.find('button[data-type=cancel]').click($.proxy(this._cancel, this));
+		
+		if (quoteManager) this._quoteManager = quoteManager;
 		
 		$('.jsQuickReply').click($.proxy(this._click, this));
 		
@@ -447,14 +456,19 @@ WCF.Message.QuickReply = Class.extend({
 	 * Saves post.
 	 */
 	_save: function() {
+		// mark quotes for removal
+		if (this._quoteManager !== null) {
+			this._quoteManager.markQuotesForRemoval();
+		}
+		
 		var $ckEditor = this._messageField.ckeditorGet();
 		var $message = $ckEditor.getData();
 		
 		this._proxy.setOption('data', {
 			actionName: 'quickReply',
-			className: this._getClassName(),// 'wcf\\data\\conversation\\message\\ConversationMessageAction',
+			className: this._getClassName(),
 			parameters: {
-				objectID: this._getObjectID(),// this._container.data('conversationID'),
+				objectID: this._getObjectID(),
 				data: {
 					message: $message
 				},
@@ -501,6 +515,11 @@ WCF.Message.QuickReply = Class.extend({
 	 * Prepares jump to extended post add form.
 	 */
 	_prepareExtended: function() {
+		// mark quotes for removal
+		if (this._quoteManager !== null) {
+			this._quoteManager.markQuotesForRemoval();
+		}
+		
 		var $ckEditor = this._messageField.ckeditorGet();
 		var $message = $ckEditor.getData();
 		
@@ -1085,7 +1104,7 @@ WCF.Message.Quote.Handler = Class.extend({
 				left: $range.boundingLeft,
 				right: $range.boundingRight,
 				top: $range.boundingTop
-			}
+			};
 		}
 		
 		return $coordinates;
@@ -1302,7 +1321,7 @@ WCF.Message.Quote.Manager = Class.extend({
 					this._form = null;
 					
 					// allow override
-					this._supportPaste = (suportPaste === true) ? true : false;
+					this._supportPaste = (supportPaste === true) ? true : false;
 				}
 			}
 		}
