@@ -564,7 +564,13 @@ WCF.Message.QuickReply = Class.extend({
 			// hide quick reply and revert it
 			this._revertQuickReply(true);
 			
+			// show notification
 			this._notification.show();
+			
+			// count stored quotes
+			if (this._quoteManager !== null) {
+				this._quoteManager.countQuotes();
+			}
 		}
 	},
 	
@@ -1186,11 +1192,11 @@ WCF.Message.Quote.Handler = Class.extend({
 	 * @param	jQuery		jqXHR
 	 */
 	_success: function(data, textStatus, jqXHR) {
-		if (data.returnValues.count) {
+		if (data.returnValues.count !== undefined) {
 			this._quoteManager.updateCount(data.returnValues.count);
 		}
 		
-		if (data.returnValues.template) {
+		if (data.returnValues.template !== undefined) {
 			this._quoteManager.renderDialog(data.returnValues.template);
 		}
 	},
@@ -1226,6 +1232,23 @@ WCF.Message.Quote.Handler = Class.extend({
 			parameters: {
 				quoteIDs: quoteIDs
 			}
+		});
+		this._proxy.sendRequest();
+		
+		// enable spinner again
+		this._proxy.setOption('showLoadingOverlay', true);
+	},
+	
+	/**
+	 * Counts stored quotes.
+	 */
+	countQuotes: function() {
+		// disable spinner
+		this._proxy.setOption('showLoadingOverlay', false);
+		
+		this._proxy.setOption('data', {
+			actionName: 'countQuotes',
+			className: this._className
 		});
 		this._proxy.sendRequest();
 		
@@ -1361,7 +1384,7 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * Toggles the display of the 'Show quotes' button
 	 */
 	_toggleShowQuotes: function() {
-		if (this._count == 0) {
+		if (!this._count) {
 			if (this._showQuotes !== null) {
 				this._showQuotes.hide();
 			}
@@ -1511,7 +1534,7 @@ WCF.Message.Quote.Manager = Class.extend({
 	_removeSelected: function() {
 		var $quoteIDs = [ ];
 		this._dialog.find('input.jsRemoveQuote:checked').each(function(index, input) {
-			$quoteIDs.push($(input).parents('dl').attr('data-quote-id'));
+			$quoteIDs.push($(input).parents('li').attr('data-quote-id'));
 		});
 		
 		if ($quoteIDs.length) {
@@ -1545,7 +1568,19 @@ WCF.Message.Quote.Manager = Class.extend({
 			// select first handler for marking
 			for (var $objectType in this._handlers) {
 				this._handlers[$objectType].markQuotesForRemoval(this._removeOnSubmit);
+				break;
 			}
+		}
+	},
+	
+	/**
+	 * Counts stored quotes.
+	 */
+	countQuotes: function() {
+		// select first handler for counting
+		for (var $objectType in this._handlers) {
+			this._handlers[$objectType].countQuotes();
+			break;
 		}
 	}
 });

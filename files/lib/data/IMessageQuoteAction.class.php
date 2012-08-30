@@ -13,6 +13,18 @@ namespace wcf\data;
  */
 interface IMessageQuoteAction {
 	/**
+	 * Does nothing.
+	 */
+	public function validateCountQuotes();
+	
+	/**
+	 * Returns the count of stored quotes.
+	 * 
+	 * @return	array
+	 */
+	public function countQuotes();
+	
+	/**
 	 * Validates parameters to load quotes.
 	 */
 	public function validateGetQuotes();

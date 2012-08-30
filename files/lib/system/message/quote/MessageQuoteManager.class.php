@@ -176,7 +176,7 @@ class MessageQuoteManager extends SingletonFactory {
 		}
 		
 		$data = array();
-		$quoteIDs = array();
+		$removeQuoteIDs = array();
 		foreach ($this->quotes[$objectType] as $objectID => $quoteIDs) {
 			if (in_array($objectID, $objectIDs)) {
 				$data[$objectID] = $quoteIDs;
@@ -184,7 +184,7 @@ class MessageQuoteManager extends SingletonFactory {
 				// mark quotes for removal
 				if ($markForRemoval) {
 					foreach ($quoteIDs as $quoteID) {
-						$quoteIDs[] = $quoteID;
+						$removeQuoteIDs[] = $quoteID;
 					}
 				}
 			}
@@ -196,8 +196,8 @@ class MessageQuoteManager extends SingletonFactory {
 		}
 		
 		// mark quotes for removal
-		if (!empty($quoteIDs)) {
-			$this->markQuotesForRemoval($quoteIDs);
+		if (!empty($removeQuoteIDs)) {
+			$this->markQuotesForRemoval($removeQuoteIDs);
 		}
 		
 		$quoteHandler = call_user_func(array($this->objectTypes[$objectType]->className, 'getInstance'));
@@ -246,7 +246,7 @@ class MessageQuoteManager extends SingletonFactory {
 	public function markQuotesForRemoval(array $quoteIDs) {
 		$oldQuoteIDs = $this->getQuotesMarkedForRemoval();
 		foreach ($quoteIDs as $index => $quoteID) {
-			if (!isset($this->quoteData[$index]) || in_array($quoteID, $oldQuoteIDs)) {
+			if (!isset($this->quoteData[$quoteID]) || in_array($quoteID, $oldQuoteIDs)) {
 				unset($quoteIDs[$index]);
 			}
 		}
@@ -326,7 +326,7 @@ class MessageQuoteManager extends SingletonFactory {
 	public function assignVariables() {
 		WCF::getTPL()->assign(array(
 			'__quoteCount' => $this->countQuotes(),
-			'__quoteRemove' => $this->removeQuoteIDs
+			'__quoteRemove' => $this->getQuotesMarkedForRemoval()
 		));
 	}
 }
