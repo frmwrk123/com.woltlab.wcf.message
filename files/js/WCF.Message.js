@@ -1169,22 +1169,6 @@ WCF.Message.Quote.Handler = Class.extend({
 	},
 	
 	/**
-	 * Removes given quotes.
-	 * 
-	 * @param	array<string>	quoteIDs
-	 */
-	removeQuotes: function(quoteIDs) {
-		this._proxy.setOption('data', {
-			actionName: 'removeQuotes',
-			className: this._className,
-			parameters: {
-				quoteIDs: quoteIDs
-			}
-		});
-		this._proxy.sendRequest();
-	},
-	
-	/**
 	 * Handles successful AJAX requests.
 	 * 
 	 * @param	object		data
@@ -1195,65 +1179,6 @@ WCF.Message.Quote.Handler = Class.extend({
 		if (data.returnValues.count !== undefined) {
 			this._quoteManager.updateCount(data.returnValues.count);
 		}
-		
-		if (data.returnValues.template !== undefined) {
-			this._quoteManager.renderDialog(data.returnValues.template);
-		}
-	},
-	
-	/**
-	 * Requests a list of stored quotes.
-	 * 
-	 * @param	boolean		supportPaste
-	 */
-	getQuotes: function(supportPaste) {
-		this._proxy.setOption('data', {
-			actionName: 'getQuotes',
-			className: this._className,
-			parameters: {
-				supportPaste: (supportPaste ? 1 : 0)
-			}
-		});
-		this._proxy.sendRequest();
-	},
-	
-	/**
-	 * Marks quote ids for removal.
-	 * 
-	 * @param	array<integer>	quoteIDs
-	 */
-	markQuotesForRemoval: function(quoteIDs) {
-		// disable spinner
-		this._proxy.setOption('showLoadingOverlay', false);
-		
-		this._proxy.setOption('data', {
-			actionName: 'markQuotesForRemoval',
-			className: this._className,
-			parameters: {
-				quoteIDs: quoteIDs
-			}
-		});
-		this._proxy.sendRequest();
-		
-		// enable spinner again
-		this._proxy.setOption('showLoadingOverlay', true);
-	},
-	
-	/**
-	 * Counts stored quotes.
-	 */
-	countQuotes: function() {
-		// disable spinner
-		this._proxy.setOption('showLoadingOverlay', false);
-		
-		this._proxy.setOption('data', {
-			actionName: 'countQuotes',
-			className: this._className
-		});
-		this._proxy.sendRequest();
-		
-		// enable spinner again
-		this._proxy.setOption('showLoadingOverlay', true);
 	}
 });
 
@@ -1298,6 +1223,12 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * @var	boolean
 	 */
 	_hasTemplate: false,
+	
+	/**
+	 * action proxy
+	 * @var	WCF.Action.Proxy
+	 */
+	_proxy: null,
 	
 	/**
 	 * list of quotes to remove upon submit
@@ -1356,6 +1287,12 @@ WCF.Message.Quote.Manager = Class.extend({
 			}
 		}
 		
+		this._proxy = new WCF.Action.Proxy({
+			showLoadingOverlay: false,
+			success: $.proxy(this._success, this),
+			url: 'index.php/MessageQuote/?t=' + SECURITY_TOKEN + SID_ARG_2ND
+		});
+		
 		this._toggleShowQuotes();
 	},
 	
@@ -1412,11 +1349,15 @@ WCF.Message.Quote.Manager = Class.extend({
 			this._dialog.wcfDialog('open');
 		}
 		else {
-			// select first handler to fetch template
-			for (var $objectType in this._handlers) {
-				this._handlers[$objectType].getQuotes(this._supportPaste);
-				break;
-			}
+			this._proxy.setOption('showLoadingOverlay', true);
+			
+			this._proxy.setOption('data', {
+				actionName: 'getQuotes',
+				supportPaste: this._supportPaste
+			});
+			this._proxy.sendRequest();
+			
+			this._proxy.setOption('showLoadingOverlay', false);
 		}
 	},
 	
@@ -1538,11 +1479,11 @@ WCF.Message.Quote.Manager = Class.extend({
 		});
 		
 		if ($quoteIDs.length) {
-			// select first handler to remove
-			for (var $objectType in this._handlers) {
-				this._handlers[$objectType].removeQuotes($quoteIDs);
-				break;
-			}
+			this._proxy.setOption('data', {
+				actionName: 'remove',
+				quoteIDs: $quoteIDs
+			});
+			this._proxy.sendRequest();
 			
 			this._dialog.wcfDialog('close');
 		}
@@ -1565,11 +1506,11 @@ WCF.Message.Quote.Manager = Class.extend({
 	 */
 	markQuotesForRemoval: function() {
 		if (this._removeOnSubmit.length) {
-			// select first handler for marking
-			for (var $objectType in this._handlers) {
-				this._handlers[$objectType].markQuotesForRemoval(this._removeOnSubmit);
-				break;
-			}
+			this._proxy.setOption('data', {
+				actionName: 'markForRemoval',
+				quoteIDs: this._removeOnSubmit
+			});
+			this._proxy.sendRequest();
 		}
 	},
 	
@@ -1577,10 +1518,26 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * Counts stored quotes.
 	 */
 	countQuotes: function() {
-		// select first handler for counting
-		for (var $objectType in this._handlers) {
-			this._handlers[$objectType].countQuotes();
-			break;
+		this._proxy.setOption('data', {
+			actionName: 'count'
+		});
+		this._proxy.sendRequest();
+	},
+	
+	/**
+	 * Handles successful AJAX requests.
+	 * 
+	 * @param	object		data
+	 * @param	string		textStatus
+	 * @param	jQuery		jqXHR
+	 */
+	_success: function(data, textStatus, jqXHR) {
+		if (data.count !== undefined) {
+			this.updateCount(data.count);
+		}
+		
+		if (data.template !== undefined) {
+			this.renderDialog(data.template);
 		}
 	}
 });

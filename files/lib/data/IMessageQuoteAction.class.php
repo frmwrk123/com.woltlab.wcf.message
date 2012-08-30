@@ -13,52 +13,6 @@ namespace wcf\data;
  */
 interface IMessageQuoteAction {
 	/**
-	 * Does nothing.
-	 */
-	public function validateCountQuotes();
-	
-	/**
-	 * Returns the count of stored quotes.
-	 * 
-	 * @return	array
-	 */
-	public function countQuotes();
-	
-	/**
-	 * Validates parameters to load quotes.
-	 */
-	public function validateGetQuotes();
-	
-	/**
-	 * Returns a parsed template for all existing quotes.
-	 * 
-	 * @return	array
-	 */
-	public function getQuotes();
-	
-	/**
-	 * Validates parameters to mark quote ids for removal.
-	 */
-	public function validateMarkQuotesForRemoval();
-	
-	/**
-	 * Marks quote ids for removal.
-	 */
-	public function markQuotesForRemoval();
-	
-	/**
-	 * Validates parameters to remove quotes from storage.
-	 */
-	public function validateRemoveQuotes();
-	
-	/**
-	 * Removes quotes from storage.
-	 * 
-	 * @return	array
-	 */
-	public function removeQuotes();
-	
-	/**
 	 * Validates parameters to save a quote.
 	 */
 	public function validateSaveQuote();
