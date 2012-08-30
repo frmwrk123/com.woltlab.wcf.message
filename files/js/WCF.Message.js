@@ -1054,9 +1054,11 @@ WCF.Message.Quote.Handler = Class.extend({
 		this._copyQuote.show();
 		
 		var $coordinates = this._getBoundingRectangle($selection);
-		var $left = (($coordinates.right - $coordinates.left) / 2) - (this._copyQuote.outerWidth() / 2) + $coordinates.left;
+		var $dimensions = this._copyQuote.getDimensions('outer');
+		var $left = (($coordinates.right - $coordinates.left) / 2) - ($dimensions.width / 2) + $coordinates.left;
+		
 		this._copyQuote.css({
-			bottom: ($(document).height() - $coordinates.top) + 7 + 'px',
+			top: $coordinates.top - $dimensions.height - 7 + 'px',
 			left: $left + 'px'
 		});
 		this._copyQuote.hide();
@@ -1088,17 +1090,22 @@ WCF.Message.Quote.Handler = Class.extend({
 		
 		if (document.createRange && typeof document.createRange().getBoundingClientRect != "undefined") { // Opera, Firefox, Safari, Chrome
 			if (selection.rangeCount > 0) {
+				// the coordinates returned by getBoundingClientRect() is relative to the window, not the document!
 				var $rect = selection.getRangeAt(0).getBoundingClientRect();
+				var $document = $(document);
+				var $offsetTop = $document.scrollTop();
+				
 				$coordinates = {
-					bottom: $rect.bottom,
+					bottom: $rect.bottom + $offsetTop,
 					left: $rect.left,
 					right: $rect.right,
-					top: $rect.top
+					top: $rect.top + $offsetTop
 				};
 			}
 		}
 		else if (document.selection && document.selection.type != "Control") { // IE
 			var $range = document.selection.createRange();
+			// TODO: Check coordinates if they're relative too!
 			$coordinates = {
 				bottom: $range.boundingBottom,
 				left: $range.boundingLeft,
@@ -1116,7 +1123,7 @@ WCF.Message.Quote.Handler = Class.extend({
 	_initCopyQuote: function() {
 		this._copyQuote = $('#quoteManagerCopy');
 		if (!this._copyQuote.length) {
-			this._copyQuote = $('<div id="quoteManagerCopy" class="balloonTooltip">' + WCF.Language.get('wcf.message.quote.quoteSelected') + '</div>').hide().appendTo(document.body);
+			this._copyQuote = $('<div id="quoteManagerCopy" class="balloonTooltip"><span>' + WCF.Language.get('wcf.message.quote.quoteSelected') + '</span><span class="pointer"><span></span></span></div>').hide().appendTo(document.body);
 			this._copyQuote.click($.proxy(this._saveQuote, this));
 		}
 	},
@@ -1537,7 +1544,7 @@ WCF.Message.Quote.Manager = Class.extend({
 		if (this._removeOnSubmit.length) {
 			// select first handler for marking
 			for (var $objectType in this._handlers) {
-				this._handlers[$objectType].markForRemoval(this._removeOnSubmit);
+				this._handlers[$objectType].markQuotesForRemoval(this._removeOnSubmit);
 			}
 		}
 	}
