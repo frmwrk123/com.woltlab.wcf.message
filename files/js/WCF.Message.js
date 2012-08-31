@@ -993,6 +993,9 @@ WCF.Message.Quote.Handler = Class.extend({
 		// register with quote manager
 		this._quoteManager = quoteManager;
 		this._quoteManager.register(this._objectType, this);
+		
+		// register with DOMNodeInsertedHandler
+		WCF.DOMNodeInsertedHandler.addCallback('WCF.Message.Quote.Handler' + objectType.hashCode(), $.proxy(this._initContainers, this));
 	},
 	
 	/**
