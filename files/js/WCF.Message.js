@@ -1532,6 +1532,10 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * @param	jQuery		jqXHR
 	 */
 	_success: function(data, textStatus, jqXHR) {
+		if (data === null) {
+			return;
+		}
+		
 		if (data.count !== undefined) {
 			this.updateCount(data.count);
 		}

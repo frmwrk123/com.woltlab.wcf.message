@@ -3,6 +3,7 @@ namespace wcf\action;
 use wcf\system\exception\SystemException;
 use wcf\system\exception\UserInputException;
 use wcf\system\message\quote\MessageQuoteManager;
+use wcf\system\WCF;
 use wcf\util\ArrayUtil;
 use wcf\util\JSON;
 use wcf\util\StringUtil;
@@ -74,10 +75,14 @@ class MessageQuoteAction extends AJAXProxyAction {
 		
 		$this->executed();
 		
+		// force session update
+		WCF::getSession()->update();
+		WCF::getSession()->disableUpdate();
+		
 		if ($returnValues !== null) {
 			// send JSON-encoded response
 			header('Content-type: application/json');
-			echo JSON::encode($this->response);
+			echo JSON::encode($returnValues);
 		}
 		
 		exit;
@@ -111,7 +116,7 @@ class MessageQuoteAction extends AJAXProxyAction {
 			throw new UserInputException('quoteIDs');
 		}
 		
-		MessageQuoteManager::getInstance()->markQuotesForRemoval($this->parameters['quoteIDs']);
+		MessageQuoteManager::getInstance()->markQuotesForRemoval($this->quoteIDs);
 	}
 	
 	/**
@@ -124,12 +129,12 @@ class MessageQuoteAction extends AJAXProxyAction {
 			throw new UserInputException('quoteIDs');
 		}
 		
-		foreach ($this->parameters['quoteIDs'] as $quoteID) {
+		foreach ($this->quoteIDs as $quoteID) {
 			if (!MessageQuoteManager::getInstance()->removeQuote($quoteID)) {
 				throw new SystemException("Unable to remove quote identified by '".$quoteID."'");
 			}
 		}
 		
-		return $this->countQuotes();
+		return $this->count();
 	}
 }
