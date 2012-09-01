@@ -1163,6 +1163,7 @@ WCF.Message.Quote.Handler = Class.extend({
 		this._proxy.setOption('data', {
 			actionName: 'saveQuote',
 			className: this._className,
+			interfaceName: 'wcf\\data\\IMessageQuoteAction',
 			objectIDs: [ this._objectID ],
 			parameters: {
 				message: this._message
