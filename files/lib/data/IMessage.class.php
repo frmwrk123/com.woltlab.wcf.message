@@ -13,6 +13,14 @@ namespace wcf\data;
  */
 interface IMessage extends ILinkableDatabaseObject, ITitledDatabaseObject {
 	/**
+	 * Returns a plain text, truncated to 255 characters by default.
+	 * 
+	 * @param	integer		$maxLength
+	 * @return	string
+	 */
+	public function getExcerpt($maxLength = 255);
+	
+	/**
 	 * Returns formatted message text.
 	 * 
 	 * @return	string

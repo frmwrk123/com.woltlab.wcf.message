@@ -13,6 +13,18 @@ namespace wcf\data;
  */
 interface IMessageQuoteAction {
 	/**
+	 * Validates parameters to quote an entire message.
+	 */
+	public function validateSaveFullQUote();
+	
+	/**
+	 * Quotes an entire message.
+	 * 
+	 * @return	array
+	 */
+	public function saveFullQuote();
+	
+	/**
 	 * Validates parameters to save a quote.
 	 */
 	public function validateSaveQuote();

@@ -1014,6 +1014,9 @@ WCF.Message.Quote.Handler = Class.extend({
 				}
 				
 				$container.mousedown($.proxy(self._mouseDown, self));
+				
+				// bind event to quote whole message
+				$container.find('.jsQuoteMessage').click($.proxy(this._saveFullQuote, this));
 			}
 		});
 	},
@@ -1154,6 +1157,35 @@ WCF.Message.Quote.Handler = Class.extend({
 		}
 		
 		return '';
+	},
+	
+	/**
+	 * Saves a full quote.
+	 * 
+	 * @param	object		event
+	 */
+	_saveFullQuote: function(event) {
+		var $listItem = $(event.currentTarget);
+		
+		this._proxy.setOption('data', {
+			actionName: 'saveFullQuote',
+			className: this._className,
+			interfaceName: 'wcf\\data\\IMessageQuoteAction',
+			objectIDs: [ $listItem.data('objectID') ]
+		});
+		this._proxy.sendRequest();
+		
+		// mark element as quoted
+		if ($listItem.data('isQuoted')) {
+			$listItem.removeClass('active').data('isQuoted', false);
+		}
+		else {
+			$listItem.addClass('active').data('isQuoted', true);
+		}
+		
+		// discard event
+		event.stopPropagation();
+		return false;
 	},
 	
 	/**

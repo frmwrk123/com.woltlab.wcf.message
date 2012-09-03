@@ -63,7 +63,7 @@ abstract class AbstractMessageQuoteHandler extends SingletonFactory implements I
 		$renderedQuotes = array();
 		foreach ($messages as $message) {
 			foreach ($message as $quote) {
-				$renderedQuotes[] = "[quote='".$message->getUsername()."','".$message->getLink()."']".$quote."[/quote]";
+				$renderedQuotes[] = MessageQuoteManager::getInstance()->renderQuote($message, $quote);
 			}
 		}
 		

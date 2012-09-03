@@ -1,12 +1,12 @@
 <?php
 namespace wcf\system\message\quote;
-use wcf\util\ArrayUtil;
-
 use wcf\data\object\type\ObjectTypeCache;
+use wcf\data\IMessage;
 use wcf\system\application\ApplicationHandler;
 use wcf\system\exception\SystemException;
 use wcf\system\SingletonFactory;
 use wcf\system\WCF;
+use wcf\util\ArrayUtil;
 
 /**
  * Manages message quotes.
@@ -44,6 +44,12 @@ class MessageQuoteManager extends SingletonFactory {
 	protected $quoteData = array();
 	
 	/**
+	 * message id for quoting
+	 * @var	integer
+	 */
+	protected $quoteMessageID = 0;
+	
+	/**
 	 * list of quote ids to be removed
 	 * @var	array<string>
 	 */
@@ -58,10 +64,9 @@ class MessageQuoteManager extends SingletonFactory {
 		// load stored quotes from session
 		$messageQuotes = WCF::getSession()->getVar('__messageQuotes'.$this->packageID);
 		if (is_array($messageQuotes)) {
-			if (isset($messageQuotes['quotes']) && isset($messageQuotes['data'])) {
-				$this->quotes = $messageQuotes['quotes'];
-				$this->quoteData = $messageQuotes['data'];
-			}
+			$this->quotes = (isset($messageQuotes['quotes'])) ? $messageQuotes['quotes'] : array();
+			$this->quoteData = (isset($messageQuotes['quoteData'])) ? $messageQuotes['quoteData'] : array();
+			$this->removeQuoteIDs = (isset($messageQuotes['removeQuoteIDs'])) ? $messageQuotes['removeQuoteIDs'] : array();
 		}
 		
 		// load object types
@@ -72,13 +77,16 @@ class MessageQuoteManager extends SingletonFactory {
 	}
 	
 	/**
-	 * Adds a quote unless it is already stored.
+	 * Adds a quote unless it is already stored. If you want to quote a whole
+	 * message while maintaing the original markup, pass $obj->getExcerpt() for
+	 * $message and $obj->getMessage() for $fullQuote.
 	 * 
 	 * @param	string		$objectType
 	 * @param	integer		$objectID
 	 * @param	string		$message
+	 * @param	string		$fullQuote
 	 */
-	public function addQuote($objectType, $objectID, $message) {
+	public function addQuote($objectType, $objectID, $message, $fullQuote = '') {
 		if (!isset($this->objectTypes[$objectType])) {
 			throw new SystemException("Object type '".$objectType."' is unknown");
 		}
@@ -92,14 +100,16 @@ class MessageQuoteManager extends SingletonFactory {
 		}
 		
 		$quoteID = substr(sha1($objectType.'|'.$objectID.'|'.$message), 0, 8);
-		if (!in_array($quoteID, $this->quotes[$objectType][$objectID])) {
-			$this->quotes[$objectType][$objectID][] = $quoteID;
+		if (!isset($this->quotes[$objectType][$objectID][$quoteID])) {
+			$this->quotes[$objectType][$objectID][$quoteID] = 0;
 			$this->quoteData[$quoteID] = $message;
 			
-			WCF::getSession()->register('__messageQuotes'.$this->packageID, array(
-				'quotes' => $this->quotes,
-				'data' => $this->quoteData
-			));
+			if (!empty($fullQuote)) {
+				$this->quotes[$objectType][$objectID][$quoteID] = 1;
+				$this->quoteData[$quoteID.'_fq'] = $message;
+			}
+			
+			$this->updateSession();
 		}
 	}
 	
@@ -115,9 +125,9 @@ class MessageQuoteManager extends SingletonFactory {
 		
 		foreach ($this->quotes as $objectType => $objectIDs) {
 			foreach ($objectIDs as $objectID => $quoteIDs) {
-				foreach ($quoteIDs as $key => $qID) {
+				foreach ($quoteIDs as $qID => $isFullQuote) {
 					if ($qID == $quoteID) {
-						unset($this->quotes[$objectType][$objectID][$key]);
+						unset($this->quotes[$objectType][$objectID][$qID]);
 						
 						// clean-up structure
 						if (empty($this->quotes[$objectType][$objectID])) {
@@ -129,11 +139,11 @@ class MessageQuoteManager extends SingletonFactory {
 						}
 						
 						unset($this->quoteData[$quoteID]);
+						if ($isFullQuote) {
+							unset($this->quoteData[$quoteID.'_fq']);
+						}
 						
-						WCF::getSession()->register('__messageQuotes'.$this->packageID, array(
-							'quotes' => $this->quotes,
-							'data' => $this->quoteData
-						));
+						$this->updateSession();
 						
 						return true;
 					}
@@ -152,11 +162,9 @@ class MessageQuoteManager extends SingletonFactory {
 	public function getQuotes($supportPaste = false) {
 		$template = '';
 		
-		if (!empty($this->quoteData)) {
-			foreach ($this->quotes as $objectType => $objectData) {
-				$quoteHandler = call_user_func(array($this->objectTypes[$objectType]->className, 'getInstance'));
-				$template .= $quoteHandler->render($objectData, $supportPaste);
-			}
+		foreach ($this->quotes as $objectType => $objectData) {
+			$quoteHandler = call_user_func(array($this->objectTypes[$objectType]->className, 'getInstance'));
+			$template .= $quoteHandler->render($objectData, $supportPaste);
 		}
 		
 		return $template;
@@ -183,9 +191,7 @@ class MessageQuoteManager extends SingletonFactory {
 				
 				// mark quotes for removal
 				if ($markForRemoval) {
-					foreach ($quoteIDs as $quoteID) {
-						$removeQuoteIDs[] = $quoteID;
-					}
+					$removeQuoteIDs = array_merge($removeQuoteIDs, array_keys($quoteIDs));
 				}
 			}
 		}
@@ -208,10 +214,14 @@ class MessageQuoteManager extends SingletonFactory {
 	 * Returns a quote by id.
 	 * 
 	 * @param	string		$quoteID
+	 * @param	boolean		$useFullQuote
 	 * @return	string
 	 */
-	public function getQuote($quoteID) {
-		if (isset($this->quoteData[$quoteID])) {
+	public function getQuote($quoteID, $useFullQuote = true) {
+		if ($useFullQuote && isset($this->quoteData[$quoteID.'_fq'])) {
+			return $this->quoteData[$quoteID.'_fq'];
+		}
+		else if (isset($this->quoteData[$quoteID])) {
 			return $this->quoteData[$quoteID];
 		}
 		
@@ -228,7 +238,7 @@ class MessageQuoteManager extends SingletonFactory {
 		if (isset($this->quoteData[$quoteID])) {
 			foreach ($this->quotes as $objectIDs) {
 				foreach ($objectIDs as $objectID => $quoteIDs) {
-					if (in_array($quoteID, $quoteIDs)) {
+					if (isset($quoteIDs[$quoteID])) {
 						return $objectID;
 					}
 				}
@@ -244,44 +254,40 @@ class MessageQuoteManager extends SingletonFactory {
 	 * @param	array<string>	$quoteIDs
 	 */
 	public function markQuotesForRemoval(array $quoteIDs) {
-		$oldQuoteIDs = $this->getQuotesMarkedForRemoval();
 		foreach ($quoteIDs as $index => $quoteID) {
-			if (!isset($this->quoteData[$quoteID]) || in_array($quoteID, $oldQuoteIDs)) {
+			if (!isset($this->quoteData[$quoteID]) || in_array($quoteID, $this->removeQuoteIDs)) {
 				unset($quoteIDs[$index]);
 			}
 		}
 		
 		if (!empty($quoteIDs)) {
-			$quoteIDs = array_merge($oldQuoteIDs, $quoteIDs);
-			WCF::getSession()->register('__messageQuotesPending'.$this->packageID, $quoteIDs);
+			$this->removeQuoteIDs = array_merge($this->removeQuoteIDs, $quoteIDs);
+			$this->updateSession();
 		}
 	}
 	
 	/**
-	 * Returns a list of quote ids previously marked for removal.
+	 * Renders a quote for given message.
 	 * 
-	 * @return	array<string>
+	 * @param	wcf\data\IMessage	$message
+	 * @param	string			$text
+	 * @return	string
 	 */
-	public function getQuotesMarkedForRemoval() {
-		$quoteIDs = WCF::getSession()->getVar('__messageQuotesPending'.$this->packageID);
-		if ($quoteIDs === null) {
-			$quoteIDs = array();
-		}
-		
-		return $quoteIDs;
+	public function renderQuote(IMessage $message, $text) {
+		return "[quote='{$message->getUsername()}','{$message->getLink()}']{$text}[/quote]";
 	}
 	
 	/**
 	 * Removes quotes marked for removal.
 	 */
 	public function removeMarkedQuotes() {
-		$quoteIDs = $this->getQuotesMarkedForRemoval();
-		foreach ($quoteIDs as $quoteID) {
-			$this->removeQuote($quoteID);
+		if (!empty($this->removeQuoteIDs)) {
+			foreach ($this->removeQuoteIDs as $quoteID) {
+				$this->removeQuote($quoteID);
+			}
+			
+			$this->updateSession();
 		}
-		
-		// remove session variable
-		WCF::getSession()->unregister('__messageQuotesPending'.$this->packageID);
 	}
 	
 	/**
@@ -290,7 +296,21 @@ class MessageQuoteManager extends SingletonFactory {
 	 * @return	integer
 	 */
 	public function countQuotes() {
-		return count($this->quoteData);
+		$count = 0;
+		foreach ($this->quoteData as $quoteID => $quote) {
+			if (strlen($quoteID) == 8) {
+				$count++;
+			}
+		}
+		
+		return $count;
+	}
+	
+	/**
+	 * Reads the quote message id.
+	 */
+	public function readParameters() {
+		if (isset($_REQUEST['quoteMessageID'])) $this->quoteMessageID = intval($_REQUEST['quoteMessageID']);
 	}
 	
 	/**
@@ -306,7 +326,7 @@ class MessageQuoteManager extends SingletonFactory {
 			}
 			
 			if (!empty($quoteIDs)) {
-				$this->removeQuoteIDs = $quoteIDs;
+				$this->removeQuoteIDs = array_merge($this->removeQuoteIDs, $quoteIDs);
 			}
 		}
 	}
@@ -315,9 +335,7 @@ class MessageQuoteManager extends SingletonFactory {
 	 * Removes quotes after saving current message.
 	 */
 	public function saved() {
-		foreach ($this->removeQuoteIDs as $quoteID) {
-			$this->removeQuote($quoteID);
-		}
+		$this->removeMarkedQuotes();
 	}
 	
 	/**
@@ -326,7 +344,27 @@ class MessageQuoteManager extends SingletonFactory {
 	public function assignVariables() {
 		WCF::getTPL()->assign(array(
 			'__quoteCount' => $this->countQuotes(),
-			'__quoteRemove' => $this->getQuotesMarkedForRemoval()
+			'__quoteRemove' => $this->removeQuoteIDs
+		));
+	}
+	
+	/**
+	 * Returns quote message id.
+	 * 
+	 * @return	integer
+	 */
+	public function getQuoteMessageID() {
+		return $this->quoteMessageID;
+	}
+	
+	/**
+	 * Updates data stored in session,
+	 */
+	protected function updateSession() {
+		WCF::getSession()->register('__messageQuotes'.$this->packageID, array(
+			'quotes' => $this->quotes,
+			'quoteData' => $this->quoteData,
+			'removeQuoteIDs' => $this->removeQuoteIDs
 		));
 	}
 }
