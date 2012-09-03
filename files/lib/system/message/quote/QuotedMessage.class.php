@@ -14,13 +14,19 @@ use wcf\data\IMessage;
  */
 class QuotedMessage implements \Countable, \Iterator {
 	/**
+	 * list of full quotes for insertation
+	 * @var	array<string>
+	 */
+	public $fullQuotes = array();
+	
+	/**
 	 * quotable database object
 	 * @var	wcf\data\IQuotableDatabaseObject
 	 */
 	public $object = null;
 	
 	/**
-	 * list of quotes
+	 * list of quotes (shortend)
 	 * @var	array<string>
 	 */
 	public $quotes = array();
@@ -51,8 +57,10 @@ class QuotedMessage implements \Countable, \Iterator {
 	 * 
 	 * @param	string		$quoteID
 	 * @param	string		$quote
+	 * @param	string		$fullQuote
 	 */
-	public function addQuote($quoteID, $quote) {
+	public function addQuote($quoteID, $quote, $fullQuote) {
+		$this->fullQuotes[] = $fullQuote;
 		$this->quotes[$quoteID] = $quote;
 		$this->indexToObject[] = $quoteID;
 	}
@@ -73,6 +81,20 @@ class QuotedMessage implements \Countable, \Iterator {
 	 */
 	public function __call($name, $value) {
 		return $this->object->$name();
+	}
+	
+	/**
+	 * Returns the full quote by quote id.
+	 *
+	 * @param	string		$quoteID
+	 * @return	string
+	 */
+	public function getFullQuote($quoteID) {
+		if (isset($this->fullQuotes[$quoteID])) {
+			return $this->fullQuotes[$quoteID];
+		}
+	
+		return null;
 	}
 	
 	/**

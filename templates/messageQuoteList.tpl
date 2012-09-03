@@ -30,8 +30,11 @@
 												{if $supportPaste}<img src="{icon size='S'}add{/icon}" alt="" class="jsTooltip icon16 jsInsertQuote" title="{lang}wcf.message.quote.insertQuote{/lang}" />{/if}
 											</span>
 											
-											<div>
-												{$quote}
+											<div class="jsQuote">
+												{@$quote}
+											</div>
+											<div class="jsFullQuote">
+												{@$message->getFullQuote($quoteID)}
 											</div>
 										</li>
 									{/foreach}

@@ -1473,7 +1473,7 @@ WCF.Message.Quote.Manager = Class.extend({
 	 */
 	_insertQuote: function(event) {
 		var $listItem = $(event.currentTarget).parents('li');
-		var $quote = $.trim($listItem.children('div:eq(0)').html());
+		var $quote = $.trim($listItem.children('div.jsFullQuote').html());
 		var $message = $listItem.parents('article.message');
 		
 		// build quote tag
