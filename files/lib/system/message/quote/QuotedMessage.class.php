@@ -60,7 +60,7 @@ class QuotedMessage implements \Countable, \Iterator {
 	 * @param	string		$fullQuote
 	 */
 	public function addQuote($quoteID, $quote, $fullQuote) {
-		$this->fullQuotes[] = $fullQuote;
+		$this->fullQuotes[$quoteID] = $fullQuote;
 		$this->quotes[$quoteID] = $quote;
 		$this->indexToObject[] = $quoteID;
 	}
