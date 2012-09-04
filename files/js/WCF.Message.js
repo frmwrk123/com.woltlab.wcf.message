@@ -547,6 +547,9 @@ WCF.Message.QuickReply = Class.extend({
 	 * @param	jQuery		jqXHR
 	 */
 	_success: function(data, textStatus, jqXHR) {
+		// remove marked quotes
+		this._quoteManager.removeMarkedQuotes();
+		
 		// redirect to new page
 		if (data.returnValues.url) {
 			window.location = data.returnValues.url;
@@ -1545,6 +1548,18 @@ WCF.Message.Quote.Manager = Class.extend({
 			this._proxy.setOption('data', {
 				actionName: 'markForRemoval',
 				quoteIDs: this._removeOnSubmit
+			});
+			this._proxy.sendRequest();
+		}
+	},
+	
+	/**
+	 * Remoes all marked quote ids.
+	 */
+	removeMarkedQuotes: function() {
+		if (this._removeOnSubmit.length) {
+			this._proxy.setOption('data', {
+				actionName: 'removeMarkedQuotes'
 			});
 			this._proxy.sendRequest();
 		}

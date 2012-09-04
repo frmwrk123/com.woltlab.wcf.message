@@ -106,7 +106,7 @@ class MessageQuoteManager extends SingletonFactory {
 			
 			if (!empty($fullQuote)) {
 				$this->quotes[$objectType][$objectID][$quoteID] = 1;
-				$this->quoteData[$quoteID.'_fq'] = $message;
+				$this->quoteData[$quoteID.'_fq'] = $fullQuote;
 			}
 			
 			$this->updateSession();
@@ -263,6 +263,7 @@ class MessageQuoteManager extends SingletonFactory {
 		if (!empty($quoteIDs)) {
 			$this->removeQuoteIDs = array_merge($this->removeQuoteIDs, $quoteIDs);
 			$this->updateSession();
+			
 		}
 	}
 	
@@ -285,6 +286,9 @@ class MessageQuoteManager extends SingletonFactory {
 			foreach ($this->removeQuoteIDs as $quoteID) {
 				$this->removeQuote($quoteID);
 			}
+			
+			// reset list of quote ids marked for removal
+			$this->removeQuoteIDs = array();
 			
 			$this->updateSession();
 		}

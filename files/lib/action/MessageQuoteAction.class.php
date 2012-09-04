@@ -36,9 +36,9 @@ class MessageQuoteAction extends AJAXProxyAction {
 			$this->quoteIDs = ArrayUtil::trim($_POST['quoteIDs']);
 			
 			// validate quote ids
-			foreach ($this->quoteIDs as $quoteID) {
+			foreach ($this->quoteIDs as $key => $quoteID) {
 				if (MessageQuoteManager::getInstance()->getQuote($quoteID) === null) {
-					throw new UserInputException('quoteIDs');
+					unset($key);
 				}
 			}
 		}
@@ -66,6 +66,10 @@ class MessageQuoteAction extends AJAXProxyAction {
 			
 			case 'remove':
 				$returnValues = array('count' => $this->remove());
+			break;
+			
+			case 'removeMarkedQuotes':
+				$returnValues = array('count' => $this->removeMarkedQuotes());
 			break;
 			
 			default:
@@ -134,6 +138,17 @@ class MessageQuoteAction extends AJAXProxyAction {
 				throw new SystemException("Unable to remove quote identified by '".$quoteID."'");
 			}
 		}
+		
+		return $this->count();
+	}
+	
+	/**
+	 * Removes all quotes marked for removal and returns the remaining count.
+	 * 
+	 * @return	integer
+	 */
+	protected function removeMarkedQuotes() {
+		MessageQuoteManager::getInstance()->removeMarkedQuotes();
 		
 		return $this->count();
 	}
