@@ -1019,7 +1019,7 @@ WCF.Message.Quote.Handler = Class.extend({
 				$container.mousedown($.proxy(self._mouseDown, self));
 				
 				// bind event to quote whole message
-				$container.find('.jsQuoteMessage').click($.proxy(this._saveFullQuote, this));
+				self._containers[$containerID].find('.jsQuoteMessage').click($.proxy(self._saveFullQuote, self));
 			}
 		});
 	},
@@ -1180,10 +1180,10 @@ WCF.Message.Quote.Handler = Class.extend({
 		
 		// mark element as quoted
 		if ($listItem.data('isQuoted')) {
-			$listItem.removeClass('active').data('isQuoted', false);
+			$listItem.data('isQuoted', false).children('a').removeClass('active');
 		}
 		else {
-			$listItem.addClass('active').data('isQuoted', true);
+			$listItem.data('isQuoted', true).children('a').addClass('active');
 		}
 		
 		// discard event

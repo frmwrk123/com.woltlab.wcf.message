@@ -20,6 +20,18 @@ use wcf\util\ArrayUtil;
  */
 class MessageQuoteManager extends SingletonFactory {
 	/**
+	 * current object ids
+	 * @var	array<integer>
+	 */
+	protected $objectIDs = array();
+	
+	/**
+	 * current object type name
+	 * @var	string
+	 */
+	protected $objectType = '';
+	
+	/**
 	 * list of object types
 	 * @var	array<wcf\data\object\type\ObjectType>
 	 */
@@ -85,6 +97,7 @@ class MessageQuoteManager extends SingletonFactory {
 	 * @param	integer		$objectID
 	 * @param	string		$message
 	 * @param	string		$fullQuote
+	 * @param	boolean
 	 */
 	public function addQuote($objectType, $objectID, $message, $fullQuote = '') {
 		if (!isset($this->objectTypes[$objectType])) {
@@ -99,7 +112,7 @@ class MessageQuoteManager extends SingletonFactory {
 			$this->quotes[$objectType][$objectID] = array();
 		}
 		
-		$quoteID = substr(sha1($objectType.'|'.$objectID.'|'.$message), 0, 8);
+		$quoteID = $this->getQuoteID($objectType, $objectID, $message, $fullQuote);
 		if (!isset($this->quotes[$objectType][$objectID][$quoteID])) {
 			$this->quotes[$objectType][$objectID][$quoteID] = 0;
 			$this->quoteData[$quoteID] = $message;
@@ -110,7 +123,24 @@ class MessageQuoteManager extends SingletonFactory {
 			}
 			
 			$this->updateSession();
+			
+			return true;
 		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns the quote id for given quote.
+	 * 
+	 * @param	string		$objectType
+	 * @param	integer		$objectID
+	 * @param	string		$message
+	 * @param	string		$fullQuote
+	 * @return	string
+	 */
+	public function getQuoteID($objectType, $objectID, $message, $fullQuote = '') {
+		return substr(sha1($objectType.'|'.$objectID.'|'.$message.'|'.$fullQuote), 0, 8);
 	}
 	
 	/**
@@ -311,6 +341,21 @@ class MessageQuoteManager extends SingletonFactory {
 	}
 	
 	/**
+	 * Sets object type and object ids.
+	 * 
+	 * @param	string		$objectType
+	 * @param	array<integer>	$objectIDs
+	 */
+	public function initObjects($objectType, array $objectIDs) {
+		if (!isset($this->objectTypes[$objectType])) {
+			throw new SystemException("Object type '".$objectType."' is unknown");
+		}
+		
+		$this->objectIDs = ArrayUtil::toIntegerArray($objectIDs);
+		$this->objectType = $objectType;
+	}
+	
+	/**
 	 * Reads the quote message id.
 	 */
 	public function readParameters() {
@@ -346,8 +391,25 @@ class MessageQuoteManager extends SingletonFactory {
 	 * Assigns variables on page load.
 	 */
 	public function assignVariables() {
+		$fullQuoteObjectIDs = array();
+		if (!empty($this->objectType) && !empty($this->objectIDs) && isset($this->quotes[$this->objectType])) {
+			foreach ($this->quotes[$this->objectType] as $objectID => $quotes) {
+				if (!in_array($objectID, $this->objectIDs)) {
+					continue;
+				}
+				
+				foreach ($quotes as $quoteID => $isFullQuote) {
+					if ($isFullQuote) {
+						$fullQuoteObjectIDs[] = $objectID;
+						break;
+					}
+				}
+			}
+		}
+		
 		WCF::getTPL()->assign(array(
 			'__quoteCount' => $this->countQuotes(),
+			'__quoteFullQuote' => $fullQuoteObjectIDs,
 			'__quoteRemove' => $this->removeQuoteIDs
 		));
 	}

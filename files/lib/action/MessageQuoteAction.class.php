@@ -38,7 +38,7 @@ class MessageQuoteAction extends AJAXProxyAction {
 			// validate quote ids
 			foreach ($this->quoteIDs as $key => $quoteID) {
 				if (MessageQuoteManager::getInstance()->getQuote($quoteID) === null) {
-					unset($key);
+					unset($this->quoteIDs[$key]);
 				}
 			}
 		}
