@@ -11,7 +11,7 @@ namespace wcf\data;
  * @subpackage	data
  * @category 	Community Framework
  */
-interface IMessage extends ILinkableDatabaseObject, ITitledDatabaseObject {
+interface IMessage extends IUserContent {
 	/**
 	 * Returns a plain text, truncated to 255 characters by default.
 	 * 
@@ -33,27 +33,6 @@ interface IMessage extends ILinkableDatabaseObject, ITitledDatabaseObject {
 	 * @return	string
 	 */
 	public function getMessage();
-	
-	/**
-	 * Returns message creation timestamp.
-	 * 
-	 * @return	integer
-	 */
-	public function getTime();
-	
-	/**
-	 * Returns author's user id.
-	 * 
-	 * @return	id
-	 */
-	public function getUserID();
-	
-	/**
-	 * Returns author's username.
-	 * 
-	 * @return	string
-	 */
-	public function getUsername();
 	
 	/**
 	 * Returns formatted message text.
