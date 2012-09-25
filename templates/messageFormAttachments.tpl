@@ -5,7 +5,7 @@
 				{if $attachment->tinyThumbnailType}
 					<img src="{link controller='Attachment' object=$attachment}tiny=1{/link}" alt="" class="thumbnail" />
 				{else}
-					<img src="{icon size='L'}attachment{/icon}" alt="" class="icon48" />
+					<img src="{icon}attachment{/icon}" alt="" class="icon48" />
 				{/if}
 				
 				<div>
@@ -15,7 +15,7 @@
 					</hgroup>
 					
 					<ul>
-						<li><img src="{icon size='S'}delete{/icon}" alt="" title="{lang}wcf.global.button.delete{/lang}" class="jsDeleteButton jsTooltip" data-object-id="{@$attachment->attachmentID}" data-confirm-message="{lang}wcf.attachment.delete.sure{/lang}" /></li>
+						<li><img src="{icon}delete{/icon}" alt="" title="{lang}wcf.global.button.delete{/lang}" class="jsDeleteButton jsTooltip" data-object-id="{@$attachment->attachmentID}" data-confirm-message="{lang}wcf.attachment.delete.sure{/lang}" /></li>
 					</ul>
 				</div>
 			</li>
@@ -41,7 +41,7 @@
 			'wcf.global.button.upload': '{lang}wcf.global.button.upload{/lang}'
 		});
 		WCF.Icon.addObject({
-			'wcf.icon.attachment': '{icon size='L'}attachment{/icon}'
+			'wcf.icon.attachment': '{icon}attachment{/icon}'
 		});
 
 		new WCF.Attachment.Upload($('#attachments > dl > dd > div'), $('#attachments > ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}', '{@$attachmentParentObjectID}', {@$attachmentHandler->getMaxCount()}-{@$attachmentHandler->getAttachmentList()|count});
