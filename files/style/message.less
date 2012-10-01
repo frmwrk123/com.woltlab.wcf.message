@@ -27,7 +27,10 @@
 		.columnSubject > h1 > .messageGroupLink {
 			font-weight: bold;
 		}
+	}
 	
+	.table > tbody > tr.jsMarked > td {
+		background-color: @wcfMarkedBackgroundColor;
 	}
 	
 	tr.new .columnAvatar div > p > img, tr:hover .columnAvatar div > p > img {
@@ -79,6 +82,10 @@
 		clear: both;
 		content: '';
 		display: block;
+	}
+	
+	&.jsMarked {
+		background-color: @wcfMarkedBackgroundColor;
 	}
 	
 	&:hover .messageOptions nav {
