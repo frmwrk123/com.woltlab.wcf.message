@@ -1,3 +1,75 @@
+/* ### message groups ### */
+.messageGroupList {
+	.columnSubject {
+		> h1 {
+			> .labelList {
+				float: right;
+				padding-left: 7px;
+				
+				> li > .badge {
+					font-size: @wcfSmallFontSize;
+				}
+			}
+			
+			> .messageGroupLink {
+				font-size: @wcfTitleFontSize;
+			}
+		}
+		
+		> small {
+			display: block;
+		}
+		
+		
+	}
+	
+	tr.new {
+		.columnSubject > h1 > .messageGroupLink {
+			font-weight: bold;
+		}
+	
+	}
+	
+	tr.new .columnAvatar div > p > img, tr:hover .columnAvatar div > p > img {
+		opacity: 1;
+	}
+	
+	.columnAvatar {
+		div {
+			position: relative;
+			width: 40px;
+			height: 38px;
+			
+			> p > img {
+				opacity: .6;
+				
+				.transition(opacity, .2s);
+			}
+		}
+		
+		.myAvatar {
+			position: absolute;
+			width: 16px;
+			height: 16px;
+			bottom: -2px;
+			left: 24px;
+			opacity: 1;
+			
+			.boxShadow(0, 0, rgba(0, 0, 0, .3), 3px);
+		}
+	}
+	
+	.columnLastPost {
+		white-space: nowrap;
+		
+		> div > hgroup > h2 {
+			color: @wcfDimmedColor;
+			font-size: @wcfSmallFontSize;
+		}
+	}
+}
+
+/* ### messages ### */
 .message {
 	background-color: @wcfContainerHoverBackgroundColor;
 	border: 1px solid @wcfContainerBorderColor;
@@ -57,6 +129,8 @@
 				a.button {
 					margin: 0;
 					padding-right: @wcfGapSmall;
+					
+					.borderRadius(0);
 				}
 			}
 		}
