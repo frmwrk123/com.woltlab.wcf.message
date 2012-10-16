@@ -832,7 +832,7 @@ WCF.Message.InlineEditor = Class.extend({
 				parameters: {
 					containerID: this._containerID,
 					message: $message,
-					objectID: $objectID
+					messageID: $objectID
 				}
 			},
 			success: function(data, textStatus, jqXHR) {

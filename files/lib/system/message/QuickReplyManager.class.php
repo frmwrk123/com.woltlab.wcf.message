@@ -69,6 +69,16 @@ class QuickReplyManager extends SingletonFactory {
 	}
 	
 	/**
+	 * Removes a stored message from session.
+	 * 
+	 * @param	string		$type
+	 * @param	integer		$objectID
+	 */
+	public function removeMessage($type, $objectID) {
+		WCF::getSession()->unregister('quickReply-'.$this->type.'-'.$objectID);
+	}
+	
+	/**
 	 * Validates parameters for current request.
 	 * 
 	 * @param	wcf\system\message\IMessageQuickReplyAction	$object
