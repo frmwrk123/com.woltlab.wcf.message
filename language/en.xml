@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/maelstrom/language.xsd" languagecode="en">
-	<category name="wcf.message.quote">
+	<category name="wcf.message">
 		<item name="wcf.message.quote.deleteSelectedQuotes"><![CDATA[Remove selected quotes]]></item>
 		<item name="wcf.message.quote.insertQuote"><![CDATA[Insert quote]]></item>
 		<item name="wcf.message.quote.manageQuotes"><![CDATA[Manage quotes]]></item>
 		<item name="wcf.message.quote.quoteSelected"><![CDATA[Quote selection]]></item>
 		<item name="wcf.message.quote.showQuotes"><![CDATA[Quotes (#count#)]]></item>
+		<item name="wcf.message.settings"><![CDATA[Settings]]></item>
+		<item name="wcf.message.settings.enableBBCodes"><![CDATA[Enable BBCode in this message]]></item>
+		<item name="wcf.message.settings.enableBBCodes.description"><![CDATA[You can use BBCode to format your message, if this option is enabled.]]></item>
+		<item name="wcf.message.settings.enableHtml"><![CDATA[Enable HTML in this message]]></item>
+		<item name="wcf.message.settings.enableHtml.description"><![CDATA[You can use HTML code to format your message, if this option is enabled.]]></item>
+		<item name="wcf.message.settings.enableSmilies"><![CDATA[Enable smileys in this message]]></item>
+		<item name="wcf.message.settings.enableSmilies.description"><![CDATA[Smiley code in your message such as :) is automatically displayed as image.]]></item>
+		<item name="wcf.message.settings.parseURL"><![CDATA[Convert URLs]]></item>
+		<item name="wcf.message.settings.parseURL.description"><![CDATA[Automatically converts internet addresses into links by adding [url] and [/url] around them.]]></item>
+		<item name="wcf.message.settings.showSignature"><![CDATA[Show signature]]></item>
+		<item name="wcf.message.settings.showSignature.description"><![CDATA[Do you want to display your signature in this message?]]></item>
+		<item name="wcf.message.smilies"><![CDATA[Smilies]]></item>
+		<item name="wcf.message.smilies.default"><![CDATA[Default]]></item>
 	</category>
 </language>
