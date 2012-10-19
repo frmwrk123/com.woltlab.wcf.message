@@ -23,5 +23,8 @@
 		<instruction type="file">files.tar</instruction>
 		<instruction type="template">templates.tar</instruction>
 		<instruction type="userGroupOption">userGroupOption.xml</instruction>
+		<instruction type="objectTypeDefinition">objectTypeDefinition.xml</instruction>
+		<instruction type="option">option.xml</instruction>
+		<instruction type="language">language/*.xml</instruction>
 	</instructions>
 </package>

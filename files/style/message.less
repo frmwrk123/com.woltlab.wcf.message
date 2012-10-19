@@ -1,0 +1,517 @@
+/* ### message groups ### */
+.messageGroupList {
+	.columnSubject {
+		> h1 {
+			> .labelList {
+				float: right;
+				padding-left: 7px;
+				
+				> li > .badge {
+					font-size: @wcfSmallFontSize;
+				}
+			}
+			
+			> .messageGroupLink {
+				font-size: @wcfTitleFontSize;
+			}
+		}
+		
+		> small {
+			display: block;
+		}
+		
+		
+	}
+	
+	tr.new {
+		.columnSubject > h1 > .messageGroupLink {
+			font-weight: bold;
+		}
+	}
+	
+	.table > tbody > tr.jsMarked > td {
+		background-color: @wcfMarkedBackgroundColor;
+	}
+	
+	tr.new .columnAvatar div > p > img, tr:hover .columnAvatar div > p > img {
+		opacity: 1;
+	}
+	
+	.columnAvatar {
+		div {
+			position: relative;
+			width: 40px;
+			height: 38px;
+			
+			> p > img {
+				opacity: .6;
+				
+				.transition(opacity, .2s);
+			}
+		}
+		
+		.myAvatar {
+			position: absolute;
+			width: 16px;
+			height: 16px;
+			bottom: -2px;
+			left: 24px;
+			opacity: 1;
+			
+			.boxShadow(0, 0, rgba(0, 0, 0, .3), 3px);
+		}
+	}
+	
+	.columnLastPost {
+		white-space: nowrap;
+		
+		> div > hgroup > h2 {
+			color: @wcfDimmedColor;
+			font-size: @wcfSmallFontSize;
+		}
+	}
+}
+
+/* ### messages ### */
+.message {
+	background-color: @wcfContainerHoverBackgroundColor;
+	border: 1px solid @wcfContainerBorderColor;
+	overflow: hidden;
+	position: relative;
+	
+	&:after {
+		clear: both;
+		content: '';
+		display: block;
+	}
+	
+	&.jsMarked {
+		background-color: @wcfMarkedBackgroundColor;
+	}
+	
+	&:hover .messageOptions nav {
+			opacity: 1;
+	}
+	
+	&.messageDeleted {
+		background-color: @wcfErrorBackgroundColor;
+		
+		.messageSidebar {
+			color: @wcfErrorColor !important;
+			
+			a {
+				color: @wcfErrorColor !important;
+			}
+		}
+	}
+	
+	&.messageDisabled:not(.messageDeleted) {
+		background-color: @wcfSuccessBackgroundColor;
+		
+		.messageSidebar {
+			color: @wcfSuccessColor !important;
+			
+			a {
+				color: @wcfSuccessColor !important;
+			}
+		}
+	}
+	
+	.messageOptions {
+		font-size: @wcfSmallFontSize;
+		position: relative;
+		
+		nav {
+			bottom: -2px;
+			opacity: 0;
+			position: absolute;
+			right: -22px;
+			text-align: right;
+			
+			.transition(opacity, .1s);
+
+			ul.smallButtons > li {
+				display: inline-block;
+				margin-left: -5px;
+				
+				a.button {
+					margin: 0;
+					padding-right: @wcfGapSmall;
+					
+					.borderRadius(0);
+				}
+			}
+		}
+	}
+}
+	
+.message.messageSidebarOrientationLeft {
+	.messageContent {
+		border-left: 1px solid @wcfContainerBorderColor;
+		margin: 0 0 0 211px;
+	}
+	
+	.messageSidebar {
+		float: left;
+	}
+	
+	.messageHeader > .pointer {
+		border-color: transparent @wcfContainerBorderColor transparent transparent;
+		border-style: solid solid solid none;
+		left: -20px;
+		
+		> span {
+			border-color: transparent @wcfContainerBackgroundColor transparent transparent;
+			border-style: solid solid solid none;
+			left: 1px;
+		}
+	}
+}
+
+.message.messageSidebarOrientationRight {
+	.messageContent {
+		border-right: 1px solid @wcfContainerBorderColor;
+		margin: 0 211px 0 0;
+	}
+	
+	.messageSidebar {
+		float: right;
+	}
+	
+	.messageHeader > .pointer {
+		border-color: transparent transparent transparent @wcfContainerBorderColor;
+		border-style: solid none solid solid;
+		right: -20px;
+		
+		> span {
+			border-color: transparent transparent transparent @wcfContainerBorderColor;
+			border-style: solid none solid solid;
+			right: 1px;
+		}			
+	}
+}
+
+.message.dividers {
+	.userCredits {
+		border-top: 1px solid @wcfContainerBorderColor;
+	}
+}
+
+.message .messageHeader {
+	> .pointer {
+		border-width: 20px;
+		display: block !important;
+		height: 0;
+		position: absolute;
+		top: 35px;
+		width: 0;
+		z-index: 100;
+		
+		> span {
+			border-width: 20px;
+			display: block;
+			height: 0;
+			position: absolute;
+			top: -20px;
+			width: 0;
+		}
+	}
+	
+	.messageCounter {
+		float: right;
+		font-size: @wcfSmallFontSize;
+		font-weight: bold;
+		margin-left: @wcfGapSmall;
+		
+		a {
+			padding: 1px 5px;
+			vertical-align: middle;
+		}
+		
+		input[type=checkbox] {
+			vertical-align: middle;
+		}
+	}
+}
+
+.message .messageBody {
+	color: @wcfColor;
+	display: block;
+	line-height: 1.5;
+	padding: @wcfGapMedium @wcfGapLarge 1px;
+	position: relative;
+	
+	&:after {
+		clear: both;
+		content: '';
+		display: block;
+	}
+	
+	> div:not(.messageFooter) {
+		border-top: 1px dotted @wcfContainerBorderColor;
+		overflow: hidden;
+		padding: @wcfGapMedium 0;
+	}
+	
+	> footer {
+		padding-bottom: @wcfGapMedium;
+	}
+	
+	> .messageSignature {
+		color: @wcfDimmedColor;
+	}
+	
+	.messageFooter {
+		> *:not(:first-child) {
+			margin-top: @wcfGapSmall;
+		}
+		
+		> .messageFooterNote {
+			border-left: 2px solid @wcfContainerBorderColor;
+			color: @wcfDimmedColor;
+			font-size: @wcfSmallFontSize;
+			padding: @wcfGapTiny @wcfGapSmall;
+				
+			@messageFooterNoteGradientColor: fade(@wcfContainerBorderColor, 20%);
+			.linearGradientNative(~"left top, @{messageFooterNoteGradientColor} 0%, transparent 40%");
+		}
+	}
+}
+
+.message .messageContent {
+	background-color: @wcfContainerBackgroundColor;
+	
+	.messageHeader {
+		padding: @wcfGapMedium @wcfGapLarge 0;
+		position: relative;
+		
+		> time {
+			color: @wcfDimmedColor;
+			font-size: @wcfSmallFontSize;
+		}
+		
+		> .likesBadge {
+			display: inline-block;
+			margin: -2px 0 -2px 4px;
+		}
+		
+		> .messageTitle {
+			color: @wcfColor;
+			font-size: @wcfSubHeadlineFontSize;
+			font-weight: bold;
+			padding: @wcfGapSmall 0 0;
+			
+			.textShadow(@wcfContainerBackgroundColor);
+		}
+	}
+}
+
+.message .messageSidebar {
+	line-height: 1.3;
+	margin-bottom: -1px;
+	padding: @wcfGapMedium @wcfGapLarge @wcfGapLarge;
+	position: relative;
+	text-align: center;
+	width: 170px; /* Width toggle */
+	
+	&:after {
+		clear: both;
+		content: '';
+		display: block;
+	}
+	
+	header .username {
+		color: @wcfLinkColor;
+		font-size: @wcfTitleFontSize;
+		font-weight: bold;
+		padding: 0 3px 1px;
+		
+		.textShadow(@wcfContainerHoverBackgroundColor);
+		
+		a {
+			text-decoration: none;
+		}
+	}
+	
+	.userTitle {
+		/* todo */
+		margin: 7px 0 0;
+	}
+	
+	.userRank {
+		/* todo */
+		margin: 2px 0 0;
+	}
+	
+	.userAvatar {
+		display: inline-block;
+		margin: @wcfGapSmall 0 0;
+		position: relative;
+		text-align: left;
+		
+		> .badgeOnline {
+			background-color: fade(@wcfSuccessBackgroundColor, 70%);
+			border-bottom: 1px solid rgba(255, 255, 255, .7); /*todo*/
+			bottom: 7px;
+			position: absolute;
+			right: -5px;
+			text-transform: uppercase;
+			
+			.borderRadius(2px);
+			.boxShadow(0, 1px, rgba(0, 0, 0, .3), 7px);
+		}
+	}
+	
+	.userCredits {
+		font-size: @wcfSmallFontSize;
+		margin: @wcfGapSmall 0 0;
+		padding: @wcfGapSmall 0 0;
+		
+		.dataList {
+			> dt {
+				width: 50%;
+			}
+			
+			> dd {
+				margin-left: 53%;
+			}
+		}
+	}
+}
+
+li:nth-child(2n+1) .message {
+	&.messageSidebarOrientationLeft .messageHeader > .pointer > span {
+		border-right-color: @wcfContainerAccentBackgroundColor;
+	}
+	
+	&.messageSidebarOrientationRight .messageHeader > .pointer > span {
+		border-left-color: @wcfContainerAccentBackgroundColor;
+	}
+	
+	.messageContent {
+		background-color: @wcfContainerAccentBackgroundColor;
+	}
+}
+
+.messageReduced {
+	.messageOptions > .breadcrumbs {
+		bottom: 10px;
+		left: 0;
+		opacity: 1;
+		position: relative;
+	}
+}
+
+.messageCollapsed {
+	color: @wcfDimmedColor;
+	opacity: .7;
+	padding: @wcfGapMedium @wcfGapLarge;
+
+	.transition(opacity, .1s);
+	
+	&:hover {
+		opacity: 1;
+	}
+	
+	&.messageCollapsedExpandable {
+		cursor: pointer;
+	}
+	
+	p {
+		display: inline-block;
+		vertical-align: middle;
+		
+		span {
+			display: block;
+			font-size: @wcfSmallFontSize;
+			margin-left: @wcfGapSmall;
+		}
+	}
+	
+	.messageCounter {
+		padding-top: 3px;
+	}
+}
+
+/*todo: move*/
+.highlight {
+	background-color: rgba(255, 200, 0, 1);
+}
+
+/* quick reply and inline editor */
+.jsMessageLoading {
+	background-image: url(../icon/spinner.svg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 64px;
+}
+
+#messageQuickReply {
+	.messageQuickReplyLoading {
+		background-image: url(../icon/spinner.svg);
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: 64px;
+	}
+	
+	.formSubmit {
+		padding-bottom: @wcfGapMedium;
+	}
+}
+
+/* message quotes */
+#showQuotes {
+	bottom: @wcfGapLarge + @wcfGapTiny;
+	cursor: pointer;
+	opacity: .7;
+	position: fixed;
+	right: @wcfGapLarge + @wcfGapTiny;
+	
+	.transition(opacity, .2s);
+	
+	&:hover {
+		opacity: 1;
+	}
+}
+
+#messageQuoteList {
+	max-width: 800px !important;
+
+	li {
+		&:not(:first-child) {
+			margin-top: @wcfGapSmall;
+		}
+		
+		span {
+			float: left;
+			width: 40px;
+			
+			> input {
+				vertical-align: bottom;
+			}
+			
+			> img {
+				cursor: pointer;
+				vertical-align: middle;
+			}
+		}
+		
+		div.jsQuote {
+			margin-left: 60px;
+		}
+		
+		div.jsFullQuote {
+			display: none;
+		}
+	}
+}
+
+#quoteManagerCopy {
+	cursor: pointer;
+	
+	.pointer {
+		border-width: 5px 5px 0;
+		bottom: -5px;
+		top: auto;
+	}
+}
