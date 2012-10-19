@@ -2,7 +2,7 @@
 <rss version="2.0">
 	<channel>
 		<title><![CDATA[{@PAGE_TITLE|language|escapeCDATA}]]></title>
-		<link><![CDATA[{@PAGE_URL|escapeCDATA}]]></link>
+		<link><![CDATA[{@$baseHref|escapeCDATA}]]></link>
 		<description><![CDATA[{@PAGE_DESCRIPTION|escapeCDATA}]]></description>
 		<language>{@$__wcf->language->getFixedLanguageCode()}</language>
 		<pubDate>{'r'|gmdate:TIME_NOW}</pubDate>
@@ -13,11 +13,11 @@
 {*		*}{foreach from=$items item='item'}
 		<item>
 			<title><![CDATA[{@$item->getTitle()|escapeCDATA}]]></title>
-			<link><![CDATA[{@PAGE_URL|escapeCDATA}/{@$item->getLink()|escapeCDATA}]]></link>
+			<link><![CDATA[{@$item->getLink()|escapeCDATA}]]></link>
 			<description><![CDATA[{@$item->getFormattedMessage()|escapeCDATA}]]></description>
 			<pubDate>{'r'|gmdate:$item->getTime()}</pubDate>
 			<author><![CDATA[{@$item->getUsername()|escapeCDATA}]]></author>
-			<guid><![CDATA[{@PAGE_URL|escapeCDATA}/{@$item->getLink()|escapeCDATA}]]></guid>
+			<guid><![CDATA[{@$item->getLink()|escapeCDATA}]]></guid>
 		</item>
 {*		*}{/foreach}
 	</channel>

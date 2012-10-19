@@ -32,4 +32,11 @@ interface IFeedEntry extends ILinkableDatabaseObject, ITitledDatabaseObject {
 	 * @return	string
 	 */
 	public function getUsername();
+	
+	/**
+	 * This method has to return the full permalink (including host) to this entry.
+	 * 
+	 * @return	string
+	 */
+	public function getLink();
 }
