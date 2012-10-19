@@ -6,14 +6,15 @@
 		<description><![CDATA[{@PAGE_DESCRIPTION|escapeCDATA}]]></description>
 		<language>{@$__wcf->language->getFixedLanguageCode()}</language>
 		<pubDate>{'r'|gmdate:TIME_NOW}</pubDate>
-		<lastBuildDate>{if $items|count}{'r'|gmdate:$items->current()->getTime()}{else}{'r'|gmdate:TIME_NOW}{/if}</lastBuildDate>
+{assign var='dummy' value=$items->rewind()}
+		<lastBuildDate>{if $items->valid()}{'r'|gmdate:$items->current()->getTime()}{else}{'r'|gmdate:TIME_NOW}{/if}</lastBuildDate>
 		<ttl>60</ttl>
 		<generator><![CDATA[WoltLab® Community Framework™ {@WCF_VERSION}]]></generator>
 {*		*}{foreach from=$items item='item'}
 		<item>
 			<title><![CDATA[{@$item->getTitle()|escapeCDATA}]]></title>
 			<link><![CDATA[{@PAGE_URL|escapeCDATA}/{@$item->getLink()|escapeCDATA}]]></link>
-			<description><![CDATA[{@$item->getMessage()|escapeCDATA}]]></description>
+			<description><![CDATA[{@$item->getFormattedMessage()|escapeCDATA}]]></description>
 			<pubDate>{'r'|gmdate:$item->getTime()}</pubDate>
 			<author><![CDATA[{@$item->getUsername()|escapeCDATA}]]></author>
 			<guid><![CDATA[{@PAGE_URL|escapeCDATA}/{@$item->getLink()|escapeCDATA}]]></guid>
