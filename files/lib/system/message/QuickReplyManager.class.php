@@ -131,7 +131,6 @@ class QuickReplyManager extends SingletonFactory {
 	 */
 	public function createMessage(IMessageQuickReplyAction $object, array &$parameters, $containerActionClassName, $messageListClassName, $templateName, $sortOrder) {
 		$tableIndexName = call_user_func(array($this->container, 'getDatabaseTableIndexName'));
-		
 		$parameters['data'][$tableIndexName] = $parameters['objectID'];
 		$parameters['data']['enableSmilies'] = WCF::getSession()->getPermission('user.message.canUseSmilies');
 		$parameters['data']['enableHtml'] = 0;
@@ -167,6 +166,11 @@ class QuickReplyManager extends SingletonFactory {
 				'startIndex' => $startIndex,
 				'sortOrder' => $sortOrder,
 			));
+			
+			// assign 'to top' link
+			if (isset($parameters['anchor'])) {
+				WCF::getTPL()->assign('anchor', $parameters['anchor']);
+			}
 			
 			// update visit time (messages shouldn't occur as new upon next visit)
 			$conversationAction = new $containerActionClassName(array(($this->container instanceof DatabaseObjectDecorator ? $this->container->getDecoratedObject() : $this->container)), 'markAsRead');
