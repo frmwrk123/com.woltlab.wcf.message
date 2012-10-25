@@ -453,7 +453,7 @@ WCF.Message.QuickReply = Class.extend({
 	},
 	
 	/**
-	 * Saves post.
+	 * Saves message.
 	 */
 	_save: function() {
 		// mark quotes for removal
@@ -464,17 +464,22 @@ WCF.Message.QuickReply = Class.extend({
 		var $ckEditor = this._messageField.ckeditorGet();
 		var $message = $ckEditor.getData();
 		
+		var $parameters = {
+			objectID: this._getObjectID(),
+			data: {
+				message: $message
+			},
+			lastPostTime: this._container.data('lastPostTime'),
+			pageNo: this._container.data('pageNo')
+		};
+		if (this._container.data('anchor')) {
+			$parameters.anchor = this._container.data('anchor');
+		}
+		
 		this._proxy.setOption('data', {
 			actionName: 'quickReply',
 			className: this._getClassName(),
-			parameters: {
-				objectID: this._getObjectID(),
-				data: {
-					message: $message
-				},
-				lastPostTime: this._container.data('lastPostTime'),
-				pageNo: this._container.data('pageNo')
-			}
+			parameters: $parameters
 		});
 		this._proxy.sendRequest();
 		
@@ -512,7 +517,7 @@ WCF.Message.QuickReply = Class.extend({
 	},
 	
 	/**
-	 * Prepares jump to extended post add form.
+	 * Prepares jump to extended message add form.
 	 */
 	_prepareExtended: function() {
 		// mark quotes for removal

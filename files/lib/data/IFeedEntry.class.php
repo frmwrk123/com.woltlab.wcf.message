@@ -13,9 +13,9 @@ namespace wcf\data;
  */
 interface IFeedEntry extends IMessage {
 	/**
-	 * Returns the content of the feed entry.
+	 * This method has to return the full permalink (including host) to this entry.
 	 * 
 	 * @return	string
 	 */
-	public function getMessage();
+	public function getLink();
 }
