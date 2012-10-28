@@ -1610,8 +1610,14 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * Counts stored quotes.
 	 */
 	countQuotes: function() {
+		var $objectTypes = [ ];
+		for (var $objectType in this._handlers) {
+			$objectTypes.push($objectType);
+		}
+		
 		this._proxy.setOption('data', {
-			actionName: 'count'
+			actionName: 'count',
+			objectTypes: $objectTypes
 		});
 		this._proxy.sendRequest();
 	},
