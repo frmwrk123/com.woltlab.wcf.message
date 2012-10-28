@@ -19,5 +19,6 @@
 		<item name="wcf.message.settings.showSignature.description"><![CDATA[Die im Profil eingestellte Signatur wird an diese Nachricht angehängt.]]></item>
 		<item name="wcf.message.smilies"><![CDATA[Smileys]]></item>
 		<item name="wcf.message.smilies.default"><![CDATA[Standard]]></item>
+		<item name="wcf.message.button.extendedEdit"><![CDATA[Erweiterte Bearbeitung]]></item>
 	</category>
 </language>

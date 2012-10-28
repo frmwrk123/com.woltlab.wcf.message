@@ -19,8 +19,6 @@
 		> small {
 			display: block;
 		}
-		
-		
 	}
 	
 	tr.new {
@@ -73,10 +71,29 @@
 }
 
 /* ### messages ### */
+.messageList {
+	.messageGroupStarter {
+		position: relative;
+		
+		> .message:after {
+			background-image: url(../icon/circleStar.svg);
+			background-position: 4px 4px;
+			background-repeat: no-repeat;
+			content: "";
+			display: block;
+			height: 20px;
+			left: 0;
+			position: absolute;
+			top: 0;
+			width: 20px;
+		}
+	}
+}
+
 .message {
 	background-color: @wcfContainerHoverBackgroundColor;
 	border: 1px solid @wcfContainerBorderColor;
-	overflow: hidden;
+	//overflow: hidden; /* todo: fixes floating issues when using message on pages with a sidebar */
 	position: relative;
 	
 	&:after {
