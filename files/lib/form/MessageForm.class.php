@@ -284,9 +284,9 @@ abstract class MessageForm extends RecaptchaForm {
 		parent::readData();
 		
 		if (!count($_POST)) {
-			$this->enableBBCodes = (ENABLE_BBCODES_DEFAULT_VALUE && WCF::getSession()->getPermission('user.message.canUseBBCodes')) ? 1 : 0;
-			$this->enableHtml = (ENABLE_HTML_DEFAULT_VALUE && WCF::getSession()->getPermission('user.message.canUseHtml')) ? 1 : 0;
-			$this->enableSmilies = (ENABLE_SMILIES_DEFAULT_VALUE && WCF::getSession()->getPermission('user.message.canUseSmilies')) ? 1 : 0;
+			$this->enableBBCodes = (ENABLE_BBCODES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseBBCodes)) ? 1 : 0;
+			$this->enableHtml = (ENABLE_HTML_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseHtml)) ? 1 : 0;
+			$this->enableSmilies = (ENABLE_SMILIES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseSmilies)) ? 1 : 0;
 			$this->parseURL = PARSE_URL_DEFAULT_VALUE;
 			$this->showSignature = SHOW_SIGNATURE_DEFAULT_VALUE;
 		}
