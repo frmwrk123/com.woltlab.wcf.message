@@ -341,6 +341,36 @@ class MessageQuoteManager extends SingletonFactory {
 	}
 	
 	/**
+	 * Returns a list of full quotes by object id for given object types.
+	 * 
+	 * @param	array<string>		$objectTypes
+	 * @return	array<array>
+	 */
+	public function getFullQuoteObjectIDs(array $objectTypes) {
+		$objectIDs = array();
+		
+		foreach ($objectTypes as $objectType) {
+			if (!isset($this->objectTypes[$objectType])) {
+				throw new SystemException("Object type '".$objectType."' is unknown");
+			}
+			
+			$objectIDs[$objectType] = array();
+			if (isset($this->quotes[$objectType])) {
+				foreach ($this->quotes[$objectType] as $objectID => $quotes) {
+					foreach ($quotes as $quoteID => $isFullQuote) {
+						if ($isFullQuote) {
+							$objectIDs[$objectType][] = $objectID;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return $objectIDs;
+	}
+	
+	/**
 	 * Sets object type and object ids.
 	 * 
 	 * @param	string		$objectType
