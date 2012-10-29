@@ -1,4 +1,4 @@
-<div class="tabMenuContainer" data-active="{*$activeTabMenuItem*}" data-store="activeTabMenuItem">
+<div class="tabMenuContainer" data-active="{$activeTabMenuItem}" data-store="activeTabMenuItem">
 	<nav class="tabMenu">
 		<ul>
 			{if MODULE_SMILEY}<li><a href="#smilies" title="{lang}wcf.smiley.smilies{/lang}">{lang}wcf.message.smilies{/lang}</a></li>{/if}
