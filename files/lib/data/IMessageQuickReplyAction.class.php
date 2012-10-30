@@ -1,6 +1,5 @@
 <?php
-namespace wcf\system\message;
-use wcf\data\DatabaseObject;
+namespace wcf\data;
 
 /**
  * Default interface for actions implementing quick reply.
@@ -9,7 +8,7 @@ use wcf\data\DatabaseObject;
  * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
- * @subpackage	system.message
+ * @subpackage	data
  * @category 	Community Framework
  */
 interface IMessageQuickReplyAction {
