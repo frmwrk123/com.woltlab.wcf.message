@@ -17,31 +17,30 @@ use wcf\util\StringUtil;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	form
- * @category 	Community Framework
+ * @category	Community Framework
  */
 abstract class MessageForm extends RecaptchaForm {
 	/**
 	 * attachment handler
-	 * @var wcf\system\attachment\AttachmentHandler
+	 * @var	wcf\system\attachment\AttachmentHandler
 	 */
 	public $attachmentHandler = null;
 	
 	/**
 	 * object id for attachments
-	 * @var integer
+	 * @var	integer
 	 */
 	public $attachmentObjectID = 0;
 	
 	/**
-	 * object type for attachments;
-	 * leave blank to disable attachment support
-	 * @var integer
+	 * object type for attachments, if left blank, attachment support is disabled
+	 * @var	integer
 	 */
 	public $attachmentObjectType = '';
 	
 	/**
 	 * parent object id for attachments
-	 * @var integer
+	 * @var	integer
 	 */
 	public $attachmentParentObjectID = 0;
 	
@@ -125,13 +124,13 @@ abstract class MessageForm extends RecaptchaForm {
 	
 	/**
 	 * enables the 'showSignature' setting
-	 * @var boolean
+	 * @var	boolean
 	 */
 	public $showSignatureSetting = 1;
 	
 	/**
 	 * list of smiley categories
-	 * @var array<wcf\data\smiley\category\SmileyCategory>
+	 * @var	array<wcf\data\smiley\category\SmileyCategory>
 	 */
 	public $smileyCategories = array();
 	
@@ -149,7 +148,7 @@ abstract class MessageForm extends RecaptchaForm {
 	
 	/**
 	 * temp hash
-	 * @var string
+	 * @var	string
 	 */
 	public $tmpHash = '';
 	
@@ -283,7 +282,7 @@ abstract class MessageForm extends RecaptchaForm {
 		
 		parent::readData();
 		
-		if (!count($_POST)) {
+		if (empty($_POST)) {
 			$this->enableBBCodes = (ENABLE_BBCODES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseBBCodes)) ? 1 : 0;
 			$this->enableHtml = (ENABLE_HTML_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseHtml)) ? 1 : 0;
 			$this->enableSmilies = (ENABLE_SMILIES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseSmilies)) ? 1 : 0;

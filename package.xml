@@ -2,7 +2,7 @@
 <package name="com.woltlab.wcf.message" xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/maelstrom/package.xsd">
 	<packageinformation>
 		<packagename>Message System</packagename>
-		<packagedescription>Provides functions to post messages</packagedescription>		
+		<packagedescription>Provides functions to post messages</packagedescription>
 		<version>1.0.0 Alpha 1</version>
 		<date>2010-08-22</date>
 	</packageinformation>

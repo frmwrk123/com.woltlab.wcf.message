@@ -16,7 +16,7 @@ use wcf\util\ArrayUtil;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.message.quote
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class MessageQuoteManager extends SingletonFactory {
 	/**
@@ -293,7 +293,6 @@ class MessageQuoteManager extends SingletonFactory {
 		if (!empty($quoteIDs)) {
 			$this->removeQuoteIDs = array_merge($this->removeQuoteIDs, $quoteIDs);
 			$this->updateSession();
-			
 		}
 	}
 	

@@ -16,7 +16,7 @@ use wcf\util\StringUtil;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	action
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class MessageQuoteAction extends AJAXProxyAction {
 	/**
