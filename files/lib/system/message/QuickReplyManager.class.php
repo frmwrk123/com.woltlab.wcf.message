@@ -18,7 +18,7 @@ use wcf\util\ClassUtil;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.message
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class QuickReplyManager extends SingletonFactory {
 	/**
@@ -158,7 +158,7 @@ class QuickReplyManager extends SingletonFactory {
 				
 			// calculate start index
 			$startIndex = $count - (count($messageList) - 1);
-				
+			
 			WCF::getTPL()->assign(array(
 				'attachmentList' => $messageList->getAttachmentList(),
 				'container' => $this->container,
