@@ -1221,7 +1221,28 @@ WCF.Message.Quote.Handler = Class.extend({
 	 */
 	_success: function(data, textStatus, jqXHR) {
 		if (data.returnValues.count !== undefined) {
-			this._quoteManager.updateCount(data.returnValues.count);
+			var $fullQuoteObjectIDs = (data.fullQuoteObjectIDs !== undefined) ? data.fullQuoteObjectIDs : { };
+			this._quoteManager.updateCount(data.returnValues.count, $fullQuoteObjectIDs);
+		}
+	},
+	
+	/**
+	 * Updates the full quote data for all matching objects.
+	 * 
+	 * @param	array<integer>		$objectIDs
+	 */
+	updateFullQuoteObjectIDs: function(objectIDs) {
+		for (var $containerID in this._containers) {
+			this._containers[$containerID].find('.jsQuoteMessage').each(function(index, button) {
+				// reset all markings
+				var $button = $(button).data('isQuoted', 0);
+				$button.children('a').removeClass('active');
+				
+				// mark as active
+				if (WCF.inArray($button.data('objectID'), objectIDs)) {
+					$button.data('isQuoted', 1).children('a').addClass('active');
+				}
+			});
 		}
 	}
 });
@@ -1354,11 +1375,19 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * Updates number of stored quotes.
 	 * 
 	 * @param	integer		count
+	 * @param	object		fullQuoteObjectIDs
 	 */
-	updateCount: function(count) {
+	updateCount: function(count, fullQuoteObjectIDs) {
 		this._count = parseInt(count) || 0;
 		
 		this._toggleShowQuotes();
+		
+		// update full quote ids of handlers
+		for (var $objectType in this._handlers) {
+			if (fullQuoteObjectIDs[$objectType]) {
+				this._handlers[$objectType].updateFullQuoteObjectIDs(fullQuoteObjectIDs[$objectType]);
+			}
+		}
 	},
 	
 	/**
@@ -1523,8 +1552,15 @@ WCF.Message.Quote.Manager = Class.extend({
 		});
 		
 		if ($quoteIDs.length) {
+			// get object types
+			var $objectTypes = [ ];
+			for (var $objectType in this._handlers) {
+				$objectTypes.push($objectType);
+			}
+			
 			this._proxy.setOption('data', {
 				actionName: 'remove',
+				objectTypes: $objectTypes,
 				quoteIDs: $quoteIDs
 			});
 			this._proxy.sendRequest();
@@ -1574,8 +1610,14 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * Counts stored quotes.
 	 */
 	countQuotes: function() {
+		var $objectTypes = [ ];
+		for (var $objectType in this._handlers) {
+			$objectTypes.push($objectType);
+		}
+		
 		this._proxy.setOption('data', {
-			actionName: 'count'
+			actionName: 'count',
+			objectTypes: $objectTypes
 		});
 		this._proxy.sendRequest();
 	},
@@ -1593,7 +1635,8 @@ WCF.Message.Quote.Manager = Class.extend({
 		}
 		
 		if (data.count !== undefined) {
-			this.updateCount(data.count);
+			var $fullQuoteObjectIDs = (data.fullQuoteObjectIDs !== undefined) ? data.fullQuoteObjectIDs : { };
+			this.updateCount(data.count, $fullQuoteObjectIDs);
 		}
 		
 		if (data.template !== undefined) {

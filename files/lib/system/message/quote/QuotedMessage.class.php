@@ -10,7 +10,7 @@ use wcf\data\IMessage;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.message.quote
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class QuotedMessage implements \Countable, \Iterator {
 	/**
