@@ -89,7 +89,7 @@
 		// smileys
 		for (var i = 0; i < this.editor.config.smiley_descriptions.length; i++) {
 			var smileyCode = this.editor.config.smiley_descriptions[i];
-			var regExp = new RegExp('(\\s|>|^)'+$.wcfEscapeRegExp(smileyCode)+'(?=\\s|<|$)', 'gi');
+			var regExp = new RegExp('(\\s|>|^)'+WCF.String.escapeRegExp(smileyCode)+'(?=\\s|<|$)', 'gi');
 			data = data.replace(regExp, '$1<img src="'+ this.editor.config.smiley_images[i] + '" class="smiley" alt="'+smileyCode+'" />');
 		}
 
