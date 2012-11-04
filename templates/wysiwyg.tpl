@@ -9,6 +9,7 @@ $(function() {
 		extraPlugins: 'wbbcode',
 		removePlugins: 'elementspath,contextmenu,menubutton,forms',
 		language: '{@$__wcf->language->getFixedLanguageCode()}',
+		fontSize_sizes: '8/8pt;10/10pt;12/12pt;14/14pt;18/18pt;24/24pt;36/36pt;',
 		disableObjectResizing: true,
 		toolbarCanCollapse: false,
 		enterMode: CKEDITOR.ENTER_BR,
@@ -17,18 +18,18 @@ $(function() {
 		toolbar:
 		[
 			['Source', '-', 'Undo', 'Redo'],
-			['Bold', 'Italic', 'Underline', 'Strike'],
-			['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', '-', 'Blockquote'],
+			['Bold', 'Italic', 'Underline', '-', 'Strike', 'Subscript','Superscript'],
+			['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Blockquote'],
 			'/',
-			['Font', 'FontSize'],
-			['Link', 'Unlink', 'Image'],
-			['TextColor', '-', 'SpecialChar', '-', 'Maximize']
+			['Font', 'FontSize', 'TextColor'],
+			['Link', 'Unlink', 'Image', 'Table'],
+			['Maximize']
 		],
 		smiley_images: [
-			{implode from=$defaultSmilies item=smiley}'{$smiley->getURL()|encodeJS}'{/implode}
+			{implode from=$defaultSmilies item=smiley}'{@$smiley->getURL()|encodeJS}'{/implode}
 		],
 		smiley_descriptions: [
-			{implode from=$defaultSmilies item=smiley}'{$smiley->smileyCode|encodeJS}'{/implode}
+			{implode from=$defaultSmilies item=smiley}'{@$smiley->smileyCode|encodeJS}'{/implode}
 		]
 	};
 	
@@ -38,3 +39,4 @@ $(function() {
 });
 //]]>
 </script>
+
