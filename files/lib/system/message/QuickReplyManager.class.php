@@ -2,6 +2,7 @@
 namespace wcf\system\message;
 use wcf\data\DatabaseObject;
 use wcf\data\DatabaseObjectDecorator;
+use wcf\data\IMessageQuickReplyAction;
 use wcf\system\event\EventHandler;
 use wcf\system\exception\UserInputException;
 use wcf\system\exception\SystemException;
