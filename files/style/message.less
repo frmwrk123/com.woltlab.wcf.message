@@ -88,6 +88,33 @@
 			width: 20px;
 		}
 	}
+	
+	.newMessageBadge {
+		color: @wcfTabularBoxColor;
+		display: block;
+		font-size: @wcfSmallFontSize;
+		font-weight: bold;
+		left: -219px;
+		padding: 6px 10px;
+		position: absolute;
+		text-transform: uppercase;
+		top: 24px;
+				
+		.borderRadius(0, 5px, 5px, 0);
+		.boxShadow(1px, 1px, rgba(0, 0, 0, .2), 3px);
+		.linearGradient(darken(@wcfTabularBoxBackgroundColor, 10%), @wcfTabularBoxBackgroundColor, darken(@wcfTabularBoxBackgroundColor, 10%));
+		.textShadow(darken(@wcfTabularBoxBackgroundColor, 10%));
+		
+		&:before {
+			border-bottom: 4px solid darken(@wcfTabularBoxBackgroundColor, 20%);
+			border-left: 6px solid transparent;
+			content: "";
+			display: block;
+			left: 0;
+			position: absolute;
+			top: -4px;
+		}
+	}
 }
 
 .message {
