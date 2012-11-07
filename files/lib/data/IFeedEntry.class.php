@@ -11,11 +11,4 @@ namespace wcf\data;
  * @subpackage	data
  * @category 	Community Framework
  */
-interface IFeedEntry extends IMessage {
-	/**
-	 * This method has to return the full permalink (including host) to this entry.
-	 * 
-	 * @return	string
-	 */
-	public function getLink();
-}
+interface IFeedEntry extends IMessage {  }
