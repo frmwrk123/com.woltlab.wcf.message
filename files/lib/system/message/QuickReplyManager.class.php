@@ -128,15 +128,16 @@ class QuickReplyManager extends SingletonFactory {
 	 * @param	string						$messageListClassName
 	 * @param	string						$templateName
 	 * @param	string						$sortOrder
+	 * @param	string						$application
 	 * @return	array
 	 */
-	public function createMessage(IMessageQuickReplyAction $object, array &$parameters, $containerActionClassName, $messageListClassName, $templateName, $sortOrder) {
+	public function createMessage(IMessageQuickReplyAction $object, array &$parameters, $containerActionClassName, $messageListClassName, $templateName, $sortOrder, $application = 'wcf') {
 		$tableIndexName = call_user_func(array($this->container, 'getDatabaseTableIndexName'));
 		$parameters['data'][$tableIndexName] = $parameters['objectID'];
 		$parameters['data']['enableSmilies'] = WCF::getSession()->getPermission('user.message.canUseSmilies');
 		$parameters['data']['enableHtml'] = 0;
 		$parameters['data']['enableBBCodes'] = WCF::getSession()->getPermission('user.message.canUseBBCodes');
-		$parameters['data']['showSignature'] = 1; // TODO: WCF::getUser()->showSignature;
+		$parameters['data']['showSignature'] = (WCF::getUser()->userID ? WCF::getUser()->showSignature : 0);
 		$parameters['data']['time'] = TIME_NOW;
 		$parameters['data']['userID'] = WCF::getUser()->userID;
 		$parameters['data']['username'] = WCF::getUser()->username;
@@ -179,7 +180,7 @@ class QuickReplyManager extends SingletonFactory {
 			
 			return array(
 				'lastPostTime' => $message->time,
-				'template' => WCF::getTPL()->fetch($templateName)
+				'template' => WCF::getTPL()->fetch($templateName, $application)
 			);
 		}
 		else {
