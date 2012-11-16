@@ -476,12 +476,6 @@ WCF.Message.QuickReply = Class.extend({
 	_scrollHandler: null,
 	
 	/**
-	 * submit button
-	 * @var	jQuery
-	 */
-	_submitButton: null,
-	
-	/**
 	 * Initializes a new WCF.Message.QuickReply object.
 	 * 
 	 * @param	boolean				supportExtendedForm
@@ -540,7 +534,21 @@ WCF.Message.QuickReply = Class.extend({
 		}
 		
 		var $ckEditor = this._messageField.ckeditorGet();
-		var $message = $ckEditor.getData();
+		var $message = $.trim($ckEditor.getData());
+		
+		// check if message is empty
+		var $innerError = this._messageField.parent().find('small.innerError');
+		if ($message === '') {
+			if (!$innerError.length) {
+				$innerError = $('<small class="innerError" />').appendTo(this._messageField.parent());
+			}
+			
+			$innerError.html(WCF.Language.get('wcf.global.form.error.empty'));
+			return;
+		}
+		else {
+			$innerError.remove();
+		}
 		
 		var $parameters = {
 			objectID: this._getObjectID(),
