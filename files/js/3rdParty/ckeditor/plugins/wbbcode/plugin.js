@@ -8,7 +8,6 @@
 /*
 - tables
 - floating images
-- smiley insert
 */
 (function() {
 	CKEDITOR.plugins.add('wbbcode', {
@@ -88,7 +87,7 @@
 		
 		// smileys
 		for (var i = 0; i < this.editor.config.smiley_descriptions.length; i++) {
-			var smileyCode = this.editor.config.smiley_descriptions[i];
+			var smileyCode = this.editor.config.smiley_descriptions[i].replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			var regExp = new RegExp('(\\s|>|^)'+WCF.String.escapeRegExp(smileyCode)+'(?=\\s|<|$)', 'gi');
 			data = data.replace(regExp, '$1<img src="'+ this.editor.config.smiley_images[i] + '" class="smiley" alt="'+smileyCode+'" />');
 		}
@@ -103,8 +102,6 @@
 		if (html == '<br>' || html == '<p><br></p>') {
 			return "";
 		}
-
-		console.debug(html);
 
 		// Convert <br> to line breaks.
 		html = html.replace(/<br><\/p>/gi,"\n");

@@ -423,10 +423,13 @@ WCF.Message.Smilies = Class.extend({
 			var $value = $textarea.val();
 			if ($value.length == 0) {
 				$textarea.val($smileyCode);
+				$textarea.setCaret($smileyCode.length);
 			}
 			else {
 				var $position = $textarea.getCaret();
-				$textarea.val( $value.substr(0, $position) + ' ' + $smileyCode + ' ' + $value.substr($position) );
+				var $string = (($value.substr($position - 1, 1) !== ' ') ? ' ' : '') + $smileyCode + ' ';
+				$textarea.val( $value.substr(0, $position) + $string + $value.substr($position) );
+				$textarea.setCaret($position + $string.length);
 			}
 		}
 	}
