@@ -290,7 +290,7 @@ WCF.Message.Multilingualism = Class.extend({
 /**
  * Loads smiley categories upon user request.
  */
-WCF.Message.Smilies = Class.extend({
+WCF.Message.SmileyCategories = Class.extend({
 	/**
 	 * list of already loaded category ids
 	 * @var	array<integer>
@@ -304,7 +304,15 @@ WCF.Message.Smilies = Class.extend({
 	_proxy: null,
 	
 	/**
+	 * ckEditor element
+	 * @var	jQuery
+	 */
+	_ckEditor: null,
+	
+	/**
 	 * Initializes the smiley loader.
+	 * 
+	 * @param	string		ckEditorID
 	 */
 	init: function() {
 		this._cache = [ ];
@@ -354,6 +362,73 @@ WCF.Message.Smilies = Class.extend({
 		this._cache.push($categoryID);
 		
 		$('#smilies-' + $categoryID).html(data.returnValues.template);
+	}
+});
+
+/**
+ * Handles smiley clicks.
+ */
+WCF.Message.Smilies = Class.extend({
+	/**
+	 * ckEditor element
+	 * @var	jQuery
+	 */
+	_ckEditor: null,
+	
+	/**
+	 * Initializes the smiley handler.
+	 * 
+	 * @param	string		ckEditorID
+	 */
+	init: function(ckEditorID) {
+		// get ck editor
+		if (ckEditorID) {
+			this._ckEditor = $('#' + ckEditorID);
+			
+			// add smiley click handler
+			$(document).on('click', '.jsSmiley', $.proxy(this._smileyClick, this));
+		}
+	},
+	
+	/**
+	 * Handles tab smiley clicks.
+	 * 
+	 * @param	object		event
+	 */
+	_smileyClick: function(event) {
+		var $target = $(event.currentTarget);
+		var $smileyCode = $target.data('smileyCode');
+		
+		// insert into ckEditor
+		var $ckEditor = this._ckEditor.ckeditorGet();
+		if ($ckEditor.mode === 'wysiwyg') {
+			// get smiley path
+			var $smileyPath = $target.find('img').attr('src');
+			
+			// in design mode
+			var $img = $ckEditor.document.createElement('img', {
+				attributes: {
+					src: $smileyPath,
+					'class': 'smiley',
+					alt: $smileyCode
+				}
+			});
+			$ckEditor.insertText(' ');
+			$ckEditor.insertElement($img);
+			$ckEditor.insertText(' ');
+		}
+		else {
+			// in source mode
+			var $textarea = this._ckEditor.next('.cke_editor_text').find('textarea');
+			var $value = $textarea.val();
+			if ($value.length == 0) {
+				$textarea.val($smileyCode);
+			}
+			else {
+				var $position = $textarea.getCaret();
+				$textarea.val( $value.substr(0, $position) + ' ' + $smileyCode + ' ' + $value.substr($position) );
+			}
+		}
 	}
 });
 
