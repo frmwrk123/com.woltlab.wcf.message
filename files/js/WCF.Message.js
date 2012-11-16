@@ -399,12 +399,18 @@ WCF.Message.Smilies = Class.extend({
 		var $target = $(event.currentTarget);
 		var $smileyCode = $target.data('smileyCode');
 		
-		// insert into ckEditor
+		// get ckEditor
 		var $ckEditor = this._ckEditor.ckeditorGet();
+		// get smiley path
+		var $smileyPath = $target.find('img').attr('src');
+		
+		// add smiley to config
+		if (!WCF.inArray($smileyCode, $ckEditor.config.smiley_descriptions)) {
+			$ckEditor.config.smiley_descriptions.push($smileyCode);
+			$ckEditor.config.smiley_images.push($smileyPath);
+		}
+		
 		if ($ckEditor.mode === 'wysiwyg') {
-			// get smiley path
-			var $smileyPath = $target.find('img').attr('src');
-			
 			// in design mode
 			var $img = $ckEditor.document.createElement('img', {
 				attributes: {
