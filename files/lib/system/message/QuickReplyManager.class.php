@@ -106,17 +106,19 @@ class QuickReplyManager extends SingletonFactory {
 		if (!$parameters['objectID']) {
 			throw new UserInputException('objectID');
 		}
-		else {
-			$this->container = new $containerClassName($parameters['objectID']);
-			if (!empty($containerDecoratorClassName)) {
-				if (!ClassUtil::isInstanceOf($containerDecoratorClassName, 'wcf\data\DatabaseObjectDecorator')) {
-					throw new SystemException("'".$containerDecoratorClassName."' does not extend 'wcf\data\DatabaseObjectDecorator'");
-				}
-				
-				$this->container = new $containerDecoratorClassName($this->container);
+		
+		$this->container = new $containerClassName($parameters['objectID']);
+		if (!empty($containerDecoratorClassName)) {
+			if (!ClassUtil::isInstanceOf($containerDecoratorClassName, 'wcf\data\DatabaseObjectDecorator')) {
+				throw new SystemException("'".$containerDecoratorClassName."' does not extend 'wcf\data\DatabaseObjectDecorator'");
 			}
-			$object->validateContainer($this->container);
+			
+			$this->container = new $containerDecoratorClassName($this->container);
 		}
+		$object->validateContainer($this->container);
+		
+		// validate message
+		$object->validateMessage($this->container, $parameters['data']['message']);
 	}
 	
 	/**

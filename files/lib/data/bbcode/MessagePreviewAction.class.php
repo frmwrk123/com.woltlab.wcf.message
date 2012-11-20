@@ -1,7 +1,7 @@
 <?php
 namespace wcf\data\bbcode;
 use wcf\system\bbcode\MessageParser;
-use wcf\system\exception\ValidateActionException;
+use wcf\system\exception\UserInputException;
 use wcf\system\WCF;
 use wcf\util\StringUtil;
 
@@ -21,11 +21,11 @@ class MessagePreviewAction extends BBCodeAction {
 	 */
 	public function validateGetMessagePreview() {
 		if (!isset($this->parameters['data']['message'])) {
-			throw new ValidateActionException("Missing parameter 'message'");
+			throw new UserInputException('message');
 		}
 		
 		if (!isset($this->parameters['options'])) {
-			throw new ValidateActionException("Missing parameter 'options'");
+			throw new UserInputException('options');
 		}
 	}
 	

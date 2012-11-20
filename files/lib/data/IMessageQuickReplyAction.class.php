@@ -37,6 +37,14 @@ interface IMessageQuickReplyAction {
 	public function getRedirectUrl(DatabaseObject $container, DatabaseObject $message);
 	
 	/**
+	 * Validates the message.
+	 * 
+	 * @param	wcf\data\DatabaseObject		$container
+	 * @param	string				$message
+	 */
+	public function validateMessage(DatabaseObject $container, $message);
+	
+	/**
 	 * Creates a new message and returns it.
 	 *
 	 * @return	array
