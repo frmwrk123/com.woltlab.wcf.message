@@ -645,7 +645,9 @@ WCF.Message.QuickReply = Class.extend({
 	 */
 	_success: function(data, textStatus, jqXHR) {
 		// remove marked quotes
-		this._quoteManager.removeMarkedQuotes();
+		if (this._quoteManager !== null) {
+			this._quoteManager.markQuotesForRemoval();
+		}
 		
 		// redirect to new page
 		if (data.returnValues.url) {
