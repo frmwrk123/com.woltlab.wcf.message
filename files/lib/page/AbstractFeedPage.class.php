@@ -32,13 +32,20 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	public $items = null;
 	
 	/**
+	 * feed title
+	 * @var string
+	 */
+	public $title = '';
+	
+	/**
 	 * @see	wcf\page\IPage::assignVariables()
 	 */
 	public function assignVariables() {
 		parent::assignVariables();
 		
 		WCF::getTPL()->assign(array(
-			'items' => $this->items
+			'items' => $this->items,
+			'title' => $this->title
 		));
 	}
 	

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 	<channel>
-		<title><![CDATA[{@PAGE_TITLE|language|escapeCDATA}]]></title>
+		<title><![CDATA[{if $title}{$title} - {/if}{@PAGE_TITLE|language|escapeCDATA}]]></title>
 		<link><![CDATA[{@$baseHref|escapeCDATA}]]></link>
 		<description><![CDATA[{@PAGE_DESCRIPTION|escapeCDATA}]]></description>
 		<language>{@$__wcf->language->getFixedLanguageCode()}</language>
