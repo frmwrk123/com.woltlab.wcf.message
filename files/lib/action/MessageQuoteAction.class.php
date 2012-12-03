@@ -16,7 +16,7 @@ use wcf\util\StringUtil;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	action
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class MessageQuoteAction extends AJAXProxyAction {
 	/**
@@ -26,12 +26,19 @@ class MessageQuoteAction extends AJAXProxyAction {
 	public $quoteIDs = array();
 	
 	/**
+	 * list of object types
+	 * @var	array<string>
+	 */
+	public $objectTypes = array();
+	
+	/**
 	 * @see	wcf\action\IAction::readParameters()
 	 */
 	public function readParameters() {
 		AbstractSecureAction::readParameters();
 		
 		if (isset($_POST['actionName'])) $this->actionName = StringUtil::trim($_POST['actionName']);
+		if (isset($_POST['objectTypes']) && is_array($_POST['objectTypes'])) $this->objectTypes = ArrayUtil::trim($_POST['objectTypes']); 
 		if (isset($_POST['quoteIDs'])) {
 			$this->quoteIDs = ArrayUtil::trim($_POST['quoteIDs']);
 			
@@ -53,7 +60,10 @@ class MessageQuoteAction extends AJAXProxyAction {
 		$returnValues = null;
 		switch ($this->actionName) {
 			case 'count':
-				$returnValues = array('count' => $this->count());
+				$returnValues = array(
+					'count' => $this->count(),
+					'fullQuoteObjectIDs' => $this->getFullQuoteObjectIDs()
+				);
 			break;
 			
 			case 'getQuotes':
@@ -65,11 +75,17 @@ class MessageQuoteAction extends AJAXProxyAction {
 			break;
 			
 			case 'remove':
-				$returnValues = array('count' => $this->remove());
+				$returnValues = array(
+					'count' => $this->remove(),
+					'fullQuoteObjectIDs' => $this->getFullQuoteObjectIDs()
+				);
 			break;
 			
 			case 'removeMarkedQuotes':
-				$returnValues = array('count' => $this->removeMarkedQuotes());
+				$returnValues = array(
+					'count' => $this->removeMarkedQuotes(),
+					'fullQuoteObjectIDs' => $this->getFullQuoteObjectIDs()
+				);
 			break;
 			
 			default:
@@ -151,5 +167,23 @@ class MessageQuoteAction extends AJAXProxyAction {
 		MessageQuoteManager::getInstance()->removeMarkedQuotes();
 		
 		return $this->count();
+	}
+	
+	/**
+	 * Returns a list of full quotes by object ids for given object types.
+	 * 
+	 * @return	array<array>
+	 */
+	protected function getFullQuoteObjectIDs() {
+		if (empty($this->objectTypes)) {
+			throw new UserInputException('objectTypes');
+		}
+		
+		try {
+			return MessageQuoteManager::getInstance()->getFullQuoteObjectIDs($this->objectTypes);
+		}
+		catch (SystemException $e) {
+			throw new UserInputException('objectTypes');
+		}
 	}
 }

@@ -290,7 +290,7 @@ WCF.Message.Multilingualism = Class.extend({
 /**
  * Loads smiley categories upon user request.
  */
-WCF.Message.Smilies = Class.extend({
+WCF.Message.SmileyCategories = Class.extend({
 	/**
 	 * list of already loaded category ids
 	 * @var	array<integer>
@@ -304,7 +304,15 @@ WCF.Message.Smilies = Class.extend({
 	_proxy: null,
 	
 	/**
+	 * ckEditor element
+	 * @var	jQuery
+	 */
+	_ckEditor: null,
+	
+	/**
 	 * Initializes the smiley loader.
+	 * 
+	 * @param	string		ckEditorID
 	 */
 	init: function() {
 		this._cache = [ ];
@@ -358,6 +366,82 @@ WCF.Message.Smilies = Class.extend({
 });
 
 /**
+ * Handles smiley clicks.
+ */
+WCF.Message.Smilies = Class.extend({
+	/**
+	 * ckEditor element
+	 * @var	jQuery
+	 */
+	_ckEditor: null,
+	
+	/**
+	 * Initializes the smiley handler.
+	 * 
+	 * @param	string		ckEditorID
+	 */
+	init: function(ckEditorID) {
+		// get ck editor
+		if (ckEditorID) {
+			this._ckEditor = $('#' + ckEditorID);
+			
+			// add smiley click handler
+			$(document).on('click', '.jsSmiley', $.proxy(this._smileyClick, this));
+		}
+	},
+	
+	/**
+	 * Handles tab smiley clicks.
+	 * 
+	 * @param	object		event
+	 */
+	_smileyClick: function(event) {
+		var $target = $(event.currentTarget);
+		var $smileyCode = $target.data('smileyCode');
+		
+		// get ckEditor
+		var $ckEditor = this._ckEditor.ckeditorGet();
+		// get smiley path
+		var $smileyPath = $target.find('img').attr('src');
+		
+		// add smiley to config
+		if (!WCF.inArray($smileyCode, $ckEditor.config.smiley_descriptions)) {
+			$ckEditor.config.smiley_descriptions.push($smileyCode);
+			$ckEditor.config.smiley_images.push($smileyPath);
+		}
+		
+		if ($ckEditor.mode === 'wysiwyg') {
+			// in design mode
+			var $img = $ckEditor.document.createElement('img', {
+				attributes: {
+					src: $smileyPath,
+					'class': 'smiley',
+					alt: $smileyCode
+				}
+			});
+			$ckEditor.insertText(' ');
+			$ckEditor.insertElement($img);
+			$ckEditor.insertText(' ');
+		}
+		else {
+			// in source mode
+			var $textarea = this._ckEditor.next('.cke_editor_text').find('textarea');
+			var $value = $textarea.val();
+			if ($value.length == 0) {
+				$textarea.val($smileyCode);
+				$textarea.setCaret($smileyCode.length);
+			}
+			else {
+				var $position = $textarea.getCaret();
+				var $string = (($value.substr($position - 1, 1) !== ' ') ? ' ' : '') + $smileyCode + ' ';
+				$textarea.val( $value.substr(0, $position) + $string + $value.substr($position) );
+				$textarea.setCaret($position + $string.length);
+			}
+		}
+	}
+});
+
+/**
  * Provides an AJAX-based quick reply for messages.
  */
 WCF.Message.QuickReply = Class.extend({
@@ -396,12 +480,6 @@ WCF.Message.QuickReply = Class.extend({
 	 * @var	WCF.Effect.Scroll
 	 */
 	_scrollHandler: null,
-	
-	/**
-	 * submit button
-	 * @var	jQuery
-	 */
-	_submitButton: null,
 	
 	/**
 	 * Initializes a new WCF.Message.QuickReply object.
@@ -462,7 +540,21 @@ WCF.Message.QuickReply = Class.extend({
 		}
 		
 		var $ckEditor = this._messageField.ckeditorGet();
-		var $message = $ckEditor.getData();
+		var $message = $.trim($ckEditor.getData());
+		
+		// check if message is empty
+		var $innerError = this._messageField.parent().find('small.innerError');
+		if ($message === '') {
+			if (!$innerError.length) {
+				$innerError = $('<small class="innerError" />').appendTo(this._messageField.parent());
+			}
+			
+			$innerError.html(WCF.Language.get('wcf.global.form.error.empty'));
+			return;
+		}
+		else {
+			$innerError.remove();
+		}
 		
 		var $parameters = {
 			objectID: this._getObjectID(),
@@ -553,7 +645,9 @@ WCF.Message.QuickReply = Class.extend({
 	 */
 	_success: function(data, textStatus, jqXHR) {
 		// remove marked quotes
-		this._quoteManager.removeMarkedQuotes();
+		if (this._quoteManager !== null) {
+			this._quoteManager.markQuotesForRemoval();
+		}
 		
 		// redirect to new page
 		if (data.returnValues.url) {
@@ -1221,7 +1315,28 @@ WCF.Message.Quote.Handler = Class.extend({
 	 */
 	_success: function(data, textStatus, jqXHR) {
 		if (data.returnValues.count !== undefined) {
-			this._quoteManager.updateCount(data.returnValues.count);
+			var $fullQuoteObjectIDs = (data.fullQuoteObjectIDs !== undefined) ? data.fullQuoteObjectIDs : { };
+			this._quoteManager.updateCount(data.returnValues.count, $fullQuoteObjectIDs);
+		}
+	},
+	
+	/**
+	 * Updates the full quote data for all matching objects.
+	 * 
+	 * @param	array<integer>		$objectIDs
+	 */
+	updateFullQuoteObjectIDs: function(objectIDs) {
+		for (var $containerID in this._containers) {
+			this._containers[$containerID].find('.jsQuoteMessage').each(function(index, button) {
+				// reset all markings
+				var $button = $(button).data('isQuoted', 0);
+				$button.children('a').removeClass('active');
+				
+				// mark as active
+				if (WCF.inArray($button.data('objectID'), objectIDs)) {
+					$button.data('isQuoted', 1).children('a').addClass('active');
+				}
+			});
 		}
 	}
 });
@@ -1354,11 +1469,19 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * Updates number of stored quotes.
 	 * 
 	 * @param	integer		count
+	 * @param	object		fullQuoteObjectIDs
 	 */
-	updateCount: function(count) {
+	updateCount: function(count, fullQuoteObjectIDs) {
 		this._count = parseInt(count) || 0;
 		
 		this._toggleShowQuotes();
+		
+		// update full quote ids of handlers
+		for (var $objectType in this._handlers) {
+			if (fullQuoteObjectIDs[$objectType]) {
+				this._handlers[$objectType].updateFullQuoteObjectIDs(fullQuoteObjectIDs[$objectType]);
+			}
+		}
 	},
 	
 	/**
@@ -1523,8 +1646,15 @@ WCF.Message.Quote.Manager = Class.extend({
 		});
 		
 		if ($quoteIDs.length) {
+			// get object types
+			var $objectTypes = [ ];
+			for (var $objectType in this._handlers) {
+				$objectTypes.push($objectType);
+			}
+			
 			this._proxy.setOption('data', {
 				actionName: 'remove',
+				objectTypes: $objectTypes,
 				quoteIDs: $quoteIDs
 			});
 			this._proxy.sendRequest();
@@ -1574,8 +1704,14 @@ WCF.Message.Quote.Manager = Class.extend({
 	 * Counts stored quotes.
 	 */
 	countQuotes: function() {
+		var $objectTypes = [ ];
+		for (var $objectType in this._handlers) {
+			$objectTypes.push($objectType);
+		}
+		
 		this._proxy.setOption('data', {
-			actionName: 'count'
+			actionName: 'count',
+			objectTypes: $objectTypes
 		});
 		this._proxy.sendRequest();
 	},
@@ -1593,7 +1729,8 @@ WCF.Message.Quote.Manager = Class.extend({
 		}
 		
 		if (data.count !== undefined) {
-			this.updateCount(data.count);
+			var $fullQuoteObjectIDs = (data.fullQuoteObjectIDs !== undefined) ? data.fullQuoteObjectIDs : { };
+			this.updateCount(data.count, $fullQuoteObjectIDs);
 		}
 		
 		if (data.template !== undefined) {

@@ -1,5 +1,5 @@
 <?php
-namespace wcf\system\message;
+namespace wcf\data;
 
 /**
  * Default interface for actions implementing message inline editing.
@@ -8,8 +8,8 @@ namespace wcf\system\message;
  * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
- * @subpackage	system.message
- * @category 	Community Framework
+ * @subpackage	data
+ * @category	Community Framework
  */
 interface IMessageInlineEditorAction {
 	/**

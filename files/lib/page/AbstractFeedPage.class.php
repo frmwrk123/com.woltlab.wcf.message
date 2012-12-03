@@ -11,23 +11,23 @@ use wcf\util\ArrayUtil;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	page
- * @category 	Community Framework
+ * @category	Community Framework
  */
 abstract class AbstractFeedPage extends AbstractAuthedPage {
 	/**
-	 * @see wcf\page\AbstractPage::$templateName
+	 * @see	wcf\page\AbstractPage::$templateName
 	 */
 	public $templateName = 'rssFeed';
 	
 	/**
 	 * parsed contents of $_REQUEST['id']
-	 * @var array<integer>
+	 * @var	array<integer>
 	 */
 	public $objectIDs = array();
 	
 	/**
 	 * list of feed-entries for the current page
-	 * @var wcf\data\DatabaseObjectList
+	 * @var	wcf\data\DatabaseObjectList
 	 */
 	public $items = null;
 	
@@ -38,7 +38,7 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	public $title = '';
 	
 	/**
-	 * @see wcf\page\IPage::assignVariables()
+	 * @see	wcf\page\IPage::assignVariables()
 	 */
 	public function assignVariables() {
 		parent::assignVariables();
@@ -50,7 +50,7 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	}
 	
 	/**
-	 * @see wcf\page\IPage::readParameters()
+	 * @see	wcf\page\IPage::readParameters()
 	 */
 	public function readParameters() {
 		parent::readParameters();
@@ -68,7 +68,7 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	}
 	
 	/**
-	 * @see wcf\page\IPage::show()
+	 * @see	wcf\page\IPage::show()
 	 */
 	public function show() {
 		// set correct content-type

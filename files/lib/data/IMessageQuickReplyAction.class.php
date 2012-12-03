@@ -1,6 +1,5 @@
 <?php
-namespace wcf\system\message;
-use wcf\data\DatabaseObject;
+namespace wcf\data;
 
 /**
  * Default interface for actions implementing quick reply.
@@ -9,8 +8,8 @@ use wcf\data\DatabaseObject;
  * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
- * @subpackage	system.message
- * @category 	Community Framework
+ * @subpackage	data
+ * @category	Community Framework
  */
 interface IMessageQuickReplyAction {
 	/**
@@ -36,6 +35,14 @@ interface IMessageQuickReplyAction {
 	 * @return	string
 	 */
 	public function getRedirectUrl(DatabaseObject $container, DatabaseObject $message);
+	
+	/**
+	 * Validates the message.
+	 * 
+	 * @param	wcf\data\DatabaseObject		$container
+	 * @param	string				$message
+	 */
+	public function validateMessage(DatabaseObject $container, $message);
 	
 	/**
 	 * Creates a new message and returns it.
