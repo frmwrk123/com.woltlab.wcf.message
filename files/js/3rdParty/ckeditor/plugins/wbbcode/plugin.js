@@ -63,7 +63,7 @@
 		
 		// [quote]
 		data = data.replace(/\[quote\]/gi, '<blockquote>');
-		data = data.replace(/\[\/quote]/gi, '</blockquote>');
+		data = data.replace(/\[\/quote\]/gi, '</blockquote>');
 
 		// [size]
 		data = data.replace(/\[size=(\d+)\](.*?)\[\/size\]/gi,'<span style="font-size: $1pt">$2</span>');
