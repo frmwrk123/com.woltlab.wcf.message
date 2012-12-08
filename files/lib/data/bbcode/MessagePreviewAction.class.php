@@ -1,5 +1,7 @@
 <?php
 namespace wcf\data\bbcode;
+use wcf\data\attachment\GroupedAttachmentList;
+use wcf\system\bbcode\AttachmentBBCode;
 use wcf\system\bbcode\MessageParser;
 use wcf\system\exception\UserInputException;
 use wcf\system\WCF;
@@ -44,6 +46,22 @@ class MessagePreviewAction extends BBCodeAction {
 		if ($enableBBCodes && !WCF::getSession()->getPermission('user.message.canUseBBCodes')) $enableBBCodes = 0;
 		if ($enableHtml && !WCF::getSession()->getPermission('user.message.canUseHtml')) $enableHtml = 0;
 		if ($enableSmilies && !WCF::getSession()->getPermission('user.message.canUseSmilies')) $enableSmilies = 0;
+		
+		// get attachments
+		if (!empty($this->parameters['attachmentObjectType']) && WCF::getUser()->userID) {
+			$attachmentList = new GroupedAttachmentList($this->parameters['attachmentObjectType']);
+			if (!empty($this->parameters['attachmentObjectID'])) {
+				$attachmentList->getConditionBuilder()->add('attachment.objectID = ?', array($this->parameters['attachmentObjectID']));
+				AttachmentBBCode::setObjectID($this->parameters['attachmentObjectID']);
+			}
+			else {
+				$attachmentList->getConditionBuilder()->add('attachment.tmpHash = ?', array($this->parameters['tmpHash']));
+			}
+			// @todo: check permissions
+			$attachmentList->getConditionBuilder()->add('attachment.userID = ?', array(WCF::getUser()->userID));
+			$attachmentList->readObjects();
+			AttachmentBBCode::setAttachmentList($attachmentList);
+		}
 		
 		// parse message
 		$message = StringUtil::trim($this->parameters['data']['message']);
