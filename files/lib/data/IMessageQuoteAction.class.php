@@ -15,7 +15,7 @@ interface IMessageQuoteAction {
 	/**
 	 * Validates parameters to quote an entire message.
 	 */
-	public function validateSaveFullQUote();
+	public function validateSaveFullQuote();
 	
 	/**
 	 * Quotes an entire message.
