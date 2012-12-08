@@ -15,7 +15,7 @@
 					</hgroup>
 					
 					<ul>
-						<li><img src="{icon}delete{/icon}" alt="" title="{lang}wcf.global.button.delete{/lang}" class="jsDeleteButton jsTooltip" data-object-id="{@$attachment->attachmentID}" data-confirm-message="{lang}wcf.attachment.delete.sure{/lang}" /></li>
+						<li><img src="{icon}delete{/icon}" alt="" title="{lang}wcf.global.button.delete{/lang}" class="jsDeleteButton jsTooltip pointer" data-object-id="{@$attachment->attachmentID}" data-confirm-message="{lang}wcf.attachment.delete.sure{/lang}" /></li>
 					</ul>
 				</div>
 			</li>
