@@ -177,11 +177,19 @@ WCF.Message.Preview = Class.extend({
  * @see	WCF.Message.Preview
  */
 WCF.Message.DefaultPreview = WCF.Message.Preview.extend({
+	_attachmentObjectType: null,
+	_attachmentObjectID: null,
+	_tmpHash: null,
+	
 	/**
 	 * @see	WCF.Message.Preview.init()
 	 */
-	init: function() {
+	init: function(attachmentObjectType, attachmentObjectID, tmpHash) {
 		this._super('wcf\\data\\bbcode\\MessagePreviewAction', 'text', 'previewButton');
+		
+		this._attachmentObjectType = attachmentObjectType || null;
+		this._attachmentObjectID = attachmentObjectID || null;
+		this._tmpHash = tmpHash || null;
 	},
 	
 	/**
@@ -190,13 +198,27 @@ WCF.Message.DefaultPreview = WCF.Message.Preview.extend({
 	_handleResponse: function(data) {
 		var $preview = $('#previewContainer');
 		if (!$preview.length) {
-			$preview = $('<div class="container containerPadding marginTop shadow" id="previewContainer"><fieldset><legend>' + WCF.Language.get('wcf.global.preview') + '</legend><div></div></fieldset>').prependTo($('#messageContainer')).wcfFadeIn();
+			$preview = $('<div class="container containerPadding marginTop" id="previewContainer"><fieldset><legend>' + WCF.Language.get('wcf.global.preview') + '</legend><div></div></fieldset>').prependTo($('#messageContainer')).wcfFadeIn();
 		}
 		
 		$preview.find('div:eq(0)').html(data.returnValues.message);
+	},
+	
+	/**
+	 * @see	WCF.Message.Preview._getParameters()
+	 */
+	_getParameters: function(message) {
+		var $parameters = this._super(message);
+		
+		if (this._attachmentObjectType != null) {
+			$parameters.attachmentObjectType = this._attachmentObjectType;
+			$parameters.attachmentObjectID = this._attachmentObjectID;
+			$parameters.tmpHash = this._tmpHash;
+		}
+		
+		return $parameters;
 	}
 });
-
 
 /**
  * Handles multilingualism for messages.
