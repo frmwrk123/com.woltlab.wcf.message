@@ -733,6 +733,12 @@ WCF.Message.InlineEditor = Class.extend({
 	_containerID: 0,
 	
 	/**
+	 * list of dropdowns
+	 * @var	object
+	 */
+	_dropdowns: { },
+	
+	/**
 	 * notification object
 	 * @var	WCF.System.Notification
 	 */
@@ -761,6 +767,7 @@ WCF.Message.InlineEditor = Class.extend({
 		this._cache = '';
 		this._container = { };
 		this._containerID = parseInt(containerID);
+		this._dropdowns = { };
 		this._supportExtendedForm = (supportExtendedForm) ? true : false;
 		this._proxy = new WCF.Action.Proxy({
 			failure: $.proxy(this._cancel, this),
@@ -785,7 +792,10 @@ WCF.Message.InlineEditor = Class.extend({
 			if (!this._container[$containerID]) {
 				this._container[$containerID] = $container;
 				
-				if ($container.data('canEdit')) {
+				if ($container.data('canEditInline')) {
+					$container.find('.jsMessageEditButton:eq(0)').data('containerID', $containerID).click($.proxy(this._clickInline, this));
+				}
+				else if ($container.data('canEdit')) {
 					$container.find('.jsMessageEditButton:eq(0)').data('containerID', $containerID).click($.proxy(this._click, this));
 				}
 			}
@@ -796,9 +806,11 @@ WCF.Message.InlineEditor = Class.extend({
 	 * Loads WYSIWYG editor for selected message.
 	 * 
 	 * @param	object		event
+	 * @param	integer		containerID
+	 * @return	boolean
 	 */
-	_click: function(event) {
-		var $containerID = $(event.currentTarget).data('containerID');
+	_click: function(event, containerID) {
+		var $containerID = (event === null) ? containerID : $(event.currentTarget).data('containerID');
 		
 		if (this._activeElementID === '') {
 			this._activeElementID = $containerID;
@@ -815,9 +827,50 @@ WCF.Message.InlineEditor = Class.extend({
 			this._proxy.sendRequest();
 		}
 		
+		if (event !== null) {
+			event.stopPropagation();
+			return false;
+		}
+	},
+	
+	/**
+	 * Provides an inline dropdown menu instead of directly loading the WYSIWYG editor.
+	 * 
+	 * @param	object		event
+	 * @return	boolean
+	 */
+	_clickInline: function(event) {
+		var $button = $(event.currentTarget);
+		
+		if (!$button.hasClass('dropdownToggle')) {
+			var $containerID = $button.data('containerID');
+			
+			WCF.DOMNodeInsertedHandler.enable();
+			
+			$button.addClass('dropdownToggle').parent().addClass('dropdown');
+			
+			var $dropdownMenu = $('<ul class="dropdownMenu" />').insertAfter($button);
+			this._initDropdownMenu($containerID, $dropdownMenu);
+			
+			WCF.DOMNodeInsertedHandler.disable();
+			
+			// trigger click event
+			$button.trigger('click');
+			
+			this._dropdowns[this._container[$containerID].data('objectID')] = $dropdownMenu;
+		}
+		
 		event.stopPropagation();
 		return false;
 	},
+	
+	/**
+	 * Initializes the inline edit dropdown menu.
+	 * 
+	 * @param	integer		containerID
+	 * @param	jQuery		dropdownMenu
+	 */
+	_initDropdownMenu: function(containerID, dropdownMenu) { },
 	
 	/**
 	 * Prepares message for WYSIWYG display.
