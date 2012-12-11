@@ -22,7 +22,7 @@
 		{/foreach}
 	</ul>
 	
-	<dl>
+	<dl class="wide">
 		<dd>
 			<div></div>
 			<small>{lang}wcf.attachment.upload.limits{/lang}</small>
