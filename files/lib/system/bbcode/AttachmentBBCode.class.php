@@ -46,6 +46,10 @@ class AttachmentBBCode extends AbstractBBCode {
 		
 		if (isset($attachments[$attachmentID])) {
 			$attachment = $attachments[$attachmentID];
+			
+			// mark attachment as embedded
+			$attachment->markAsEmbedded();
+			
 			if ($attachment->isImage) {
 				// image
 				$linkParameters = array(
