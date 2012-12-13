@@ -10,7 +10,7 @@
 				
 				<div>
 					<hgroup>
-						<h1><a href="{link controller='Attachment' object=$attachment}{/link}"{if $attachment->isImage} rel="imageviewer" title="{$attachment->filename}"{/if}>{$attachment->filename}</a></h1>
+						<h1><a href="{link controller='Attachment' object=$attachment}{/link}"{if $attachment->isImage} title="{$attachment->filename}" class="jsImageViewer"{/if}>{$attachment->filename}</a></h1>
 						<h2><small>{@$attachment->filesize|filesize}</small></h2>
 					</hgroup>
 					
