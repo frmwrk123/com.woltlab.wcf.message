@@ -876,14 +876,26 @@ WCF.Message.InlineEditor = Class.extend({
 			
 			WCF.DOMNodeInsertedHandler.disable();
 			
+			this._dropdowns[this._container[$containerID].data('objectID')] = $dropdownMenu;
+			
+			WCF.Dropdown.registerCallback($button.parent().wcfIdentify(), $.proxy(this._toggleDropdown, this));
+			
 			// trigger click event
 			$button.trigger('click');
-			
-			this._dropdowns[this._container[$containerID].data('objectID')] = $dropdownMenu;
 		}
 		
 		event.stopPropagation();
 		return false;
+	},
+	
+	/**
+	 * Forces message options to stay visible if toggling dropdown menu.
+	 * 
+	 * @param	jQuery		dropdown
+	 * @param	string		action
+	 */
+	_toggleDropdown: function(dropdown, action) {
+		dropdown.parents('.messageOptions').toggleClass('forceOpen');
 	},
 	
 	/**
