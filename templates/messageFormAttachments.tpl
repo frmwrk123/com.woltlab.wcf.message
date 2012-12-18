@@ -10,7 +10,7 @@
 				
 				<div>
 					<hgroup>
-						<h1><a href="{link controller='Attachment' object=$attachment}{/link}"{if $attachment->isImage} rel="imageviewer" title="{$attachment->filename}"{/if}>{$attachment->filename}</a></h1>
+						<h1><a href="{link controller='Attachment' object=$attachment}{/link}"{if $attachment->isImage} title="{$attachment->filename}" class="jsImageViewer"{/if}>{$attachment->filename}</a></h1>
 						<h2><small>{@$attachment->filesize|filesize}</small></h2>
 					</hgroup>
 					
@@ -45,7 +45,7 @@
 		});
 		
 		new WCF.Attachment.Upload($('#attachments > dl > dd > div'), $('#attachments > ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}', '{@$attachmentParentObjectID}', {@$attachmentHandler->getMaxCount()}-{@$attachmentHandler->getAttachmentList()|count});
-		new WCF.Action.Delete('wcf\\data\\attachment\\AttachmentAction', $('.formAttachmentList > li'));
+		new WCF.Action.Delete('wcf\\data\\attachment\\AttachmentAction', '.formAttachmentList > li');
 		
 		{* @todo: sorting *}
 		{* @todo: add to message button *}

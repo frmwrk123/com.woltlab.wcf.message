@@ -876,14 +876,26 @@ WCF.Message.InlineEditor = Class.extend({
 			
 			WCF.DOMNodeInsertedHandler.disable();
 			
+			this._dropdowns[this._container[$containerID].data('objectID')] = $dropdownMenu;
+			
+			WCF.Dropdown.registerCallback($button.parent().wcfIdentify(), $.proxy(this._toggleDropdown, this));
+			
 			// trigger click event
 			$button.trigger('click');
-			
-			this._dropdowns[this._container[$containerID].data('objectID')] = $dropdownMenu;
 		}
 		
 		event.stopPropagation();
 		return false;
+	},
+	
+	/**
+	 * Forces message options to stay visible if toggling dropdown menu.
+	 * 
+	 * @param	jQuery		dropdown
+	 * @param	string		action
+	 */
+	_toggleDropdown: function(dropdown, action) {
+		dropdown.parents('.messageOptions').toggleClass('forceOpen');
 	},
 	
 	/**
@@ -1213,9 +1225,6 @@ WCF.Message.Quote.Handler = Class.extend({
 			$container = this._containers[$container.data('containerID')];
 		}
 		this._activeContainerID = $container.wcfIdentify();
-		
-		var self = this;
-		$container.mouseout(function() { self._activeContainerID = ''; });
 	},
 	
 	/**
@@ -1237,6 +1246,23 @@ WCF.Message.Quote.Handler = Class.extend({
 		if ($text == '') {
 			this._copyQuote.hide();
 			
+			return;
+		}
+		
+		// normalize line breaks before comparing content
+		$text = $text.replace(/\r?\n|\r/g, "\n");
+		
+		// compare selection with message text of given container
+		var $messageText = null;
+		if (this._messageBodySelector) {
+			$messageText = $container.find(this._messageBodySelector).text();
+		}
+		else {
+			$messageText = $container.text();
+		}
+		
+		// selected text is not part of $messageText or contains text from unrelated nodes
+		if ($messageText.indexOf($text) === -1) {
 			return;
 		}
 		
