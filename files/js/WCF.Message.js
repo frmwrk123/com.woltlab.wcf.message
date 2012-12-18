@@ -1249,8 +1249,8 @@ WCF.Message.Quote.Handler = Class.extend({
 			return;
 		}
 		
-		// normalize line breaks before compairing content
-		$text = $text.replace(/\r?\n|\r/g, "\n");;
+		// normalize line breaks before comparing content
+		$text = $text.replace(/\r?\n|\r/g, "\n");
 		
 		// compare selection with message text of given container
 		var $messageText = null;
