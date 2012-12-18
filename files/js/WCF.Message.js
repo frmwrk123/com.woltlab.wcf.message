@@ -1225,9 +1225,6 @@ WCF.Message.Quote.Handler = Class.extend({
 			$container = this._containers[$container.data('containerID')];
 		}
 		this._activeContainerID = $container.wcfIdentify();
-		
-		var self = this;
-		$container.mouseout(function() { self._activeContainerID = ''; });
 	},
 	
 	/**
@@ -1249,6 +1246,20 @@ WCF.Message.Quote.Handler = Class.extend({
 		if ($text == '') {
 			this._copyQuote.hide();
 			
+			return;
+		}
+		
+		// compare selection with message text of given container
+		var $messageText = null;
+		if (this._messageBodySelector) {
+			$messageText = $container.find(this._messageBodySelector).text();
+		}
+		else {
+			$messageText = $container.text();
+		}
+		
+		// selected text is not part of $messageText or contains text from unrelated nodes
+		if ($messageText.indexOf($text) === -1) {
 			return;
 		}
 		
