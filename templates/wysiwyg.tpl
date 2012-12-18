@@ -1,11 +1,16 @@
-<script type="text/javascript" src="{@$__wcf->getPath('wcf')}js/3rdParty/ckeditor/ckeditor.js"></script>
-<script type="text/javascript" src="{@$__wcf->getPath('wcf')}js/3rdParty/ckeditor/adapters/jquery.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+	var CKEDITOR_BASEPATH = '{@$__wcf->getPath()}js/3rdParty/ckeditor/';
+//]]>
+</script>
+<script type="text/javascript" src="{@$__wcf->getPath()}js/3rdParty/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{@$__wcf->getPath()}js/3rdParty/ckeditor/adapters/jquery.js"></script>
 {event name='additionalIncludes'}
 
 <script type="text/javascript">
 //<![CDATA[
 $(function() {
-	var config = {
+	var $config = {
 		extraPlugins: 'wbbcode',
 		removePlugins: 'elementspath,contextmenu,menubutton,forms',
 		language: '{@$__wcf->language->getFixedLanguageCode()}',
@@ -35,8 +40,10 @@ $(function() {
 	
 	{event name='additionalJS'}
 	
-	$('{if $wysiwygSelector|isset}#{$wysiwygSelector|encodeJS}{else}#text{/if}').ckeditor(config);
+	var $editor = CKEDITOR.instances['{if $wysiwygSelector|isset}{$wysiwygSelector|encodeJS}{else}text{/if}'];
+	if ($editor) $editor.destroy(true);
+	
+	$('{if $wysiwygSelector|isset}#{$wysiwygSelector|encodeJS}{else}#text{/if}').ckeditor($config);
 });
 //]]>
 </script>
-
