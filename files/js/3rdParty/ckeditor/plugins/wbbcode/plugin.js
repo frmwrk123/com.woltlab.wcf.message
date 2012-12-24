@@ -62,8 +62,8 @@
 		data = data.replace(/\[img='?(.*?)'?\]\[\/img\]/gi,'<img src="$1" />');
 		
 		// [quote]
-		data = data.replace(/\[quote\]/gi, '<blockquote>');
-		data = data.replace(/\[\/quote\]/gi, '</blockquote>');
+		// data = data.replace(/\[quote\]/gi, '<blockquote>');
+		// data = data.replace(/\[\/quote\]/gi, '</blockquote>');
 
 		// [size]
 		data = data.replace(/\[size=(\d+)\](.*?)\[\/size\]/gi,'<span style="font-size: $1pt">$2</span>');
@@ -149,8 +149,8 @@
 		html = html.replace(/<img .*?src=(["'])(.+?)\1.*?>/gi, '[img]$2[/img]');
 
 		// [quote]
-		html = html.replace(/<blockquote>/gi, '[quote]');
-		html = html.replace(/\n*<\/blockquote>/gi, '[/quote]');
+		// html = html.replace(/<blockquote>/gi, '[quote]');
+		// html = html.replace(/\n*<\/blockquote>/gi, '[/quote]');
 
 		// [color]
 		html = html.replace(/<span style="color: ?(.*?);?">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
