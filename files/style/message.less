@@ -383,12 +383,10 @@
 	}
 	
 	.userTitle {
-		/* todo */
 		margin: 7px 0 0;
 	}
 	
 	.userRank {
-		/* todo */
 		margin: 2px 0 0;
 	}
 	
@@ -399,15 +397,26 @@
 		text-align: left;
 		
 		> .badgeOnline {
-			background-color: fade(@wcfSuccessBackgroundColor, 70%);
-			border-bottom: 1px solid rgba(255, 255, 255, .7); /*todo*/
+			color: rgba(238, 255, 238, 1);
 			bottom: 7px;
+			left: -5px;
 			position: absolute;
-			right: -5px;
 			text-transform: uppercase;
 			
-			.borderRadius(2px);
-			.boxShadow(0, 1px, rgba(0, 0, 0, .3), 7px);
+			.borderRadius(0, 5px, 5px, 0);
+			.boxShadow(1px, 1px, rgba(0, 0, 0, .2), 3px);
+			.linearGradient(darken(rgba(0, 153, 0, 1), 10%), rgba(0, 153, 0, 1), darken(rgba(0, 153, 0, 1), 10%));
+			.textShadow(darken(rgba(0, 153, 0, 1), 10%));
+			
+			&:before {
+				border-bottom: 4px solid darken(rgba(0, 153, 0, 1), 20%);
+				border-left: 6px solid transparent;
+				content: "";
+				display: block;
+				left: 0;
+				position: absolute;
+				top: -4px;
+			}
 		}
 	}
 	
