@@ -19,5 +19,6 @@
 		<item name="wcf.message.settings.showSignature.description"><![CDATA[Do you want to display your signature in this message?]]></item>
 		<item name="wcf.message.smilies"><![CDATA[Smilies]]></item>
 		<item name="wcf.message.smilies.default"><![CDATA[Default]]></item>
+		<item name="wcf.message.new"><![CDATA[New]]></item>
 	</category>
 </language>
