@@ -412,6 +412,13 @@
 		.box32 > .messageHeadline > h2:first-child {
 			font-size: 100%;
 			
+			> .username {
+				font-size: @wcfTitleFontSize;
+				font-weight: bold;
+				
+				.textShadow(@wcfContainerBackgroundColor);
+			}
+			
 			> .username,
 			> time {
 				display: block;
