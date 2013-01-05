@@ -1,9 +1,9 @@
 <?php
 namespace wcf\form;
 use wcf\data\smiley\SmileyCache;
+use wcf\system\attachment\AttachmentHandler;
 use wcf\system\bbcode\BBCodeParser;
 use wcf\system\bbcode\URLParser;
-use wcf\system\attachment\AttachmentHandler;
 use wcf\system\exception\UserInputException;
 use wcf\system\language\LanguageFactory;
 use wcf\system\WCF;
