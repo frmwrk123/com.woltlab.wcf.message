@@ -419,13 +419,17 @@
 				.textShadow(@wcfContainerBackgroundColor);
 			}
 			
-			> .username,
-			> time {
+			> .username {
 				display: block;
 			}
 			
 			> .username + time:before {
 				content: "";
+			}
+			
+			> .likesBadge {
+				font-size: @wcfSmallFontSize;
+				top: -1px;
 			}
 		}
 	}
