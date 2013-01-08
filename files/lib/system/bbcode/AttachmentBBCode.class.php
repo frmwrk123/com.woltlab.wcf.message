@@ -50,12 +50,12 @@ class AttachmentBBCode extends AbstractBBCode {
 			// mark attachment as embedded
 			$attachment->markAsEmbedded();
 			
-			if ($attachment->isImage) {
+			if ($attachment->showAsImage()) {
 				// image
 				$linkParameters = array(
 					'object' => $attachment	
 				);
-				if ($attachment->thumbnailType) {
+				if ($attachment->hasThumbnail()) {
 					$linkParameters['thumbnail'] = 1; 
 				}
 				
@@ -63,8 +63,8 @@ class AttachmentBBCode extends AbstractBBCode {
 					// get alignment
 					$alignment = (isset($openingTag['attributes'][1]) ? $openingTag['attributes'][1] : '');
 					$linkParameters['embedded'] = 1;
-					$result = '<img src="'.StringUtil::encodeHTML(LinkHandler::getInstance()->getLink('Attachment', $linkParameters)).'"'.(!$attachment->thumbnailType ? ' class="jsResizeImage"' : '').' style="width: '.($attachment->thumbnailType ? $attachment->thumbnailWidth : $attachment->width).'px; height: '.($attachment->thumbnailType ? $attachment->thumbnailHeight: $attachment->height).'px;'.(!empty($alignment) ? ' float:' . ($alignment == 'left' ? 'left' : 'right') . '; margin: ' . ($alignment == 'left' ? '0 15px 7px 0' : '0 0 7px 15px' ) : '').'" alt="" />';
-					if ($attachment->thumbnailType) {
+					$result = '<img src="'.StringUtil::encodeHTML(LinkHandler::getInstance()->getLink('Attachment', $linkParameters)).'"'.(!$attachment->hasThumbnail() ? ' class="jsResizeImage"' : '').' style="width: '.($attachment->hasThumbnail() ? $attachment->thumbnailWidth : $attachment->width).'px; height: '.($attachment->hasThumbnail() ? $attachment->thumbnailHeight: $attachment->height).'px;'.(!empty($alignment) ? ' float:' . ($alignment == 'left' ? 'left' : 'right') . '; margin: ' . ($alignment == 'left' ? '0 15px 7px 0' : '0 0 7px 15px' ) : '').'" alt="" />';
+					if ($attachment->hasThumbnail() && $attachment->canDownload()) {
 						$result = '<a href="'.StringUtil::encodeHTML(LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment))).'" title="'.StringUtil::encodeHTML($attachment->filename).'" class="jsImageViewer">'.$result.'</a>';
 					}
 					return $result;
