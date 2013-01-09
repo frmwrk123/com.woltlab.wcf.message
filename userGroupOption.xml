@@ -19,6 +19,11 @@
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
 			</option>
+			<option name="user.message.allowedBBCodes">
+				<categoryname>user.message</categoryname>
+				<optiontype>BBCodeSelect</optiontype>
+				<defaultvalue>all</defaultvalue>
+			</option>
 			<!-- /user.message -->
 		</options>
 	</import>

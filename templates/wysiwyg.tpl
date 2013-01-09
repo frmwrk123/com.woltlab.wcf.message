@@ -12,19 +12,18 @@
 $(function() {
 	var $config = {
 		extraPlugins: 'wbbcode',
-		removePlugins: 'elementspath,contextmenu,menubutton,forms',
+		removePlugins: 'elementspath,menubutton,forms',
 		language: '{@$__wcf->language->getFixedLanguageCode()}',
 		fontSize_sizes: '8/8pt;10/10pt;12/12pt;14/14pt;18/18pt;24/24pt;36/36pt;',
 		disableObjectResizing: true,
 		toolbarCanCollapse: false,
 		enterMode: CKEDITOR.ENTER_BR,
 		minHeight: 200,
-		forcePasteAsPlainText: true,
 		toolbar:
 		[
 			['Source', '-', 'Undo', 'Redo'],
 			['Bold', 'Italic', 'Underline', '-', 'Strike', 'Subscript','Superscript'],
-			['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Blockquote'],
+			['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
 			'/',
 			['Font', 'FontSize', 'TextColor'],
 			['Link', 'Unlink', 'Image', 'Table'],

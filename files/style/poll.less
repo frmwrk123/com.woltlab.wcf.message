@@ -33,14 +33,16 @@
 		
 		&:hover {
 			background-color: @wcfContainerAccentBackgroundColor;
+			
+			.borderRadius(0, 5px, 5px, 0);
 		}
 		
 		.pollMeter {
 			background-color: @wcfContainerHoverBackgroundColor;
-			height: 1.5em;
+			height: 1.9em;
 			left: 0;
 			position: absolute;
-			top: 1px;
+			top: 0;
 			z-index: -1;
 			
 			.borderRadius(0, 5px, 5px, 0);
@@ -48,15 +50,15 @@
 		
 		.caption {
 			color: @wcfLinkColor;
+			padding: 2px 0;
 			
 			.optionName {
-				padding: 0 2.5em 0 @wcfGapTiny;
+				padding: 0 2.5em 0 @wcfGapSmall;
 			}
 			
 			.relativeVotes {
 				position: absolute;
-				right: 0;
-				top: 3px;
+				right: 7px;
 			}
 		}
 	}

@@ -1,8 +1,9 @@
 <?php
 namespace wcf\form;
 use wcf\data\smiley\SmileyCache;
-use wcf\system\bbcode\PreParser;
 use wcf\system\attachment\AttachmentHandler;
+use wcf\system\bbcode\BBCodeParser;
+use wcf\system\bbcode\PreParser;
 use wcf\system\exception\UserInputException;
 use wcf\system\language\LanguageFactory;
 use wcf\system\WCF;
@@ -20,6 +21,12 @@ use wcf\util\StringUtil;
  * @category	Community Framework
  */
 abstract class MessageForm extends RecaptchaForm {
+	/**
+	 * name of the permission which contains the allowed BBCodes
+	 * @var	string
+	 */
+	public $allowedBBCodesPermission = 'user.message.allowedBBCodes';
+	
 	/**
 	 * attachment handler
 	 * @var	wcf\system\attachment\AttachmentHandler
@@ -234,6 +241,15 @@ abstract class MessageForm extends RecaptchaForm {
 			throw new UserInputException('text', 'tooLong');
 		}
 		
+		if ($this->enableBBCodes && $this->allowedBBCodesPermission) {
+			$disallowedBBCodes = BBCodeParser::getInstance()->validateBBCodes($this->text, explode(',', WCF::getSession()->getPermission($this->allowedBBCodesPermission)));
+			if (!empty($disallowedBBCodes)) {
+				// todo: the user should be informed which disallowed BBCodes
+				// they are using
+				throw new UserInputException('text', 'disallowedBBCodes');
+			}
+		}
+		
 		/*// TODO: search for censored words
 		if (ENABLE_CENSORSHIP) {
 			require_once(WCF_DIR.'lib/data/message/censorship/Censorship.class.php');
@@ -280,8 +296,6 @@ abstract class MessageForm extends RecaptchaForm {
 			$this->attachmentHandler = new AttachmentHandler($this->attachmentObjectType, $this->attachmentObjectID, $this->tmpHash);
 		}
 		
-		parent::readData();
-		
 		if (empty($_POST)) {
 			$this->enableBBCodes = (ENABLE_BBCODES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseBBCodes)) ? 1 : 0;
 			$this->enableHtml = (ENABLE_HTML_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseHtml)) ? 1 : 0;
@@ -289,6 +303,8 @@ abstract class MessageForm extends RecaptchaForm {
 			$this->preParse = PRE_PARSE_DEFAULT_VALUE;
 			$this->showSignature = SHOW_SIGNATURE_DEFAULT_VALUE;
 		}
+		
+		parent::readData();
 		
 		// get default smilies
 		if (MODULE_SMILEY) {
@@ -331,5 +347,9 @@ abstract class MessageForm extends RecaptchaForm {
 			'text' => $this->text,
 			'tmpHash' => $this->tmpHash
 		));
+		
+		if ($this->allowedBBCodesPermission) {
+			WCF::getTPL()->assign('allowedBBCodes', explode(',', WCF::getSession()->getPermission($this->allowedBBCodesPermission)));
+		}
 	}
 }
