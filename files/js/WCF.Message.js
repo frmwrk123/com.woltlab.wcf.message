@@ -2,7 +2,7 @@
  * Message related classes for WCF
  * 
  * @author	Alexander Ebert
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  */
 WCF.Message = { };
@@ -593,6 +593,7 @@ WCF.Message.QuickReply = Class.extend({
 		this._proxy.setOption('data', {
 			actionName: 'quickReply',
 			className: this._getClassName(),
+			interfaceName: 'wcf\\data\\IMessageQuickReplyAction',
 			parameters: $parameters
 		});
 		this._proxy.sendRequest();
@@ -647,6 +648,7 @@ WCF.Message.QuickReply = Class.extend({
 			data: {
 				actionName: 'jumpToExtended',
 				className: this._getClassName(),
+				interfaceName: 'wcf\\data\\IExtendedMessageQuickReplyAction',
 				parameters: {
 					containerID: this._getObjectID(),
 					message: $message
@@ -841,6 +843,7 @@ WCF.Message.InlineEditor = Class.extend({
 			this._proxy.setOption('data', {
 				actionName: 'beginEdit',
 				className: this._getClassName(),
+				interfaceName: 'wcf\\data\\IMessageInlineEditorAction',
 				parameters: {
 					containerID: this._containerID,
 					objectID: this._container[$containerID].data('objectID')
@@ -985,6 +988,7 @@ WCF.Message.InlineEditor = Class.extend({
 		this._proxy.setOption('data', {
 			actionName: 'save',
 			className: this._getClassName(),
+			interfaceName: 'wcf\\data\\IMessageInlineEditorAction',
 			parameters: {
 				containerID: this._containerID,
 				data: {
