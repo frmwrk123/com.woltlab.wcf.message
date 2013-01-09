@@ -13,8 +13,8 @@
 		<item name="wcf.message.settings.enableHtml.description"><![CDATA[Wenn Sie diese Option aktiviert haben, können Sie HTML zur Formatierung verwenden.]]></item>
 		<item name="wcf.message.settings.enableSmilies"><![CDATA[Darstellung von Smileys aktivieren]]></item>
 		<item name="wcf.message.settings.enableSmilies.description"><![CDATA[Smiley-Code wird in Ihrem Beitrag automatisch als Smiley-Grafik dargestellt.]]></item>
-		<item name="wcf.message.settings.parseURL"><![CDATA[URLs automatisch erkennen]]></item>
-		<item name="wcf.message.settings.parseURL.description"><![CDATA[Internet-Adressen werden automatisch erkannt und umgewandelt.]]></item>
+		<item name="wcf.message.settings.preParse"><![CDATA[URLs automatisch erkennen]]></item>
+		<item name="wcf.message.settings.preParse.description"><![CDATA[Internet-Adressen werden automatisch erkannt und umgewandelt.]]></item>
 		<item name="wcf.message.settings.showSignature"><![CDATA[Signatur anzeigen]]></item>
 		<item name="wcf.message.settings.showSignature.description"><![CDATA[Die im Profil eingestellte Signatur wird an diese Nachricht angehängt.]]></item>
 		<item name="wcf.message.smilies"><![CDATA[Smileys]]></item>

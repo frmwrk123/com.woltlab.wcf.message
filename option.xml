@@ -17,7 +17,7 @@
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
 			</option>
-			<option name="parse_url_default_value">
+			<option name="pre_parse_default_value">
 				<categoryname>message.general</categoryname>
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>

@@ -13,8 +13,8 @@
 		<item name="wcf.message.settings.enableHtml.description"><![CDATA[You can use HTML code to format your message, if this option is enabled.]]></item>
 		<item name="wcf.message.settings.enableSmilies"><![CDATA[Enable smileys in this message]]></item>
 		<item name="wcf.message.settings.enableSmilies.description"><![CDATA[Smiley code in your message such as :) is automatically displayed as image.]]></item>
-		<item name="wcf.message.settings.parseURL"><![CDATA[Convert URLs]]></item>
-		<item name="wcf.message.settings.parseURL.description"><![CDATA[Automatically converts internet addresses into links by adding [url] and [/url] around them.]]></item>
+		<item name="wcf.message.settings.preParse"><![CDATA[Convert URLs]]></item>
+		<item name="wcf.message.settings.preParse.description"><![CDATA[Automatically converts internet addresses into links by adding [url] and [/url] around them.]]></item>
 		<item name="wcf.message.settings.showSignature"><![CDATA[Show signature]]></item>
 		<item name="wcf.message.settings.showSignature.description"><![CDATA[Do you want to display your signature in this message?]]></item>
 		<item name="wcf.message.smilies"><![CDATA[Smilies]]></item>
