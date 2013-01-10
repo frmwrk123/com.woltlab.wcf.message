@@ -3,7 +3,7 @@ namespace wcf\form;
 use wcf\data\smiley\SmileyCache;
 use wcf\system\attachment\AttachmentHandler;
 use wcf\system\bbcode\BBCodeParser;
-use wcf\system\bbcode\URLParser;
+use wcf\system\bbcode\PreParser;
 use wcf\system\exception\UserInputException;
 use wcf\system\language\LanguageFactory;
 use wcf\system\WCF;
@@ -100,10 +100,10 @@ abstract class MessageForm extends RecaptchaForm {
 	public $maxTextLength = 0;
 	
 	/**
-	 * adds url bbcodes automatically
+	 * pre parses the message
 	 * @var	boolean
 	 */
-	public $parseURL = 1;
+	public $preParse = 1;
 	
 	/**
 	 * required permission to use BBCodes
@@ -187,8 +187,8 @@ abstract class MessageForm extends RecaptchaForm {
 		if (isset($_POST['text'])) $this->text = MessageUtil::stripCrap(StringUtil::trim($_POST['text']));
 		
 		// settings
-		$this->enableSmilies = $this->enableHtml = $this->enableBBCodes = $this->parseURL = $this->showSignature = 0;
-		if (isset($_POST['parseURL'])) $this->parseURL = intval($_POST['parseURL']);
+		$this->enableSmilies = $this->enableHtml = $this->enableBBCodes = $this->preParse = $this->showSignature = 0;
+		if (isset($_POST['preParse'])) $this->preParse = intval($_POST['preParse']);
 		if (isset($_POST['enableSmilies']) && WCF::getSession()->getPermission($this->permissionCanUseSmilies)) $this->enableSmilies = intval($_POST['enableSmilies']);
 		if (isset($_POST['enableHtml']) && WCF::getSession()->getPermission($this->permissionCanUseHtml)) $this->enableHtml = intval($_POST['enableHtml']);
 		if (isset($_POST['enableBBCodes']) && WCF::getSession()->getPermission($this->permissionCanUseBBCodes)) $this->enableBBCodes = intval($_POST['enableBBCodes']);
@@ -282,8 +282,8 @@ abstract class MessageForm extends RecaptchaForm {
 		parent::save();
 		
 		// parse URLs
-		if ($this->parseURL == 1) {
-			$this->text = URLParser::getInstance()->parse($this->text);
+		if ($this->preParse == 1) {
+			$this->text = PreParser::getInstance()->parse($this->text);
 		}
 	}
 	
@@ -300,7 +300,7 @@ abstract class MessageForm extends RecaptchaForm {
 			$this->enableBBCodes = (ENABLE_BBCODES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseBBCodes)) ? 1 : 0;
 			$this->enableHtml = (ENABLE_HTML_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseHtml)) ? 1 : 0;
 			$this->enableSmilies = (ENABLE_SMILIES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseSmilies)) ? 1 : 0;
-			$this->parseURL = PARSE_URL_DEFAULT_VALUE;
+			$this->preParse = PRE_PARSE_DEFAULT_VALUE;
 			$this->showSignature = SHOW_SIGNATURE_DEFAULT_VALUE;
 		}
 		
@@ -339,7 +339,7 @@ abstract class MessageForm extends RecaptchaForm {
 			'enableSmilies' => $this->enableSmilies,
 			'languageID' => ($this->languageID ?: 0),
 			'maxTextLength' => $this->maxTextLength,
-			'parseURL' => $this->parseURL,
+			'preParse' => $this->preParse,
 			'showSignature' => $this->showSignature,
 			'showSignatureSetting' => $this->showSignatureSetting,
 			'smileyCategories' => $this->smileyCategories,
