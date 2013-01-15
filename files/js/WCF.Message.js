@@ -578,10 +578,29 @@ WCF.Message.QuickReply = Class.extend({
 			$innerError.remove();
 		}
 		
+		this._proxy.setOption('data', {
+			actionName: 'quickReply',
+			className: this._getClassName(),
+			interfaceName: 'wcf\\data\\IMessageQuickReplyAction',
+			parameters: this._getParameters($message)
+		});
+		this._proxy.sendRequest();
+		
+		// show spinner and hide CKEditor
+		this._container.find('.messageQuickReplyContent .messageBody').addClass('messageQuickReplyLoading').children('#cke_text').hide().end().next().hide();
+	},
+	
+	/**
+	 * Returns the parameters for the save request.
+	 * 
+	 * @param	string		message
+	 * @return	object
+	 */
+	_getParameters: function(message) {
 		var $parameters = {
 			objectID: this._getObjectID(),
 			data: {
-				message: $message
+				message: message
 			},
 			lastPostTime: this._container.data('lastPostTime'),
 			pageNo: this._container.data('pageNo')
@@ -590,16 +609,7 @@ WCF.Message.QuickReply = Class.extend({
 			$parameters.anchor = this._container.data('anchor');
 		}
 		
-		this._proxy.setOption('data', {
-			actionName: 'quickReply',
-			className: this._getClassName(),
-			interfaceName: 'wcf\\data\\IMessageQuickReplyAction',
-			parameters: $parameters
-		});
-		this._proxy.sendRequest();
-		
-		// show spinner and hide CKEditor
-		this._container.find('.messageQuickReplyContent .messageBody').addClass('messageQuickReplyLoading').children('#cke_text').hide().end().next().hide();
+		return $parameters;
 	},
 	
 	/**
