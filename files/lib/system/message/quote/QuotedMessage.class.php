@@ -66,7 +66,7 @@ class QuotedMessage implements \Countable, \Iterator {
 	}
 	
 	/**
-	 * @see	wcf\data\ITitledDatabaseObject::getTitle()
+	 * @see	wcf\data\ITitledObject::getTitle()
 	 */
 	public function __toString() {
 		return $this->object->getTitle();
