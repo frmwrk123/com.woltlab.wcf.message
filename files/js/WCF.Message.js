@@ -587,7 +587,9 @@ WCF.Message.QuickReply = Class.extend({
 		this._proxy.sendRequest();
 		
 		// show spinner and hide CKEditor
-		this._container.find('.messageQuickReplyContent .messageBody').addClass('messageQuickReplyLoading').children('#cke_text').hide().end().next().hide();
+		var $messageBody = this._container.find('.messageQuickReplyContent .messageBody');
+		$('<span class="icon icon48 icon-spinner" />').appendTo($messageBody);
+		$messageBody.children('#cke_text').hide().end().next().hide();
 	},
 	
 	/**
@@ -635,7 +637,8 @@ WCF.Message.QuickReply = Class.extend({
 		var $messageBody = this._container.find('.messageQuickReplyContent .messageBody');
 		
 		// display CKEditor
-		$messageBody.removeClass('messageQuickReplyLoading').children('#cke_text').show();
+		$messageBody.children('.icon-spinner').remove();
+		$messageBody.children('#cke_text').show();
 		
 		// display form submit
 		$messageBody.next().show();
@@ -923,7 +926,10 @@ WCF.Message.InlineEditor = Class.extend({
 	 * Prepares message for WYSIWYG display.
 	 */
 	_prepare: function() {
-		var $content = this._container[this._activeElementID].find('.messageBody').addClass('jsMessageLoading').find('.messageText');
+		var $messageBody = this._container[this._activeElementID].find('.messageBody');
+		$('<span class="icon icon48 icon-spinner" />').appendTo($messageBody);
+		
+		var $content = $messageBody.find('.messageText');
 		this._cache = $content.html();
 		$content.empty();
 	},
@@ -974,8 +980,9 @@ WCF.Message.InlineEditor = Class.extend({
 	 * @param	object		data
 	 */
 	_showEditor: function(data) {
-		var $container = this._container[this._activeElementID];
-		var $content = $container.find('.messageBody').removeClass('jsMessageLoading').find('.messageText');
+		var $messageBody = this._container[this._activeElementID].find('.messageBody');
+		$messageBody.children('.icon-spinner').remove();
+		var $content = $messageBody.find('.messageText');
 		
 		// insert wysiwyg
 		$('' + data.returnValues.template).appendTo($content);
@@ -1045,7 +1052,9 @@ WCF.Message.InlineEditor = Class.extend({
 	 * Hides WYSIWYG editor.
 	 */
 	_hideEditor: function() {
-		this._container[this._activeElementID].find('.messageBody').addClass('jsMessageLoading').find('.messageText').children().hide();
+		var $messageBody = this._container[this._activeElementID].find('.messageBody');
+		$('<span class="icon icon48 icon-spinner" />').appendTo($messageBody);
+		$messageBody.find('.messageText').children().hide();
 	},
 	
 	/**
@@ -1055,7 +1064,9 @@ WCF.Message.InlineEditor = Class.extend({
 	 */
 	_showMessage: function(data) {
 		var $container = this._container[this._activeElementID];
-		var $content = $container.find('.messageBody').removeClass('jsMessageLoading').find('.messageText');
+		var $messageBody = $container.find('.messageBody');
+		$messageBody.children('.icon-spinner').remove();
+		var $content = $messageBody.find('.messageText');
 		
 		// remove editor
 		var $ckEditor = $('#messageEditor' + $container.data('objectID')).ckeditorGet();

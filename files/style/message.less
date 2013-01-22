@@ -80,16 +80,15 @@
 		position: relative;
 		
 		> .message:after {
-			background-image: url(../icon/circleStar.svg);
-			background-position: 4px 4px;
-			background-repeat: no-repeat;
-			content: "";
+			content: "\f005";
+			font-family: FontAwesome;
+			font-size: 14px;
 			display: block;
-			height: 20px;
-			left: 0;
+			left: 4px;
 			position: absolute;
-			top: 0;
-			width: 20px;
+			top: 2px;
+			
+			.textShadow(@wcfSidebarBackgroundColor);
 		}
 		
 		> .message.messageSidebarOrientationRight:after {
@@ -581,21 +580,14 @@ li:nth-child(2n+1) .message {
 }
 
 /* quick reply and inline editor */
-.jsMessageLoading {
-	background-image: url(../icon/spinner.svg);
-	background-position: center center;
-	background-repeat: no-repeat;
-	background-size: 64px;
+.messageBody > span.icon-spinner {
+	left: 50%;
+	margin: -21px -21px 0 0;
+	position: absolute;
+	top: 50%;
 }
 
 #messageQuickReply {
-	.messageQuickReplyLoading {
-		background-image: url(../icon/spinner.svg);
-		background-position: center center;
-		background-repeat: no-repeat;
-		background-size: 64px;
-	}
-	
 	.formSubmit {
 		padding-bottom: @wcfGapMedium;
 	}
