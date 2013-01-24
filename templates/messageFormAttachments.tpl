@@ -37,6 +37,8 @@
 		WCF.Language.addObject({
 			'wcf.attachment.upload.error.invalidExtension': '{lang}wcf.attachment.upload.error.invalidExtension{/lang}',
 			'wcf.attachment.upload.error.tooLarge': '{lang}wcf.attachment.upload.error.tooLarge{/lang}',
+			'wcf.attachment.upload.error.reachedLimit': '{lang}wcf.attachment.upload.error.reachedLimit{/lang}',
+			'wcf.attachment.upload.error.reachedRemainingLimit': '{lang}wcf.attachment.upload.error.reachedRemainingLimit{/lang}',
 			'wcf.attachment.upload.error.uploadFailed': '{lang}wcf.attachment.upload.error.uploadFailed{/lang}',
 			'wcf.global.button.upload': '{lang}wcf.global.button.upload{/lang}'
 		});
@@ -45,9 +47,7 @@
 		new WCF.Action.Delete('wcf\\data\\attachment\\AttachmentAction', '.formAttachmentList > li');
 		
 		{* @todo: sorting *}
-		{* @todo: add to message button *}
 		{* @todo: ie9 fallback *}
-		{* @todo: count number of attachments / check max count *}
 	});
 	//]]>
 </script>
