@@ -31,10 +31,6 @@
 		}
 	}
 	
-	.table > tbody > tr.jsMarked > td {
-		background-color: @wcfMarkedBackgroundColor;
-	}
-	
 	tr.new .columnAvatar div > p > img, tr:hover .columnAvatar div > p > img {
 		opacity: 1;
 	}
@@ -74,6 +70,17 @@
 	}
 }
 
+tr.jsMarked {
+	> td {
+		background-color: @wcfSelectedBackgroundColor !important;
+		color: @wcfColor;
+	}
+	
+	a {
+		color: @wcfColor;
+	}
+}
+
 /* ### messages ### */
 .messageList {
 	.messageGroupStarter {
@@ -104,34 +111,42 @@
 	//overflow: hidden; /* todo: fixes floating issues when using message on pages with a sidebar */
 	position: relative;
 	
-	&.jsMarked {
-		background-color: @wcfMarkedBackgroundColor;
-	}
-	
 	&:hover .messageOptions nav {
 			opacity: 1;
 	}
 	
-	&.messageDeleted {
-		background-color: @wcfErrorBackgroundColor;
+	&.messageDisabled {
+		background-color: @wcfDisabledBackgroundColor;
 		
 		.messageSidebar {
-			color: @wcfErrorColor !important;
+			color: @wcfDisabledColor;
 			
 			a {
-				color: @wcfErrorColor !important;
+				color: @wcfDisabledColor;
 			}
 		}
 	}
 	
-	&.messageDisabled:not(.messageDeleted) {
-		background-color: @wcfSuccessBackgroundColor;
+	&.messageDeleted {
+		background-color: @wcfDeletedBackgroundColor;
 		
 		.messageSidebar {
-			color: @wcfSuccessColor !important;
+			color: @wcfDeletedColor;
 			
 			a {
-				color: @wcfSuccessColor !important;
+				color: @wcfDeletedColor;
+			}
+		}
+	}
+	
+	&.jsMarked {
+		background-color: @wcfSelectedBackgroundColor;
+		
+		.messageSidebar {
+			color: @wcfSelectedColor;
+			
+			a {
+				color: @wcfSelectedColor;
 			}
 		}
 	}
@@ -545,7 +560,7 @@ li:nth-child(2n+1) .message {
 
 .messageCollapsed {
 	color: @wcfDimmedColor;
-	opacity: .7;
+	opacity: .8;
 	padding: @wcfGapMedium @wcfGapLarge;
 
 	.transition(opacity, .1s);
@@ -571,6 +586,15 @@ li:nth-child(2n+1) .message {
 	
 	.messageCounter {
 		padding-top: 3px;
+	}
+	
+	&.jsMarked {
+		background-color: @wcfSelectedBackgroundColor !important;
+		color: @wcfColor;
+		
+		a {
+			color: @wcfColor;
+		}
 	}
 }
 

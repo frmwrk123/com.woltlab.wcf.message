@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+>
 	<channel>
 		<title><![CDATA[{if $title}{$title} - {/if}{@PAGE_TITLE|language|escapeCDATA}]]></title>
 		<link><![CDATA[{@$baseHref|escapeCDATA}]]></link>
@@ -9,15 +14,21 @@
 {assign var='dummy' value=$items->rewind()}
 		<lastBuildDate>{if $items->valid()}{'r'|gmdate:$items->current()->getTime()}{else}{'r'|gmdate:TIME_NOW}{/if}</lastBuildDate>
 		<ttl>60</ttl>
-		<generator><![CDATA[WoltLab® Community Framework™ {@WCF_VERSION}]]></generator>
+		<generator><![CDATA[WoltLab Community Framework {@WCF_VERSION}]]></generator>
+		<atom:link href="{$__wcf->getRequestURI()}" rel="self" type="application/rss+xml" />
 {*		*}{foreach from=$items item='item'}
 		<item>
 			<title><![CDATA[{@$item->getTitle()|escapeCDATA}]]></title>
 			<link><![CDATA[{@$item->getLink()|escapeCDATA}]]></link>
-			<description><![CDATA[{@$item->getFormattedMessage()|escapeCDATA}]]></description>
+			{hascontent}<description><![CDATA[{content}{@$item->getExcerpt()|escapeCDATA}{/content}]]></description>{/hascontent}
 			<pubDate>{'r'|gmdate:$item->getTime()}</pubDate>
-			<author><![CDATA[{@$item->getUsername()|escapeCDATA}]]></author>
+			<dc:creator>{@$item->getUsername()|escapeCDATA}</dc:creator>
 			<guid><![CDATA[{@$item->getLink()|escapeCDATA}]]></guid>
+			{foreach from=$item->getCategories() item='category'}
+				<category><![CDATA[{@$category|escapeCDATA}]]></category>
+			{/foreach}
+			{hascontent}<content:encoded><![CDATA[{content}{@$item->getFormattedMessage()|escapeCDATA}{/content}]]></content:encoded>{/hascontent}
+			<slash:comments>{@$item->getComments()|escapeCDATA}</slash:comments>
 		</item>
 {*		*}{/foreach}
 	</channel>
