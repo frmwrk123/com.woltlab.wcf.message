@@ -6,8 +6,8 @@ use wcf\util\ArrayUtil;
 /**
  * Generates RSS 2-Feeds.
  * 
- * @author	Tim Düsterhus
- * @copyright	2001-2012 WoltLab GmbH
+ * @author	Tim Duesterhus
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	page
@@ -18,6 +18,17 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	 * @see	wcf\page\AbstractPage::$templateName
 	 */
 	public $templateName = 'rssFeed';
+	
+	/**
+	 * application name
+	 * @var string
+	 */
+	public $application = 'wcf';
+	
+	/**
+	 * @see	wcf\page\AbstractPage::$useTemplate
+	 */
+	public $useTemplate = false;
 	
 	/**
 	 * parsed contents of $_REQUEST['id']
@@ -71,9 +82,12 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	 * @see	wcf\page\IPage::show()
 	 */
 	public function show() {
+		parent::show();
+		
 		// set correct content-type
 		@header('Content-Type: application/rss+xml');
 		
-		parent::show();
+		// show template
+		WCF::getTPL()->display($this->templateName, $this->application, false);
 	}
 }
