@@ -2,6 +2,7 @@
 namespace wcf\system\message;
 use wcf\data\DatabaseObjectDecorator;
 use wcf\data\IMessageQuickReplyAction;
+use wcf\system\bbcode\PreParser;
 use wcf\system\event\EventHandler;
 use wcf\system\exception\SystemException;
 use wcf\system\exception\UserInputException;
@@ -13,7 +14,7 @@ use wcf\util\ClassUtil;
  * Manages quick replies and stored messages.
  * 
  * @author	Alexander Ebert
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.message
@@ -141,6 +142,9 @@ class QuickReplyManager extends SingletonFactory {
 		$parameters['data']['time'] = TIME_NOW;
 		$parameters['data']['userID'] = WCF::getUser()->userID;
 		$parameters['data']['username'] = WCF::getUser()->username;
+		
+		// pre-parse message text
+		$parameters['data']['message'] = PreParser::getInstance()->parse($parameters['data']['message']);
 		
 		$message = $object->create();
 		$tableAlias = call_user_func(array($message, 'getDatabaseTableAlias'));
