@@ -8,6 +8,7 @@ use wcf\system\exception\SystemException;
 use wcf\system\exception\UserInputException;
 use wcf\system\SingletonFactory;
 use wcf\system\WCF;
+use wcf\util\ArrayUtil;
 use wcf\util\ClassUtil;
 
 /**
@@ -118,6 +119,9 @@ class QuickReplyManager extends SingletonFactory {
 		
 		// validate message
 		$object->validateMessage($this->container, $parameters['data']['message']);
+		
+		// check for message quote ids
+		$parameters['removeQuoteIDs'] = (isset($parameters['removeQuoteIDs']) && is_array($parameters['removeQuoteIDs'])) ? ArrayUtil::trim($parameters['removeQuoteIDs']) : array();
 	}
 	
 	/**

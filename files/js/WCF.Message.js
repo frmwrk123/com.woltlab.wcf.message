@@ -556,11 +556,6 @@ WCF.Message.QuickReply = Class.extend({
 	 * Saves message.
 	 */
 	_save: function() {
-		// mark quotes for removal
-		if (this._quoteManager !== null) {
-			this._quoteManager.markQuotesForRemoval();
-		}
-		
 		var $ckEditor = this._messageField.ckeditorGet();
 		var $message = $.trim($ckEditor.getData());
 		
@@ -605,7 +600,8 @@ WCF.Message.QuickReply = Class.extend({
 				message: message
 			},
 			lastPostTime: this._container.data('lastPostTime'),
-			pageNo: this._container.data('pageNo')
+			pageNo: this._container.data('pageNo'),
+			removeQuoteIDs: (this._quoteManager === null ? [ ] : this._quoteManager.getQuotesMarkedForRemoval())
 		};
 		if (this._container.data('anchor')) {
 			$parameters.anchor = this._container.data('anchor');
@@ -681,11 +677,6 @@ WCF.Message.QuickReply = Class.extend({
 	 * @param	jQuery		jqXHR
 	 */
 	_success: function(data, textStatus, jqXHR) {
-		// remove marked quotes
-		if (this._quoteManager !== null) {
-			this._quoteManager.markQuotesForRemoval();
-		}
-		
 		// redirect to new page
 		if (data.returnValues.url) {
 			window.location = data.returnValues.url;
@@ -1799,6 +1790,15 @@ WCF.Message.Quote.Manager = Class.extend({
 				$('<input type="hidden" name="__removeQuoteIDs[]" value="' + this._removeOnSubmit[$i] + '" />').appendTo($formSubmit);
 			}
 		}
+	},
+	
+	/**
+	 * Returns a list of quote ids marked for removal.
+	 * 
+	 * @return	array<integer>
+	 */
+	getQuotesMarkedForRemoval: function() {
+		return this._removeOnSubmit;
 	},
 	
 	/**
