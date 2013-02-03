@@ -194,11 +194,6 @@ abstract class MessageForm extends RecaptchaForm {
 		if (isset($_POST['enableBBCodes']) && WCF::getSession()->getPermission($this->permissionCanUseBBCodes)) $this->enableBBCodes = intval($_POST['enableBBCodes']);
 		if (isset($_POST['showSignature'])) $this->showSignature = intval($_POST['showSignature']);
 		
-		// TODO: stop shouting
-		/*if (StringUtil::length($this->subject) >= MESSAGE_SUBJECT_STOP_SHOUTING && StringUtil::toUpperCase($this->subject) == $this->subject) {
-			$this->subject = StringUtil::wordsToUpperCase(StringUtil::toLowerCase($this->subject));
-		}*/
-		
 		// multilingualism
 		if (isset($_POST['languageID'])) $this->languageID = intval($_POST['languageID']);
 	}
@@ -226,6 +221,10 @@ abstract class MessageForm extends RecaptchaForm {
 		if (empty($this->subject)) {
 			throw new UserInputException('subject');
 		}
+		
+		if (StringUtil::length($this->subject) > 255) {
+			throw new UserInputException('subject', 'tooLong');
+		}
 	}
 	
 	/**
@@ -244,7 +243,7 @@ abstract class MessageForm extends RecaptchaForm {
 		if ($this->enableBBCodes && $this->allowedBBCodesPermission) {
 			$disallowedBBCodes = BBCodeParser::getInstance()->validateBBCodes($this->text, explode(',', WCF::getSession()->getPermission($this->allowedBBCodesPermission)));
 			if (!empty($disallowedBBCodes)) {
-				// todo: the user should be informed which disallowed BBCodes
+				// @todo: the user should be informed which disallowed BBCodes
 				// they are using
 				throw new UserInputException('text', 'disallowedBBCodes');
 			}
