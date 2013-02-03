@@ -132,11 +132,9 @@ class MessageQuoteAction extends AJAXProxyAction {
 	 * Marks quotes for removal.
 	 */
 	protected function markForRemoval() {
-		if (empty($this->quoteIDs)) {
-			throw new UserInputException('quoteIDs');
+		if (!empty($this->quoteIDs)) {
+			MessageQuoteManager::getInstance()->markQuotesForRemoval($this->quoteIDs);
 		}
-		
-		MessageQuoteManager::getInstance()->markQuotesForRemoval($this->quoteIDs);
 	}
 	
 	/**

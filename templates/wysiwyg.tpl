@@ -12,10 +12,11 @@
 $(function() {
 	var $config = {
 		extraPlugins: 'wbbcode',
-		removePlugins: 'elementspath,menubutton,forms',
+		removePlugins: 'contextmenu,tabletools,liststyle,elementspath,menubutton,forms',
 		language: '{@$__wcf->language->getFixedLanguageCode()}',
 		fontSize_sizes: '8/8pt;10/10pt;12/12pt;14/14pt;18/18pt;24/24pt;36/36pt;',
 		disableObjectResizing: true,
+		disableNativeSpellChecker: false,
 		toolbarCanCollapse: false,
 		enterMode: CKEDITOR.ENTER_BR,
 		minHeight: 200,

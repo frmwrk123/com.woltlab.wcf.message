@@ -2,18 +2,20 @@
 namespace wcf\system\message;
 use wcf\data\DatabaseObjectDecorator;
 use wcf\data\IMessageQuickReplyAction;
+use wcf\system\bbcode\PreParser;
 use wcf\system\event\EventHandler;
 use wcf\system\exception\SystemException;
 use wcf\system\exception\UserInputException;
 use wcf\system\SingletonFactory;
 use wcf\system\WCF;
+use wcf\util\ArrayUtil;
 use wcf\util\ClassUtil;
 
 /**
  * Manages quick replies and stored messages.
  * 
  * @author	Alexander Ebert
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.message
@@ -117,6 +119,9 @@ class QuickReplyManager extends SingletonFactory {
 		
 		// validate message
 		$object->validateMessage($this->container, $parameters['data']['message']);
+		
+		// check for message quote ids
+		$parameters['removeQuoteIDs'] = (isset($parameters['removeQuoteIDs']) && is_array($parameters['removeQuoteIDs'])) ? ArrayUtil::trim($parameters['removeQuoteIDs']) : array();
 	}
 	
 	/**
@@ -141,6 +146,9 @@ class QuickReplyManager extends SingletonFactory {
 		$parameters['data']['time'] = TIME_NOW;
 		$parameters['data']['userID'] = WCF::getUser()->userID;
 		$parameters['data']['username'] = WCF::getUser()->username;
+		
+		// pre-parse message text
+		$parameters['data']['message'] = PreParser::getInstance()->parse($parameters['data']['message']);
 		
 		$message = $object->create();
 		$tableAlias = call_user_func(array($message, 'getDatabaseTableAlias'));
