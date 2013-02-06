@@ -50,7 +50,7 @@ class AttachmentBBCode extends AbstractBBCode {
 			// mark attachment as embedded
 			$attachment->markAsEmbedded();
 			
-			if ($attachment->showAsImage()) {
+			if ($attachment->showAsImage() && $parser->getOutputType() == 'text/html') {
 				// image
 				$linkParameters = array(
 					'object' => $attachment	
@@ -59,44 +59,26 @@ class AttachmentBBCode extends AbstractBBCode {
 					$linkParameters['thumbnail'] = 1; 
 				}
 				
-				if ($parser->getOutputType() == 'text/html') {
-					// get alignment
-					$alignment = (isset($openingTag['attributes'][1]) ? $openingTag['attributes'][1] : '');
-					$result = '<img src="'.StringUtil::encodeHTML(LinkHandler::getInstance()->getLink('Attachment', $linkParameters)).'"'.(!$attachment->hasThumbnail() ? ' class="jsResizeImage"' : '').' style="width: '.($attachment->hasThumbnail() ? $attachment->thumbnailWidth : $attachment->width).'px; height: '.($attachment->hasThumbnail() ? $attachment->thumbnailHeight: $attachment->height).'px;'.(!empty($alignment) ? ' float:' . ($alignment == 'left' ? 'left' : 'right') . '; margin: ' . ($alignment == 'left' ? '0 15px 7px 0' : '0 0 7px 15px' ) : '').'" alt="" />';
-					if ($attachment->hasThumbnail() && $attachment->canDownload()) {
-						$result = '<a href="'.StringUtil::encodeHTML(LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment))).'" title="'.StringUtil::encodeHTML($attachment->filename).'" class="jsImageViewer">'.$result.'</a>';
-					}
-					return $result;
+				// get alignment
+				$alignment = (isset($openingTag['attributes'][1]) ? $openingTag['attributes'][1] : '');
+				$result = '<img src="'.StringUtil::encodeHTML(LinkHandler::getInstance()->getLink('Attachment', $linkParameters)).'"'.(!$attachment->hasThumbnail() ? ' class="jsResizeImage"' : '').' style="width: '.($attachment->hasThumbnail() ? $attachment->thumbnailWidth : $attachment->width).'px; height: '.($attachment->hasThumbnail() ? $attachment->thumbnailHeight: $attachment->height).'px;'.(!empty($alignment) ? ' float:' . ($alignment == 'left' ? 'left' : 'right') . '; margin: ' . ($alignment == 'left' ? '0 15px 7px 0' : '0 0 7px 15px' ) : '').'" alt="" />';
+				if ($attachment->hasThumbnail() && $attachment->canDownload()) {
+					$result = '<a href="'.StringUtil::encodeHTML(LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment))).'" title="'.StringUtil::encodeHTML($attachment->filename).'" class="jsImageViewer">'.$result.'</a>';
 				}
-				else if ($parser->getOutputType() == 'text/plain') {
-					return ((!empty($content) && $content != $attachmentID) ? $content : $attachment->filename).': '.LinkHandler::getInstance()->getLink('Attachment', $linkParameters);
-				}
+				return $result;
 			}
 			else {
 				// file
-				$link = LinkHandler::getInstance()->getLink('Attachment', array(
+				return StringUtil::getAnchorTag(LinkHandler::getInstance()->getLink('Attachment', array(
 					'object' => $attachment
-				));
-				if ($parser->getOutputType() == 'text/html') {
-					return '<a href="'.StringUtil::encodeHTML($link).'">'.((!empty($content) && $content != $attachmentID) ? $content : StringUtil::encodeHTML($attachment->filename)).'</a>';
-				}
-				else if ($parser->getOutputType() == 'text/plain') {
-					return ((!empty($content) && $content != $attachmentID) ? $content : $attachment->filename).': '.$link;
-				}
+				)), ((!empty($content) && $content != $attachmentID) ? $content : $attachment->filename));
 			}
 		}
 		
 		// fallback
-		$link = LinkHandler::getInstance()->getLink('Attachment', array(
+		return StringUtil::getAnchorTag(LinkHandler::getInstance()->getLink('Attachment', array(
 			'id' => $attachmentID
-		));
-		if ($parser->getOutputType() == 'text/html') {
-			$encodedLink = StringUtil::encodeHTML($link);
-			return '<a href="'.$encodedLink.'">'.$encodedLink.'</a>';
-		}
-		else if ($parser->getOutputType() == 'text/plain') {
-			return $link;
-		}
+		)));
 	}
 	
 	/**

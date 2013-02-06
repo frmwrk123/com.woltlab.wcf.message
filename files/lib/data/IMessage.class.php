@@ -13,7 +13,7 @@ namespace wcf\data;
  */
 interface IMessage extends IUserContent {
 	/**
-	 * Returns a plain text, truncated to 255 characters by default.
+	 * Returns a simplified message (only inline codes), truncated to 255 characters by default.
 	 * 
 	 * @param	integer		$maxLength
 	 * @return	string
