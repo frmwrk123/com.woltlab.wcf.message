@@ -70,6 +70,9 @@
 			return data;
 		}
 		
+		// Convert & to its HTML entity.
+		data = data.replace(/&/g, '&amp;');
+		
 		// [url]
 		data = data.replace(/\[url\](.+?)\[\/url]/gi, '<a href="$1">$1</a>');
 		data = data.replace(/\[url\=([^\]]+)](.+?)\[\/url]/gi, '<a href="$1">$2</a>');
@@ -216,10 +219,11 @@
 		// Remove remaining tags.
 		html = html.replace(/<[^>]+>/g, '');
 
-		// Restore < and >
+		// Restore <, > and &
 		html = html.replace(/&lt;/g, '<');
 		html = html.replace(/&gt;/g, '>');
-
+		html = html.replace(/&amp;/g, '&');
+		
 		// Restore (and )
 		html = html.replace(/%28/g, '(');
 		html = html.replace(/%29/g, ')');
