@@ -12,7 +12,7 @@ use wcf\util\ArrayUtil;
  * Manages message quotes.
  * 
  * @author	Alexander Ebert
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.message.quote
@@ -427,7 +427,7 @@ class MessageQuoteManager extends SingletonFactory {
 					continue;
 				}
 				
-				foreach ($quotes as $quoteID => $isFullQuote) {
+				foreach ($quotes as $isFullQuote) {
 					if ($isFullQuote) {
 						$fullQuoteObjectIDs[] = $objectID;
 						break;

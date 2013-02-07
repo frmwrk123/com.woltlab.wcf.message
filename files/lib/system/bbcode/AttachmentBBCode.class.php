@@ -17,13 +17,13 @@ use wcf\util\StringUtil;
 class AttachmentBBCode extends AbstractBBCode {
 	/**
 	 * list of attachments
-	 * @var wcf\data\attachment\GroupedAttachmentList
+	 * @var	wcf\data\attachment\GroupedAttachmentList
 	 */
 	protected static $attachmentList = null;
 	
 	/**
 	 * active object id
-	 * @var integer
+	 * @var	integer
 	 */
 	protected static $objectID = 0;
 	
@@ -36,7 +36,7 @@ class AttachmentBBCode extends AbstractBBCode {
 		if (isset($openingTag['attributes'][0])) {
 			$attachmentID = $openingTag['attributes'][0];
 		}
-
+		
 		// get attachment for active object
 		$attachments = array();
 		if (self::$attachmentList !== null) {
