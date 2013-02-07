@@ -6,7 +6,6 @@
 
 // todo
 /*
-- tables
 - floating images
 */
 (function() {
@@ -18,7 +17,7 @@
 		 */
 		event.editor.on('paste', function(ev) {
 			if (ev.data.type == 'html') {
-				$value = ev.data.dataValue;
+				var $value = ev.data.dataValue;
 				
 				// Convert <br> to line breaks.
 				$value = $value.replace(/<br><\/p>/gi,"\n\n");
@@ -37,6 +36,48 @@
 				$pasted = true;
 			}
 		}, null, null, 9); 
+	});
+	
+	/**
+	 * Removes obsolete dialog elements.
+	 */
+	CKEDITOR.on('dialogDefinition', function(event) {
+		var $tab;
+		var $name = event.data.name;
+		var $definition = event.data.definition;
+
+		if ($name == 'link') {
+			$definition.removeContents('target');
+			$definition.removeContents('upload');
+			$definition.removeContents('advanced');
+			$tab = $definition.getContents('info');
+			$tab.remove('emailSubject');
+			$tab.remove('emailBody');
+		}
+		else if ($name == 'image') {
+			$definition.removeContents('advanced');
+			$tab = $definition.getContents('Link');
+			$tab.remove('cmbTarget');
+			$tab = $definition.getContents('info');
+			$tab.remove('txtAlt');
+			$tab.remove('basic');
+		}
+		else if ($name == 'table') {
+			$definition.removeContents('advanced');
+			$tab = $definition.getContents('info');
+			
+			$tab.remove('selHeaders');
+			$tab.remove('cmbAlign');
+			$tab.remove('txtHeight');
+			$tab.remove('txtCaption');
+			$tab.remove('txtSummary');
+			
+			// don't remove these fields as we need their default values
+			$tab.get('txtBorder').style = 'display: none';
+			$tab.get('txtWidth').style = 'display: none';
+			$tab.get('txtCellSpace').style = 'display: none';
+			$tab.get('txtCellPad').style = 'display: none';
+		}
 	});
 	
 	/**
@@ -128,6 +169,16 @@
 		data = data.replace(/\[list=1\]/gi, '<ul style="list-style-type: decimal">');
 		data = data.replace(/\[\/list]/gi, '</ul>');
 		
+		// [table]
+		data = data.replace(/\[table\]/gi, '<table border="1" cellspacing="1" cellpadding="1" style="width: 500px;">');
+		data = data.replace(/\[\/table\]/gi, '</table>');
+		// [tr]
+		data = data.replace(/\[tr\]/gi, '<tr>');
+		data = data.replace(/\[\/tr\]/gi, '</tr>');
+		// [td]
+		data = data.replace(/\[td\]/gi, '<td>');
+		data = data.replace(/\[\/td\]/gi, '</td>');
+		
 		// smileys
 		for (var i = 0; i < this.editor.config.smiley_descriptions.length; i++) {
 			var smileyCode = this.editor.config.smiley_descriptions[i].replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -216,6 +267,16 @@
 		html = html.replace(/<(ol|ul style="list-style-type: decimal")>/gi, '[list=1]');
 		html = html.replace(/<\/(ul|ol)>/gi, '[/list]');
 
+		// [table]
+		html = html.replace(/<table[^>]*>/gi, '[table]');
+		html = html.replace(/<\/table>/gi, '[/table]');
+		// [tr]
+		html = html.replace(/<tr>/gi, '[tr]');
+		html = html.replace(/<\/tr>/gi, '[/tr]');
+		// [td]
+		html = html.replace(/<td>/gi, '[td]');
+		html = html.replace(/<\/td>/gi, '[/td]');
+		
 		// Remove remaining tags.
 		html = html.replace(/<[^>]+>/g, '');
 
