@@ -2,14 +2,13 @@
 namespace wcf\system\bbcode;
 use wcf\data\attachment\GroupedAttachmentList;
 use wcf\system\request\LinkHandler;
-use wcf\system\WCF;
 use wcf\util\StringUtil;
 
 /**
  * Parses the [attach] bbcode tag.
  * 
  * @author	Marcel Werk
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.bbcode
