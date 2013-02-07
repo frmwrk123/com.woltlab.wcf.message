@@ -2,14 +2,13 @@
 namespace wcf\system\bbcode;
 use wcf\data\attachment\GroupedAttachmentList;
 use wcf\system\request\LinkHandler;
-use wcf\system\WCF;
 use wcf\util\StringUtil;
 
 /**
  * Parses the [attach] bbcode tag.
  * 
  * @author	Marcel Werk
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.bbcode
@@ -18,13 +17,13 @@ use wcf\util\StringUtil;
 class AttachmentBBCode extends AbstractBBCode {
 	/**
 	 * list of attachments
-	 * @var wcf\data\attachment\GroupedAttachmentList
+	 * @var	wcf\data\attachment\GroupedAttachmentList
 	 */
 	protected static $attachmentList = null;
 	
 	/**
 	 * active object id
-	 * @var integer
+	 * @var	integer
 	 */
 	protected static $objectID = 0;
 	
@@ -37,7 +36,7 @@ class AttachmentBBCode extends AbstractBBCode {
 		if (isset($openingTag['attributes'][0])) {
 			$attachmentID = $openingTag['attributes'][0];
 		}
-
+		
 		// get attachment for active object
 		$attachments = array();
 		if (self::$attachmentList !== null) {

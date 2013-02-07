@@ -21,7 +21,7 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	
 	/**
 	 * application name
-	 * @var string
+	 * @var	string
 	 */
 	public $application = 'wcf';
 	
@@ -44,7 +44,7 @@ abstract class AbstractFeedPage extends AbstractAuthedPage {
 	
 	/**
 	 * feed title
-	 * @var string
+	 * @var	string
 	 */
 	public $title = '';
 	

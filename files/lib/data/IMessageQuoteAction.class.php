@@ -5,7 +5,7 @@ namespace wcf\data;
  * Default interface for message action classes supporting quotes.
  * 
  * @author	Alexander Ebert
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	data
@@ -32,7 +32,7 @@ interface IMessageQuoteAction {
 	/**
 	 * Saves the quote message and returns the number of stored quotes.
 	 * 
-	 * @return 	array
+	 * @return	array
 	 */
 	public function saveQuote();
 }
