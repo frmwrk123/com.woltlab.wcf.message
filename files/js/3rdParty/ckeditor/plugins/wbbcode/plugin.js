@@ -10,6 +10,38 @@
 - floating images
 */
 (function() {
+	var $pasted = false;
+	
+	CKEDITOR.on('instanceReady', function(event) {
+		/**
+		 * Fixes issues with pasted html.
+		 */
+		event.editor.on('paste', function(ev) {
+			if (ev.data.type == 'html') {
+				$value = ev.data.dataValue;
+				
+				// Convert <br> to line breaks.
+				$value = $value.replace(/<br><\/p>/gi,"\n\n");
+				$value = $value.replace(/<br>/gi, "\n");
+				$value = $value.replace(/<\/p>/gi,"\n\n");
+				$value = $value.replace(/&nbsp;/gi," ");
+				
+				// remove html tags
+				$value = $value.replace(/<[^>]+>/g, '');
+
+				// fix multiple new lines
+				$value = $value.replace(/\n{3,}/gi,"\n\n");
+				
+				ev.data.dataValue = $value;
+				
+				$pasted = true;
+			}
+		}, null, null, 9); 
+	});
+	
+	/**
+	 * Enables this plugin.
+	 */
 	CKEDITOR.plugins.add('wbbcode', {
 		requires: ['htmlwriter'],
 		init: function(editor) {
@@ -20,16 +52,24 @@
 	});
 
 	/**
-	 * Converts bbcodes to html
+	 * Converts bbcodes to html.
 	 */
 	var toHtml = function(data, fixForBody) {
-		// Convert < and > to their HTML entities.
-		data = data.replace(/</g, '&lt;');
-		data = data.replace(/>/g, '&gt;');
+		if (!$pasted) {
+			// Convert < and > to their HTML entities.
+			data = data.replace(/</g, '&lt;');
+			data = data.replace(/>/g, '&gt;');
+		}
 
 		// Convert line breaks to <br>.
 		data = data.replace(/(?:\r\n|\n|\r)/g, '<br>');
-
+		
+		if ($pasted) {
+			$pasted = false;
+			// skip
+			return data;
+		}
+		
 		// [url]
 		data = data.replace(/\[url\](.+?)\[\/url]/gi, '<a href="$1">$1</a>');
 		data = data.replace(/\[url\=([^\]]+)](.+?)\[\/url]/gi, '<a href="$1">$2</a>');
@@ -96,9 +136,9 @@
 	};
 	
 	/**
-	 * Converts html to bbcodes
+	 * Converts html to bbcodes.
 	 */
-	var toDataFormat = function(html, fixForBody ) {
+	var toDataFormat = function(html, fixForBody) {
 		if (html == '<br>' || html == '<p><br></p>') {
 			return "";
 		}
