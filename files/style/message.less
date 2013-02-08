@@ -535,6 +535,10 @@ tr.jsMarked {
 	.clearfix();
 }
 
+.message:not(.messageReduced) .messageBody {
+	.clearfix();
+}
+
 li:nth-child(2n+1) .message {
 	&.messageSidebarOrientationLeft .messageHeader:after {
 		border-right-color: @wcfContainerAccentBackgroundColor;
