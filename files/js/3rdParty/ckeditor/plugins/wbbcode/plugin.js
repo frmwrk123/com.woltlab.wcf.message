@@ -4,12 +4,9 @@
  * - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
  */
 
-// todo
-/*
-- floating images
-*/
 (function() {
 	var $pasted = false;
+	var $insertedText = null;
 	
 	CKEDITOR.on('instanceReady', function(event) {
 		/**
@@ -35,7 +32,11 @@
 				
 				$pasted = true;
 			}
-		}, null, null, 9); 
+		}, null, null, 9);
+		
+		event.editor.on('insertText', function(ev) {
+			$insertedText = ev.data;
+		}, null, null, 1);
 	});
 	
 	/**
@@ -99,7 +100,15 @@
 	 * Converts bbcodes to html.
 	 */
 	var toHtml = function(data, fixForBody) {
+		if ($insertedText !== null) {
+			data = $insertedText;
+			$insertedText = null;
+		}
+		
 		if (!$pasted) {
+			// Convert & to its HTML entity.
+			data = data.replace(/&/g, '&amp;');
+		
 			// Convert < and > to their HTML entities.
 			data = data.replace(/</g, '&lt;');
 			data = data.replace(/>/g, '&gt;');
@@ -113,9 +122,6 @@
 			// skip
 			return data;
 		}
-		
-		// Convert & to its HTML entity.
-		data = data.replace(/&/g, '&amp;');
 		
 		// [url]
 		data = data.replace(/\[url\](.+?)\[\/url]/gi, '<a href="$1">$1</a>');
@@ -238,6 +244,7 @@
 		html = html.replace(/<\/sup>/gi, '[/sup]');
 				
 		// smileys
+		html = html.replace(/<img.*?alt="(.*?)" class="smiley".*?>/gi, '$1');
 		html = html.replace(/<img .*?class="smiley" alt="(.*?)".*?>/gi, '$1');
 
 		// [img]
