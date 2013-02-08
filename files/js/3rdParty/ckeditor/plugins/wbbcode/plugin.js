@@ -64,6 +64,9 @@
 		}
 		else if ($name == 'table') {
 			$definition.removeContents('advanced');
+			$definition.width = 210;
+			$definition.height = 1;
+			
 			$tab = $definition.getContents('info');
 			
 			$tab.remove('selHeaders');
