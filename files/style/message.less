@@ -26,14 +26,12 @@
 	}
 	
 	tr {
-		&.new {
-			.columnSubject > h1 > .messageGroupLink {
-				font-weight: bold;
-			}
-			
-			.columnAvatar div > p > img, tr:hover .columnAvatar div > p > img {
-				opacity: 1;
-			}
+		&.new .columnSubject > h1 > .messageGroupLink {
+			font-weight: bold;
+		}
+		
+		&.new .columnAvatar div > p > img, &:hover .columnAvatar div > p > img {
+			opacity: 1;
 		}
 		
 		&.messageDisabled {
