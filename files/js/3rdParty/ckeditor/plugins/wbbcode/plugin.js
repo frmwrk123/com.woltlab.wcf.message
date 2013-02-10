@@ -103,6 +103,8 @@
 		if ($insertedText !== null) {
 			data = $insertedText;
 			$insertedText = null;
+			
+			if (data == ' ') return '&nbsp;';
 		}
 		
 		if (!$pasted) {
@@ -242,16 +244,14 @@
 		// [sup]
 		html = html.replace(/<sup>/gi, '[sup]');
 		html = html.replace(/<\/sup>/gi, '[/sup]');
-				
+		
 		// smileys
-		html = html.replace(/<img.*?alt="(.*?)" class="smiley".*?>/gi, '$1');
-		html = html.replace(/<img .*?class="smiley" alt="(.*?)".*?>/gi, '$1');
+		html = html.replace(/<img [^>]*?alt="([^"]+?)" class="smiley".*?>/gi, '$1'); // firefox
+		html = html.replace(/<img [^>]*?class="smiley" alt="([^"]+?)".*?>/gi, '$1'); // chrome, ie
 
 		// [img]
-		//html = html.replace(/<img .*?class=(["'])([\w-]+)\1.*?src=(["'])(.+?)\3.*?>/gi, '[img class=$2]$4[/img]');
-		//html = html.replace(/<img .*?src=(["'])(.+?)\1.*?class=(["'])([\w-]+)\3.*?>/gi, '[img class=$4]$2[/img]');
-		html = html.replace(/<img .*?src=(["'])(.+?)\1 style="float: (left|right)".*?>/gi, "[img='$2',$3][/img]");
-		html = html.replace(/<img .*?src=(["'])(.+?)\1.*?>/gi, '[img]$2[/img]');
+		html = html.replace(/<img [^>]*?src=(["'])([^"']+?)\1 style="float: (left|right)".*?>/gi, "[img='$2',$3][/img]");
+		html = html.replace(/<img [^>]*?src=(["'])([^"']+?)\1.*?>/gi, '[img]$2[/img]');
 
 		// [quote]
 		// html = html.replace(/<blockquote>/gi, '[quote]');
