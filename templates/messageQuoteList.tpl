@@ -1,6 +1,6 @@
 {if !$supportPaste|isset}{assign var=supportPaste value=false}{/if}
 {foreach from=$messages item=message}
-	<article class="message messageReduced" data-link="{@$message->getLink()}" data-username="{$message->getUsername()}">
+	<article class="message messageReduced marginTop" data-link="{@$message->getLink()}" data-username="{$message->getUsername()}">
 		<div>
 			<section class="messageContent">
 				<div>
