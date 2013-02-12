@@ -37,7 +37,36 @@
 		event.editor.on('insertText', function(ev) {
 			$insertedText = ev.data;
 		}, null, null, 1);
+		
+		event.editor.on('mode', function(ev) {
+			handleSubmit(ev);
+		});
+		event.editor.on('afterSetData', function(ev) {
+			handleSubmit(ev);
+		});
+		
+		handleSubmit(event);
 	});
+	
+	/**
+	 * Forwards the [Alt]+[S] keystroke and inserts a fake submit button, Chrome only.
+	 * 
+	 * @param	object		event
+	 */
+	function handleSubmit(event) {
+		if (event.editor.mode == 'source' || !WCF.Browser.isChrome()) {
+			return;
+		}
+		
+		event.editor.document.on('keydown', function(ev) {
+			if (ev.data.getKeystroke() == CKEDITOR.ALT + 83) { // [Alt] + [S]
+				WCF.Message.Submit.execute(event.editor.name);
+			}
+		});
+		
+		// place button outside of <body> to prevent it being removed once deleting content
+		$('<button accesskey="s" />').hide().appendTo($(event.editor.document.$).find('html'));
+	}
 	
 	/**
 	 * Removes obsolete dialog elements.

@@ -545,6 +545,8 @@ WCF.Message.QuickReply = Class.extend({
 		
 		if (this._container.is(':visible')) {
 			this._scroll.scrollTo(this._container, true);
+			
+			WCF.Message.Submit.registerButton('text', this._container.find('.formSubmit button[data-type=save]'));
 		}
 		
 		// discard event
@@ -980,9 +982,14 @@ WCF.Message.InlineEditor = Class.extend({
 		
 		// bind buttons
 		var $formSubmit = $content.find('.formSubmit');
-		$formSubmit.find('button[data-type=save]').click($.proxy(this._save, this));
+		var $saveButton = $formSubmit.find('button[data-type=save]').click($.proxy(this._save, this));
 		if (this._supportExtendedForm) $formSubmit.find('button[data-type=extended]').click($.proxy(this._prepareExtended, this));
 		$formSubmit.find('button[data-type=cancel]').click($.proxy(this._cancel, this));
+		
+		WCF.Message.Submit.registerButton(
+			'messageEditor' + this._container[this._activeElementID].data('objectID'),
+			$saveButton
+		);
 	},
 	
 	/**
@@ -1079,6 +1086,42 @@ WCF.Message.InlineEditor = Class.extend({
 		return '';
 	}
 });
+
+/**
+ * Handles submit buttons for forms with an embedded WYSIWYG editor.
+ */
+WCF.Message.Submit = {
+	/**
+	 * list of registered buttons
+	 * @var	object
+	 */
+	_buttons: { },
+	
+	/**
+	 * Registers submit button for specified wysiwyg container id.
+	 * 
+	 * @param	string		wysiwygContainerID
+	 * @param	string		selector
+	 */
+	registerButton: function(wysiwygContainerID, selector) {
+		if (!WCF.Browser.isChrome()) {
+			return;
+		}
+		
+		this._buttons[wysiwygContainerID] = $(selector);
+	},
+	
+	/**
+	 * Triggers 'click' event for registered buttons.
+	 */
+	execute: function(wysiwygContainerID) {
+		if (!this._buttons[wysiwygContainerID]) {
+			return;
+		}
+		
+		this._buttons[wysiwygContainerID].trigger('click');
+	}
+};
 
 /**
  * Namespace for message quotes.
