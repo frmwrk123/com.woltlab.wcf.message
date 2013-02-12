@@ -37,7 +37,36 @@
 		event.editor.on('insertText', function(ev) {
 			$insertedText = ev.data;
 		}, null, null, 1);
+		event.editor.on('mode', function(ev) {
+			insertFakeSubmitButton(ev);
+		});
+		event.editor.on('afterSetData', function(ev) {
+			insertFakeSubmitButton(ev);
+		});
+		
+		event.editor.on('key', function(ev) {
+			if (ev.data.keyCode == CKEDITOR.ALT + 83) { // [Alt] + [S]
+				WCF.Message.Submit.execute(ev.editor.name);
+			}
+		});
+		
+		insertFakeSubmitButton(event);
 	});
+	
+	/**
+	 * Inserts a fake submit button, Chrome only.
+	 * 
+	 * @param	object		event
+	 */
+	function insertFakeSubmitButton(event) {
+		if (event.editor.mode === 'source' || !WCF.Browser.isChrome()) {
+			return;
+		}
+		
+		// place button outside of <body> to prevent it being removed once deleting content
+		$('<button accesskey="s" />').hide().appendTo($(event.editor.document.$).find('html'));
+		
+	}
 	
 	/**
 	 * Removes obsolete dialog elements.

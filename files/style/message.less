@@ -25,14 +25,50 @@
 		}
 	}
 	
-	tr.new {
-		.columnSubject > h1 > .messageGroupLink {
+	tr {
+		&.new .columnSubject > h1 > .messageGroupLink {
 			font-weight: bold;
 		}
-	}
-	
-	tr.new .columnAvatar div > p > img, tr:hover .columnAvatar div > p > img {
-		opacity: 1;
+		
+		&.new .columnAvatar div > p > img, &:hover .columnAvatar div > p > img {
+			opacity: 1;
+		}
+		
+		&.messageDisabled {
+			color: @wcfDisabledColor;
+			
+			> td {
+				background-color: @wcfDisabledBackgroundColor !important;
+			}
+			
+			a {
+				color: @wcfDisabledColor;
+			}
+		}
+		
+		&.messageDeleted {
+			color: @wcfDeletedColor;
+			
+			> td {
+				background-color: @wcfDeletedBackgroundColor !important;
+			}
+			
+			a {
+				color: @wcfDeletedColor;
+			}
+		}
+		
+		&.jsMarked {
+			color: @wcfSelectedColor;
+			
+			> td {
+				background-color: @wcfSelectedBackgroundColor !important;
+			}
+			
+			a {
+				color: @wcfSelectedColor;
+			}
+		}
 	}
 	
 	.columnAvatar {
@@ -67,17 +103,6 @@
 			color: @wcfDimmedColor;
 			font-size: @wcfSmallFontSize;
 		}
-	}
-}
-
-tr.jsMarked {
-	> td {
-		background-color: @wcfSelectedBackgroundColor !important;
-		color: @wcfColor;
-	}
-	
-	a {
-		color: @wcfColor;
 	}
 }
 
@@ -167,7 +192,7 @@ tr.jsMarked {
 			text-align: right;
 			
 			.transition(opacity, .1s);
-
+			
 			ul.smallButtons {
 				> li {
 					a.button {
@@ -184,7 +209,7 @@ tr.jsMarked {
 			font-size: @wcfSmallFontSize;
 			font-weight: bold;
 			margin-left: @wcfGapSmall;
-		
+			
 			a {
 				min-height: 0;
 				padding: 1px 5px;
