@@ -1211,8 +1211,9 @@ WCF.Message.Quote.Handler = Class.extend({
 	 * @param	string				objectType
 	 * @param	string				containerSelector
 	 * @param	string				messageBodySelector
+	 * @param	string				messageContentSelector
 	 */
-	init: function(quoteManager, className, objectType, containerSelector, messageBodySelector) {
+	init: function(quoteManager, className, objectType, containerSelector, messageBodySelector, messageContentSelector) {
 		this._className = className;
 		if (this._className == '') {
 			console.debug("[WCF.Message.QuoteManager] Empty class name given, aborting.");
@@ -1227,7 +1228,8 @@ WCF.Message.Quote.Handler = Class.extend({
 		
 		this._containerSelector = containerSelector;
 		this._message = '';
-		this._messageBodySelector = (messageBodySelector) ? messageBodySelector : null;
+		this._messageBodySelector = messageBodySelector;
+		this._messageContentSelector = messageContentSelector;
 		this._objectID = 0;
 		this._proxy = new WCF.Action.Proxy({
 			success: $.proxy(this._success, this)
@@ -1257,7 +1259,7 @@ WCF.Message.Quote.Handler = Class.extend({
 			
 			if (!self._containers[$containerID]) {
 				self._containers[$containerID] = $container;
-				if (self._messageBodySelector != null) {
+				if (self._messageBodySelector !== null) {
 					$container = $container.find(self._messageBodySelector).data('containerID', $containerID);
 				}
 				
@@ -1314,7 +1316,7 @@ WCF.Message.Quote.Handler = Class.extend({
 		// compare selection with message text of given container
 		var $messageText = null;
 		if (this._messageBodySelector) {
-			$messageText = $container.find(this._messageBodySelector).text();
+			$messageText = $container.find(this._messageContentSelector).text();
 		}
 		else {
 			$messageText = $container.text();
