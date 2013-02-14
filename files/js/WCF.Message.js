@@ -1678,15 +1678,13 @@ WCF.Message.Quote.Manager = Class.extend({
 			this._dialog.wcfDialog('open');
 		}
 		else {
-			this._proxy.setOption('showLoadingOverlay', true);
+			this._proxy.showLoadingOverlayOnce();
 			
 			this._proxy.setOption('data', {
 				actionName: 'getQuotes',
 				supportPaste: this._supportPaste
 			});
 			this._proxy.sendRequest();
-			
-			this._proxy.setOption('showLoadingOverlay', false);
 		}
 	},
 	
