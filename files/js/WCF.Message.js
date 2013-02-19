@@ -769,6 +769,18 @@ WCF.Message.InlineEditor = Class.extend({
 	_dropdowns: { },
 	
 	/**
+	 * CSS selector for the message container
+	 * @var	string
+	 */
+	_messageContainerSelector: '.jsMessage',
+	
+	/**
+	 * prefix of the message editor CSS id
+	 * @var	string
+	 */
+	_messageEditorIDPrefix: 'messageEditor',
+	
+	/**
 	 * notification object
 	 * @var	WCF.System.Notification
 	 */
@@ -815,7 +827,7 @@ WCF.Message.InlineEditor = Class.extend({
 	 * Initializes editing capability for all messages.
 	 */
 	initContainers: function() {
-		$('.jsMessage').each($.proxy(function(index, container) {
+		$(this._messageContainerSelector).each($.proxy(function(index, container) {
 			var $container = $(container);
 			var $containerID = $container.wcfIdentify();
 			
@@ -935,7 +947,7 @@ WCF.Message.InlineEditor = Class.extend({
 		
 		// remove ckEditor
 		try {
-			var $ckEditor = $('#messageEditor' + $container.data('objectID')).ckeditorGet();
+			var $ckEditor = $('#' + this._messageEditorIDPrefix + $container.data('objectID')).ckeditorGet();
 			$ckEditor.destroy();
 		}
 		catch (e) {
@@ -987,7 +999,7 @@ WCF.Message.InlineEditor = Class.extend({
 		$formSubmit.find('button[data-type=cancel]').click($.proxy(this._cancel, this));
 		
 		WCF.Message.Submit.registerButton(
-			'messageEditor' + this._container[this._activeElementID].data('objectID'),
+			this._messageEditorIDPrefix + this._container[this._activeElementID].data('objectID'),
 			$saveButton
 		);
 	},
@@ -998,7 +1010,7 @@ WCF.Message.InlineEditor = Class.extend({
 	_save: function() {
 		var $container = this._container[this._activeElementID];
 		var $objectID = $container.data('objectID');
-		var $ckEditor = $('#messageEditor' + $objectID).ckeditorGet();
+		var $ckEditor = $('#' + this._messageEditorIDPrefix + $objectID).ckeditorGet();
 		
 		this._proxy.setOption('data', {
 			actionName: 'save',
@@ -1026,7 +1038,7 @@ WCF.Message.InlineEditor = Class.extend({
 		var $container = this._container[this._activeElementID];
 		var $objectID = $container.data('objectID');
 		
-		var $ckEditor = $('#messageEditor' + $objectID).ckeditorGet();
+		var $ckEditor = $('#' + this._messageEditorIDPrefix + $objectID).ckeditorGet();
 		var $message = $ckEditor.getData();
 		
 		new WCF.Action.Proxy({
@@ -1067,7 +1079,7 @@ WCF.Message.InlineEditor = Class.extend({
 		var $content = $messageBody.find('.messageText');
 		
 		// remove editor
-		var $ckEditor = $('#messageEditor' + $container.data('objectID')).ckeditorGet();
+		var $ckEditor = $('#' + this._messageEditorIDPrefix + $container.data('objectID')).ckeditorGet();
 		$ckEditor.destroy();
 		$content.empty();
 		
