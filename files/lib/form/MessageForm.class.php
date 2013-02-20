@@ -301,6 +301,7 @@ abstract class MessageForm extends RecaptchaForm {
 			$this->enableSmilies = (ENABLE_SMILIES_DEFAULT_VALUE && WCF::getSession()->getPermission($this->permissionCanUseSmilies)) ? 1 : 0;
 			$this->preParse = PRE_PARSE_DEFAULT_VALUE;
 			$this->showSignature = SHOW_SIGNATURE_DEFAULT_VALUE;
+			$this->languageID = WCF::getLanguage()->languageID;
 		}
 		
 		parent::readData();
