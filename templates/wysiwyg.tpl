@@ -24,7 +24,7 @@ $(function() {
 		var $buttons = [ ];
 		
 		for (var $i = 0, $length = __CKEDITOR_BUTTONS.length; $i < $length; $i++) {
-			$buttons.push(__CKEDITOR_BUTTONS[$i].name);
+			$buttons.push('__wcf_' + __CKEDITOR_BUTTONS[$i].name);
 		}
 		
 		__CKEDITOR_TOOLBAR.push($buttons);
