@@ -41,7 +41,8 @@
 			'wcf.attachment.upload.error.reachedRemainingLimit': '{lang}wcf.attachment.upload.error.reachedRemainingLimit{/lang}',
 			'wcf.attachment.upload.error.uploadFailed': '{lang}wcf.attachment.upload.error.uploadFailed{/lang}',
 			'wcf.global.button.upload': '{lang}wcf.global.button.upload{/lang}',
-			'wcf.attachment.insert': '{lang}wcf.attachment.insert{/lang}'
+			'wcf.attachment.insert': '{lang}wcf.attachment.insert{/lang}',
+			'wcf.attachment.delete.sure': '{lang}wcf.attachment.delete.sure{/lang}'
 		});
 		
 		new WCF.Attachment.Upload($('#attachments > dl > dd > div'), $('#attachments > ul'), '{@$attachmentObjectType}', '{@$attachmentObjectID}', '{$tmpHash|encodeJS}', '{@$attachmentParentObjectID}', {@$attachmentHandler->getMaxCount()}-{@$attachmentHandler->getAttachmentList()|count}, '{@$wysiwygContainerID}');
