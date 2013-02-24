@@ -136,8 +136,14 @@
 	//overflow: hidden; /* todo: fixes floating issues when using message on pages with a sidebar */
 	position: relative;
 	
-	&:hover .messageOptions nav {
+	&:hover {
+		.messageHeader .messageQuickOptions > li > a {
 			opacity: 1;
+		}
+		
+		.messageOptions nav {
+			opacity: 1;
+		}
 	}
 	
 	&.messageDisabled {
@@ -204,21 +210,39 @@
 	}
 	
 	.messageHeader {
-		.messageCounter {
+		.messageQuickOptions {
 			float: right;
-			font-size: @wcfSmallFontSize;
-			font-weight: bold;
-			margin-left: @wcfGapSmall;
 			
-			a {
-				min-height: 0;
-				padding: 1px 5px;
-				vertical-align: middle;
+			> li {
+				display: inline-block;
+				
+				> a {
+					opacity: .6;
+					
+					.transition(opacity, .2s);
+					
+					> span.icon {
+						color: @wcfDimmedColor;
+						
+						.transition(color, .2s);
+					}
+					
+					&:hover {
+						> span.icon {
+							color: @wcfLinkColor;
+						}
+					}
+				}
 			}
 			
 			input[type=checkbox] {
-				vertical-align: middle;
+				position: relative;
+				top: 1px;
 			}
+		}
+		
+		.permalink {
+			color: @wcfDimmedColor;
 		}
 	}
 	
@@ -433,16 +457,12 @@
 			> h2 {
 				font-size: @wcfSmallFontSize;
 				
-				> time {
-					color: @wcfDimmedColor;
-				}
-				
 				> .likesBadge {
 					font-size: 100%;
-					margin: -2px 0 -2px 4px;
+					margin: -2px 0 -1px 4px;
 				}
 				
-				> .username + time:before {
+				> .username:after {
 					content: " - ";
 				}
 			}
@@ -462,7 +482,7 @@
 				display: block;
 			}
 			
-			> .username + time:before {
+			> .username:after {
 				content: "";
 			}
 			

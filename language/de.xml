@@ -21,5 +21,6 @@
 		<item name="wcf.message.smilies.default"><![CDATA[Standard]]></item>
 		<item name="wcf.message.button.extendedEdit"><![CDATA[Erweiterte Bearbeitung]]></item>
 		<item name="wcf.message.new"><![CDATA[Neu]]></item>
+		<item name="wcf.message.share"><![CDATA[Teilen]]></item>
 	</category>
 </language>
