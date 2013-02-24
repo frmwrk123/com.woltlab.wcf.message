@@ -27,6 +27,11 @@
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
 			</option>
+			<option name="share_buttons_show_count">
+				<categoryname>message.general</categoryname>
+				<optiontype>boolean</optiontype>
+				<defaultvalue>1</defaultvalue>
+			</option>
 		</options>
 	</import>
 </data>

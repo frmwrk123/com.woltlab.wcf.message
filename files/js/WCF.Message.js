@@ -1919,3 +1919,169 @@ WCF.Message.Quote.Manager = Class.extend({
 		}
 	}
 });
+
+/**
+ * Namespace for message sharing related classes.
+ */
+WCF.Message.Share = { };
+
+/**
+ * Provides buttons to share a page through multiple social community sites.
+ * 
+ * @param	boolean		fetchObjectCount
+ */
+WCF.Message.Share.Page = Class.extend({
+	/**
+	 * dialog overlay
+	 * @var	jQuery
+	 */
+	_dialog: null,
+	
+	/**
+	 * list of share buttons
+	 * @var	object
+	 */
+	_ui: { },
+	
+	/**
+	 * page description
+	 * @var	string
+	 */
+	_pageDescription: '',
+	
+	/**
+	 * canonical page URL
+	 * @var	string
+	 */
+	_pageURL: '',
+	
+	/**
+	 * Initializes the WCF.Message.Share.Page class.
+	 * 
+	 * @param	boolean		fetchObjectCount
+	 */
+	init: function(fetchObjectCount) {
+		this._pageDescription = encodeURIComponent($('meta[property="og:description"]').prop('content'));
+		this._pageURL = encodeURIComponent($('meta[property="og:url"]').prop('content'));
+		
+		var $container = $('.messageShareButtons');
+		this._ui = {
+			facebook: $container.find('.jsButtonShareFacebook').click($.proxy(this._shareFacebook, this)),
+			google: $container.find('.jsButtonShareGoogle').click($.proxy(this._shareGoogle, this)),
+			reddit: $container.find('.jsButtonShareReddit').click($.proxy(this._shareReddit, this)),
+			twitter: $container.find('.jsButtonShareTwitter').click($.proxy(this._shareTwitter, this))
+		};
+		
+		if (fetchObjectCount === true) {
+			this._fetchFacebook();
+			this._fetchTwitter();
+			this._fetchGoogle();
+			this._fetchReddit();
+		}
+	},
+	
+	/**
+	 * Shares current page to selected social community site.
+	 * 
+	 * @param	string		objectName
+	 * @param	string		iframeURL
+	 */
+	_share: function(objectName, iframeURL) {
+		if (this._dialog === null) {
+			this._dialog = $('<div />').hide().appendTo(document.body);
+		}
+		
+		$('<iframe height="600" width="600" seamless="seamless" src="' + iframeURL.replace(/{pageURL}/, this._pageURL).replace(/{text}/, this._pageDescription) + '" />').appendTo(this._dialog.empty());
+		this._dialog.wcfDialog({
+			title: WCF.Language.get('wcf.message.share.' + objectName)
+		});
+	},
+	
+	/**
+	 * Shares current page with Facebook.
+	 */
+	_shareFacebook: function() {
+		this._share('facebook', 'https://www.facebook.com/sharer.php?u={pageURL}&t={text}');
+	},
+	
+	/**
+	 * Shares current page with Google Plus.
+	 */
+	_shareGoogle: function() {
+		this._share('google', 'https://plus.google.com/share?url={pageURL}');
+	},
+	
+	/**
+	 * Shares current page with Reddit.
+	 */
+	_shareReddit: function() {
+		this._share('reddit', 'https://ssl.reddit.com/submit?url={pageURL}');
+	},
+	
+	/**
+	 * Shares current page with Twitter.
+	 */
+	_shareTwitter: function() {
+		this._share('twitter', 'https://twitter.com/share?url={pageURL}&text={text}');
+	},
+	
+	/**
+	 * Fetches share count from a social community site.
+	 * 
+	 * @param	string		url
+	 * @param	object		callback
+	 */
+	_fetchCount: function(url, callback) {
+		new WCF.Action.Proxy({
+			autoSend: true,
+			success: callback,
+			url: url.replace(/{pageURL}/, this._pageURL)
+		});
+	},
+	
+	/**
+	 * Fetches number of Facebook likes.
+	 */
+	_fetchFacebook: function() {
+		var self = this;
+		this._fetchCount('https://graph.facebook.com/?id={pageURL}', function(data) {
+			if (data && data.shares) {
+				self._ui.facebook.children('badge').show().text(data.shares);
+			}
+		});
+	},
+	
+	/**
+	 * Fetches tweet count from Twitter.
+	 */
+	_fetchTwitter: function() {
+		var self = this;
+		this._fetchCount('https://urls.api.twitter.com/1/urls/count.json?url={pageURL}', function(data) {
+			if (data && data.count) {
+				self._ui.twitter.children('badge').show().text(data.count);
+			}
+		});
+	},
+	
+	/**
+	 * Fetches recommendations from Google Plus.
+	 */
+	_fetchGoogle: function() {
+		var self = this;
+		this._fetchCount('https://plusone.google.com/_/+1/fastbutton?url={pageURL}', function(data) {
+			console.debug(data);
+		});
+	},
+	
+	/**
+	 * Fetches cumulative vote sum from Reddit.
+	 */
+	_fetchReddit: function() {
+		var self = this;
+		this._fetchCount('https://urls.api.twitter.com/1/urls/count.json?url={pageURL}', function(data) {
+			if (data && data.data) {
+				self._ui.reddit.children('badge').show().text(data.data.children[0].data.score);
+			}
+		});
+	}
+});

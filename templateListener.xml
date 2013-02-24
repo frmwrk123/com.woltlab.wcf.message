@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/templateListener.xsd">
+	<import>
+		<!-- user -->
+		<templatelistener name="openGraphProtocolTags">
+			<environment>user</environment>
+			<templatename>headInclude</templatename>
+			<eventname>metaTags</eventname>
+			<templatecode><![CDATA[{foreach from=$__wcf->getOpenGraphProtocolHandler()->getTags() item=$ogpTag}
+	<meta property="og:{@$ogpTag->getName()}" content="{@$ogpTag->getValue()}" />
+{/if}]]></templatecode>
+		</templatelistener>
+		<!-- /user -->
+	</import>
+</data>

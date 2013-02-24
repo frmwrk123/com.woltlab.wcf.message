@@ -28,5 +28,7 @@
 		<instruction type="option">option.xml</instruction>
 		<instruction type="bbcode">bbcode.xml</instruction>
 		<instruction type="language">language/*.xml</instruction>
+		<instruction type="templateListener">templateListener.xml</instruction>
+		<instruction type="coreObject">coreObject.xml</instruction>
 	</instructions>
 </package>
