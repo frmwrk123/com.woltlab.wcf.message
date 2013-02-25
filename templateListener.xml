@@ -8,7 +8,7 @@
 			<eventname>metaTags</eventname>
 			<templatecode><![CDATA[{foreach from=$__wcf->getOpenGraphProtocolHandler()->getTags() item=$ogpTag}
 	<meta property="og:{@$ogpTag->getName()}" content="{@$ogpTag->getValue()}" />
-{/if}]]></templatecode>
+{/foreach}]]></templatecode>
 		</templatelistener>
 		<!-- /user -->
 	</import>
