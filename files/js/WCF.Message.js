@@ -1926,6 +1926,93 @@ WCF.Message.Quote.Manager = Class.extend({
 WCF.Message.Share = { };
 
 /**
+ * Displays a dialog overlay for permalinks.
+ */
+WCF.Message.Share.Content = Class.extend({
+	/**
+	 * list of cached templates
+	 * @var	object
+	 */
+	_cache: { },
+	
+	/**
+	 * dialog overlay
+	 * @var	jQuery
+	 */
+	_dialog: null,
+	
+	/**
+	 * Initializes the WCF.Message.Share.Content class.
+	 */
+	init: function() {
+		this._cache = { };
+		this._dialog = null;
+		
+		this._initLinks();
+		
+		WCF.DOMNodeInsertedHandler.addCallback('WCF.Message.Share.Content', $.proxy(this._initLinks, this));
+	},
+	
+	/**
+	 * Initializes share links.
+	 */
+	_initLinks: function() {
+		$('a.jsButtonShare').removeClass('jsButtonShare').click($.proxy(this._click, this));
+	},
+	
+	/**
+	 * Displays links to share this content.
+	 * 
+	 * @param	object		event
+	 */
+	_click: function(event) {
+		event.preventDefault();
+		
+		var $link = $(event.currentTarget).prop('href');
+		var $key = $link.hashCode();
+		if (this._cache[$key] === undefined) {
+			// remove dialog contents
+			var $dialogInitialized = false;
+			if (this._dialog === null) {
+				this._dialog = $('<div />').hide().appendTo(document.body);
+				$dialogInitialized = true;
+			}
+			else {
+				this._dialog.empty();
+			}
+			
+			// permalink (plain text)
+			var $fieldset = $('<fieldset><legend><legend>' + WCF.Language.get('wcf.message.share.permalink') + '</legend></fieldset>').appendTo(this._dialog);
+			$('<input type="text" class="long" value="' + $link + '" readonly="readonly" />').appendTo($fieldset);
+			
+			// permalink (BBCode)
+			var $fieldset = $('<fieldset><legend><legend>' + WCF.Language.get('wcf.message.share.permalink.bbcode') + '</legend></fieldset>').appendTo(this._dialog);
+			$('<input type="text" class="long" value="[url]' + $link + '[/url]" readonly="readonly" />').appendTo($fieldset);
+			
+			// permalink (HTML)
+			var $fieldset = $('<fieldset><legend><legend>' + WCF.Language.get('wcf.message.share.permalink.html') + '</legend></fieldset>').appendTo(this._dialog);
+			$("<input type=\"text\" class=\"long\" value='&lt;a href=\"" + $link + "\"&gt;" + $link + "&lt;/a&gt;' readonly=\"readonly\" />").appendTo($fieldset);
+			
+			this._cache[$key] = this._dialog.html();
+			
+			if ($dialogInitialized) {
+				this._dialog.wcfDialog({
+					title: WCF.Language.get('wcf.message.share')
+				});
+			}
+			else {
+				this._dialog.wcfDialog('open');
+			}
+		}
+		else {
+			this._dialog.html(this._cache[$key]).wcfDialog('open');
+		}
+		
+		this._dialog.find('input').click(function() { $(this).select(); });
+	}
+});
+
+/**
  * Provides buttons to share a page through multiple social community sites.
  * 
  * @param	boolean		fetchObjectCount
