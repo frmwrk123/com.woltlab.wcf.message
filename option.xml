@@ -44,7 +44,7 @@
 				<enableoptions><![CDATA[share_buttons_show_count]]></enableoptions>
 			</option>
 			<option name="share_buttons_show_count">
-				<categoryname>message.general</categoryname>
+				<categoryname>message.general.share</categoryname>
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
 			</option>
