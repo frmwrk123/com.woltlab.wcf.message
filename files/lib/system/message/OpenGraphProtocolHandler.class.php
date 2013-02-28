@@ -21,17 +21,6 @@ class OpenGraphProtocolHandler extends SingletonFactory {
 	protected $tags = array();
 	
 	/**
-	 * @see	wcf\system\SingletonFactory::init()
-	 */
-	protected function init() {
-		$this->addTag(new OpenGraphProtocolTag('link', WCF::getRequestURI()));
-		$this->addTag(new OpenGraphProtocolTag('type', 'article'));
-		$this->addTag(new OpenGraphProtocolTag('title', WCF::getLanguage()->get(PAGE_TITLE)));
-		$this->addTag(new OpenGraphProtocolTag('site_name', WCF::getLanguage()->get(PAGE_TITLE)));
-		$this->addTag(new OpenGraphProtocolTag('description', WCF::getLanguage()->get(PAGE_DESCRIPTION)));
-	}
-	
-	/**
 	 * Adds a new tag or replaces an existing one.
 	 * 
 	 * @param	wcf\system\message\OpenGraphProtocolTag		$tag
@@ -41,9 +30,21 @@ class OpenGraphProtocolHandler extends SingletonFactory {
 	}
 	
 	/**
+	 * Assigns default values for missing tags and return all previously set tags.
+	 * 
 	 * @return	array<wcf\system\message\OpenGraphProtocolTag>
 	 */
 	public function getTags() {
+		// add site name
+		if (!empty($this->tags)) {
+			$this->addTag(new OpenGraphProtocolTag('site_name', WCF::getLanguage()->get(PAGE_TITLE)));
+			
+			// default to 'article' type
+			if (!isset($this->tags['type'])) {
+				$this->addTag(new OpenGraphProtocolTag('type', 'article'));
+			}
+		}
+		
 		return $this->tags;
 	}
 }

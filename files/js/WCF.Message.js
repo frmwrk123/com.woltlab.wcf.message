@@ -1975,7 +1975,6 @@ WCF.Message.Share.Page = Class.extend({
 		if (fetchObjectCount === true) {
 			this._fetchFacebook();
 			this._fetchTwitter();
-			this._fetchGoogle();
 			this._fetchReddit();
 		}
 	},
@@ -2030,58 +2029,54 @@ WCF.Message.Share.Page = Class.extend({
 	 * 
 	 * @param	string		url
 	 * @param	object		callback
+	 * @param	string		callbackName
 	 */
-	_fetchCount: function(url, callback) {
-		new WCF.Action.Proxy({
+	_fetchCount: function(url, callback, callbackName) {
+		var $options = {
 			autoSend: true,
+			dataType: 'jsonp',
+			showLoadingOverlay: false,
 			success: callback,
+			type: 'GET',
 			url: url.replace(/{pageURL}/, this._pageURL)
-		});
+		};
+		if (callbackName) {
+			$options.jsonp = callbackName;
+		}
+		
+		new WCF.Action.Proxy($options);
 	},
 	
 	/**
 	 * Fetches number of Facebook likes.
 	 */
 	_fetchFacebook: function() {
-		var self = this;
-		this._fetchCount('https://graph.facebook.com/?id={pageURL}', function(data) {
-			if (data && data.shares) {
-				self._ui.facebook.children('badge').show().text(data.shares);
+		this._fetchCount('https://graph.facebook.com/?id={pageURL}', $.proxy(function(data) {
+			if (data.shares) {
+				this._ui.facebook.children('span.badge').show().text(data.shares);
 			}
-		});
+		}, this));
 	},
 	
 	/**
 	 * Fetches tweet count from Twitter.
 	 */
 	_fetchTwitter: function() {
-		var self = this;
-		this._fetchCount('https://urls.api.twitter.com/1/urls/count.json?url={pageURL}', function(data) {
-			if (data && data.count) {
-				self._ui.twitter.children('badge').show().text(data.count);
+		this._fetchCount('http://urls.api.twitter.com/1/urls/count.json?url={pageURL}', $.proxy(function(data) {
+			if (data.count) {
+				this._ui.twitter.children('span.badge').show().text(data.count);
 			}
-		});
-	},
-	
-	/**
-	 * Fetches recommendations from Google Plus.
-	 */
-	_fetchGoogle: function() {
-		var self = this;
-		this._fetchCount('https://plusone.google.com/_/+1/fastbutton?url={pageURL}', function(data) {
-			console.debug(data);
-		});
+		}, this));
 	},
 	
 	/**
 	 * Fetches cumulative vote sum from Reddit.
 	 */
 	_fetchReddit: function() {
-		var self = this;
-		this._fetchCount('https://urls.api.twitter.com/1/urls/count.json?url={pageURL}', function(data) {
-			if (data && data.data) {
-				self._ui.reddit.children('badge').show().text(data.data.children[0].data.score);
+		this._fetchCount('http://www.reddit.com/api/info.json?url={pageURL}', $.proxy(function(data) {
+			if (data.data.children.length) {
+				self._ui.reddit.children('span.badge').show().text(data.data.children[0].data.score);
 			}
-		});
+		}, this), 'jsonp');
 	}
 });

@@ -32,7 +32,7 @@
 				'wcf.message.share.twitter': '{lang}wcf.message.share.twitter{/lang}'
 			});
 			
-			new WCF.Message.Share.Page({if MESSAGE_SHARE_SHOW_COUNT}true{else}false{/if});
+			new WCF.Message.Share.Page({if SHARE_BUTTONS_SHOW_COUNT}true{else}false{/if});
 		});
 		//]]>
 	</script>

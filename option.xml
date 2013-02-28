@@ -1,7 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <data xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/maelstrom/option.xsd">
 	<import>
+		<categories>
+			<category name="message.general.share">
+				<parent>message.general</parent>
+			</category>
+		</categories>
+		
 		<options>
+			<!-- message.general -->
 			<option name="enable_bbcodes_default_value">
 				<categoryname>message.general</categoryname>
 				<optiontype>boolean</optiontype>
@@ -27,11 +34,21 @@
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
 			</option>
+			<!-- /message.general -->
+			
+			<!-- message.general.share -->
+			<option name="enable_share_buttons">
+				<categoryname>message.general.share</categoryname>
+				<optiontype>boolean</optiontype>
+				<defaultvalue>1</defaultvalue>
+				<enableoptions><![CDATA[share_buttons_show_count]]></enableoptions>
+			</option>
 			<option name="share_buttons_show_count">
-				<categoryname>message.general</categoryname>
+				<categoryname>message.general.share</categoryname>
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
 			</option>
+			<!-- /message.general.share -->
 		</options>
 	</import>
 </data>
