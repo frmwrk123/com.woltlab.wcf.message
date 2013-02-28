@@ -17,10 +17,17 @@
 		<item name="wcf.message.settings.preParse.description"><![CDATA[Internet-Adressen werden automatisch erkannt und umgewandelt.]]></item>
 		<item name="wcf.message.settings.showSignature"><![CDATA[Signatur anzeigen]]></item>
 		<item name="wcf.message.settings.showSignature.description"><![CDATA[Die im Profil eingestellte Signatur wird an diese Nachricht angehängt.]]></item>
+		<item name="wcf.message.share"><![CDATA[Teilen]]></item>
+		<item name="wcf.message.share.facebook"><![CDATA[Facebook]]></item>
+		<item name="wcf.message.share.google"><![CDATA[Google Plus]]></item>
+		<item name="wcf.message.share.permalink"><![CDATA[Permalink]]></item>
+		<item name="wcf.message.share.permalink.bbcode"><![CDATA[BBCode]]></item>
+		<item name="wcf.message.share.permalink.html"><![CDATA[HTML]]></item>
+		<item name="wcf.message.share.reddit"><![CDATA[Reddit]]></item>
+		<item name="wcf.message.share.twitter"><![CDATA[Twitter]]></item>
 		<item name="wcf.message.smilies"><![CDATA[Smileys]]></item>
 		<item name="wcf.message.smilies.default"><![CDATA[Standard]]></item>
 		<item name="wcf.message.button.extendedEdit"><![CDATA[Erweiterte Bearbeitung]]></item>
 		<item name="wcf.message.new"><![CDATA[Neu]]></item>
-		<item name="wcf.message.share"><![CDATA[Teilen]]></item>
 	</category>
 </language>
