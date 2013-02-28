@@ -409,7 +409,7 @@
 	}
 	
 	> footer {
-		padding-bottom: @wcfGapLarge;
+		padding-bottom: @wcfGapMedium;
 	}
 	
 	> .messageSignature {
@@ -714,5 +714,30 @@ li:nth-child(2n+1) .message {
 		border-width: 5px 5px 0;
 		bottom: -5px;
 		top: auto;
+	}
+}
+
+/* share buttons */
+.messageShareButtons {
+	> ul > li {
+		display: inline-block;
+	}
+	
+	.jsButtonShareFacebook {
+		> .icon {
+			color: rgb(59, 89, 152);
+		}
+	}
+	
+	.jsButtonShareTwitter {
+		> .icon {
+			color: rgb(64, 153, 255);
+		}
+	}
+	
+	.jsButtonShareGoogle {
+		> .icon {
+			color: rgb(211, 72, 54);
+		}
 	}
 }
