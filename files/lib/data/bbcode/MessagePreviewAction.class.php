@@ -19,6 +19,11 @@ use wcf\util\StringUtil;
  */
 class MessagePreviewAction extends BBCodeAction {
 	/**
+	 * @see	wcf\data\AbstractDatabaseObjectAction::$allowGuestAccess
+	 */
+	protected $allowGuestAccess = array('getMessagePreview');
+		
+	/**
 	 * Validates parameters for message preview.
 	 */
 	public function validateGetMessagePreview() {
