@@ -5,6 +5,10 @@
 			<category name="message.general.share">
 				<parent>message.general</parent>
 			</category>
+			
+			<category name="message.censorship">
+				<parent>security.censorship</parent>
+			</category>
 		</categories>
 		
 		<options>
@@ -49,6 +53,18 @@
 				<defaultvalue>1</defaultvalue>
 			</option>
 			<!-- /message.general.share -->
+			
+			<!-- message.censorship -->
+			<option name="enable_censorship">
+				<categoryname>message.censorship</categoryname>
+				<optiontype>boolean</optiontype>
+				<enableoptions><![CDATA[censored_words]]></enableoptions>
+			</option>
+			<option name="censored_words">
+				<categoryname>message.censorship</categoryname>
+				<optiontype>textarea</optiontype>
+			</option>
+			<!-- /message.censorship -->
 		</options>
 	</import>
 </data>

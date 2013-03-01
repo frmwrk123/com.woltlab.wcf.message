@@ -6,6 +6,7 @@ use wcf\system\bbcode\BBCodeParser;
 use wcf\system\bbcode\PreParser;
 use wcf\system\exception\UserInputException;
 use wcf\system\language\LanguageFactory;
+use wcf\system\message\censorship\Censorship;
 use wcf\system\WCF;
 use wcf\util\MessageUtil;
 use wcf\util\StringUtil;
@@ -230,6 +231,15 @@ abstract class MessageForm extends RecaptchaForm {
 		if (StringUtil::length($this->subject) > 255) {
 			throw new UserInputException('subject', 'tooLong');
 		}
+		
+		// search for censored words
+		if (ENABLE_CENSORSHIP) {
+			$result = Censorship::getInstance()->test($this->subject);
+			if ($result) {
+				WCF::getTPL()->assign('censoredWords', $result);
+				throw new UserInputException('subject', 'censoredWordsFound');
+			}
+		}
 	}
 	
 	/**
@@ -254,15 +264,14 @@ abstract class MessageForm extends RecaptchaForm {
 			}
 		}
 		
-		/*// TODO: search for censored words
+		// search for censored words
 		if (ENABLE_CENSORSHIP) {
-			require_once(WCF_DIR.'lib/data/message/censorship/Censorship.class.php');
-			$result = Censorship::test($this->text);
+			$result = Censorship::getInstance()->test($this->text);
 			if ($result) {
 				WCF::getTPL()->assign('censoredWords', $result);
 				throw new UserInputException('text', 'censoredWordsFound');
 			}
-		}*/
+		}
 	}
 	
 	/**
