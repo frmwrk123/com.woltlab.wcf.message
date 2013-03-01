@@ -2019,12 +2019,6 @@ WCF.Message.Share.Content = Class.extend({
  */
 WCF.Message.Share.Page = Class.extend({
 	/**
-	 * dialog overlay
-	 * @var	jQuery
-	 */
-	_dialog: null,
-	
-	/**
 	 * list of share buttons
 	 * @var	object
 	 */
@@ -2070,17 +2064,10 @@ WCF.Message.Share.Page = Class.extend({
 	 * Shares current page to selected social community site.
 	 * 
 	 * @param	string		objectName
-	 * @param	string		iframeURL
+	 * @param	string		url
 	 */
-	_share: function(objectName, iframeURL) {
-		if (this._dialog === null) {
-			this._dialog = $('<div />').hide().appendTo(document.body);
-		}
-		
-		$('<iframe height="600" width="600" seamless="seamless" src="' + iframeURL.replace(/{pageURL}/, this._pageURL).replace(/{text}/, this._pageDescription) + '" />').appendTo(this._dialog.empty());
-		this._dialog.wcfDialog({
-			title: WCF.Language.get('wcf.message.share.' + objectName)
-		});
+	_share: function(objectName, url) {
+		window.open(url.replace(/{pageURL}/, this._pageURL).replace(/{text}/, this._pageDescription), 'height=600,width=600');
 	},
 	
 	/**
