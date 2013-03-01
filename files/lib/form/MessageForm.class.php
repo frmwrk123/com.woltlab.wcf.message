@@ -174,6 +174,11 @@ abstract class MessageForm extends RecaptchaForm {
 		
 		if ($this->enableMultilingualism) {
 			$this->availableContentLanguages = LanguageFactory::getInstance()->getContentLanguages();
+			if (WCF::getUser()->userID) {
+				foreach ($this->availableContentLanguages as $key => $value) {
+					if (!in_array($key, WCF::getUser()->getLanguageIDs())) unset($this->availableContentLanguages[$key]);
+				}
+			}
 		}
 	}
 	
@@ -264,7 +269,7 @@ abstract class MessageForm extends RecaptchaForm {
 	 * Validates content language id.
 	 */
 	protected function validateContentLanguage() {
-		if (!$this->languageID || !$this->enableMultilingualism || count($this->availableContentLanguages) < 2) {
+		if (!$this->languageID || !$this->enableMultilingualism || empty($this->availableContentLanguages)) {
 			$this->languageID = null;
 			return;
 		}
