@@ -258,8 +258,7 @@ abstract class MessageForm extends RecaptchaForm {
 		if ($this->enableBBCodes && $this->allowedBBCodesPermission) {
 			$disallowedBBCodes = BBCodeParser::getInstance()->validateBBCodes($this->text, explode(',', WCF::getSession()->getPermission($this->allowedBBCodesPermission)));
 			if (!empty($disallowedBBCodes)) {
-				// @todo: the user should be informed which disallowed BBCodes
-				// they are using
+				WCF::getTPL()->assign('disallowedBBCodes', $disallowedBBCodes);
 				throw new UserInputException('text', 'disallowedBBCodes');
 			}
 		}
