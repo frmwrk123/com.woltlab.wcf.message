@@ -6,13 +6,13 @@ use wcf\util\StringUtil;
 
 /**
  * Finds censored words.
- *
+ * 
  * @author	Marcel Werk
  * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.message
  * @subpackage	system.message.censorship
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class Censorship extends SingletonFactory {
 	/**
@@ -52,23 +52,23 @@ class Censorship extends SingletonFactory {
 	
 	/**
 	 * Returns censored words from a text.
-	 *
+	 * 
 	 * @param	string		$text
 	 * @return	mixed		$matches / false
 	 */
 	public function test($text) {
 		// reset values
 		$this->matches = $this->words = array();
-	
+		
 		// string to lower case
 		$text = StringUtil::toLowerCase($text);
-	
+		
 		// ignore bbcode tags
 		$text = preg_replace('~\[/?[a-z]+[^\]]*\]~i', '', $text);
-	
+		
 		// split the text in single words
 		$this->words = preg_split("!".$this->delimiters."+!", $text, -1, PREG_SPLIT_NO_EMPTY);
-	
+		
 		// check each word if it's censored.
 		for ($i = 0, $count = count($this->words); $i < $count; $i++) {
 			$word = $this->words[$i];
@@ -96,7 +96,7 @@ class Censorship extends SingletonFactory {
 						else {
 							$this->matches[$word] = 1;
 						}
-	
+						
 						continue 2;
 					}
 				}
@@ -110,7 +110,7 @@ class Censorship extends SingletonFactory {
 								continue;
 							}
 						}
-	
+						
 						if ($position + StringUtil::length($word) < StringUtil::length($censoredWord)) {
 							// look ahead
 							if (($newIndex = $this->lookAhead($i + 1, StringUtil::substring($censoredWord, $position + StringUtil::length($word))))) {
@@ -120,7 +120,7 @@ class Censorship extends SingletonFactory {
 								continue;
 							}
 						}
-	
+						
 						// store censored word
 						if (isset($this->matches[$censoredWord])) {
 							$this->matches[$censoredWord]++;
@@ -128,13 +128,13 @@ class Censorship extends SingletonFactory {
 						else {
 							$this->matches[$censoredWord] = 1;
 						}
-	
+						
 						continue 2;
 					}
 				}
 			}
 		}
-	
+		
 		// at least one censored word was found
 		if (count($this->matches) > 0) {
 			return $this->matches;
@@ -147,7 +147,7 @@ class Censorship extends SingletonFactory {
 	
 	/**
 	 * Looks behind in the word list.
-	 *
+	 * 
 	 * @param	integer		$index
 	 * @param	string		$search
 	 * @return	boolean
@@ -161,13 +161,13 @@ class Censorship extends SingletonFactory {
 				return $this->lookBehind($index - 1, 0, (StringUtil::length($search) - StringUtil::length($this->words[$index])));
 			}
 		}
-	
+		
 		return false;
 	}
 	
 	/**
 	 * Looks ahead in the word list.
-	 *
+	 * 
 	 * @param	integer		$index
 	 * @param	string		$search
 	 * @return	mixed
@@ -181,7 +181,7 @@ class Censorship extends SingletonFactory {
 				return $this->lookAhead($index + 1, StringUtil::substring($search, StringUtil::length($this->words[$index])));
 			}
 		}
-	
+		
 		return false;
 	}
 }
