@@ -628,11 +628,14 @@ WCF.Message.QuickReply = Class.extend({
 	 * @param	boolean		hide
 	 */
 	_revertQuickReply: function(hide) {
+		var $messageBody = this._container.find('.messageQuickReplyContent .messageBody');
+		
 		if (hide) {
 			this._container.hide();
+			
+			// remove previous error messages
+			$messageBody.children('small.innerError').remove();
 		}
-		
-		var $messageBody = this._container.find('.messageQuickReplyContent .messageBody');
 		
 		// display CKEditor
 		$messageBody.children('.icon-spinner').remove();
@@ -709,8 +712,22 @@ WCF.Message.QuickReply = Class.extend({
 	/**
 	 * Reverts quick reply on failure to preserve entered message.
 	 */
-	_failure: function() {
+	_failure: function(data) {
 		this._revertQuickReply(false);
+		
+		if (data === null) {
+			return true;
+		}
+		
+		var $messageBody = this._container.find('.messageQuickReplyContent .messageBody');
+		var $innerError = $messageBody.children('small.innerError').empty();
+		if (!$innerError.length) {
+			$innerError = $('<small class="innerError" />').appendTo($messageBody);
+		}
+		
+		$innerError.html((data.returnValues && data.returnValues.errorType) ? data.returnValues.errorType : data.message);
+		
+		return false;
 	},
 	
 	/**
