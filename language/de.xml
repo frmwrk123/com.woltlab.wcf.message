@@ -6,6 +6,7 @@
 		<item name="wcf.message.quote.manageQuotes"><![CDATA[Zitate verwalten]]></item>
 		<item name="wcf.message.quote.quoteSelected"><![CDATA[Auswahl zitieren]]></item>
 		<item name="wcf.message.quote.showQuotes"><![CDATA[Zitate (#count#)]]></item>
+		<item name="wcf.message.quote.quoteMessage"><![CDATA[Zitieren]]></item>
 		<item name="wcf.message.settings"><![CDATA[Einstellungen]]></item>
 		<item name="wcf.message.settings.enableBBCodes"><![CDATA[Darstellung von BBCodes aktivieren]]></item>
 		<item name="wcf.message.settings.enableBBCodes.description"><![CDATA[Sie können BBCodes zur Formatierung nutzen, sofern diese Option aktiviert ist.]]></item>
