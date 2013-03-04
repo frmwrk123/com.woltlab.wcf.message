@@ -1,4 +1,4 @@
-<div id="attachments" class="formAttachmentContent tabMenuContent container containerPadding">
+<div id="attachments" class="jsOnly formAttachmentContent tabMenuContent container containerPadding">
 	<ul class="formAttachmentList clearfix"{if !$attachmentHandler->getAttachmentList()|count} style="display: none"{/if}>
 		{foreach from=$attachmentHandler->getAttachmentList() item=$attachment}
 			<li class="box48">

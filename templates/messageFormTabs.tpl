@@ -1,5 +1,5 @@
 <div class="tabMenuContainer" data-active="{$activeTabMenuItem}" data-store="activeTabMenuItem">
-	<nav class="tabMenu">
+	<nav class="tabMenu jsOnly">
 		<ul>
 			{if MODULE_SMILEY}<li><a href="{@$__wcf->getAnchor('smilies')}" title="{lang}wcf.message.smilies{/lang}">{lang}wcf.message.smilies{/lang}</a></li>{/if}
 			{if MODULE_ATTACHMENT && $attachmentHandler !== null}<li><a href="{@$__wcf->getAnchor('attachments')}" title="{lang}wcf.attachment.attachments{/lang}">{lang}wcf.attachment.attachments{/lang}</a></li>{/if}
