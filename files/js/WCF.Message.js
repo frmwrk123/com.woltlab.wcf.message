@@ -2064,11 +2064,16 @@ WCF.Message.Share.Page = Class.extend({
 		
 		var $container = $('.messageShareButtons');
 		this._ui = {
-			facebook: $container.find('.jsButtonShareFacebook').click($.proxy(this._shareFacebook, this)),
-			google: $container.find('.jsButtonShareGoogle').click($.proxy(this._shareGoogle, this)),
-			reddit: $container.find('.jsButtonShareReddit').click($.proxy(this._shareReddit, this)),
-			twitter: $container.find('.jsButtonShareTwitter').click($.proxy(this._shareTwitter, this))
+			facebook: $container.find('.jsShareFacebook'),
+			google: $container.find('.jsShareGoogle'),
+			reddit: $container.find('.jsShareReddit'),
+			twitter: $container.find('.jsShareTwitter')
 		};
+		
+		this._ui.facebook.children('a').click($.proxy(this._shareFacebook, this));
+		this._ui.google.children('a').click($.proxy(this._shareGoogle, this));
+		this._ui.reddit.children('a').click($.proxy(this._shareReddit, this));
+		this._ui.twitter.children('a').click($.proxy(this._shareTwitter, this));
 		
 		if (fetchObjectCount === true) {
 			this._fetchFacebook();

@@ -1,25 +1,33 @@
 <div class="messageShareButtons jsOnly">
 	<ul>
-		<li><a class="jsButtonShareFacebook">
-			<span class="icon icon32 icon-facebook-sign jsTooltip" title="{lang}wcf.message.share.facebook{/lang}"></span>
-			<span class="invisible">{lang}wcf.message.share.facebook{/lang}</span>
+		<li class="jsShareFacebook">
+			<a>
+				<span class="icon icon32 icon-facebook-sign jsTooltip" title="{lang}wcf.message.share.facebook{/lang}"></span>
+				<span class="invisible">{lang}wcf.message.share.facebook{/lang}</span>
+			</a>
 			<span class="badge" style="display: none">0</span>
-		</a></li>
-		<li><a class="jsButtonShareTwitter">
-			<span class="icon icon32 icon-twitter-sign jsTooltip" title="{lang}wcf.message.share.twitter{/lang}"></span>
-			<span class="invisible">{lang}wcf.message.share.twitter{/lang}</span>
+		</li>
+		<li class="jsShareTwitter">
+			<a>
+				<span class="icon icon32 icon-twitter-sign jsTooltip" title="{lang}wcf.message.share.twitter{/lang}"></span>
+				<span class="invisible">{lang}wcf.message.share.twitter{/lang}</span>
+			</a>
 			<span class="badge" style="display: none">0</span>
-		</a></li>
-		<li><a class="jsButtonShareGoogle">
-			<span class="icon icon32 icon-google-plus-sign jsTooltip" title="{lang}wcf.message.share.google{/lang}"></span>
-			<span class="invisible">{lang}wcf.message.share.google{/lang}</span>
+		</li>
+		<li class="jsShareGoogle">
+			<a>
+				<span class="icon icon32 icon-google-plus-sign jsTooltip" title="{lang}wcf.message.share.google{/lang}"></span>
+				<span class="invisible">{lang}wcf.message.share.google{/lang}</span>
+			</a>
 			<span class="badge" style="display: none">0</span>
-		</a></li>
-		<li><a class="jsButtonShareReddit">
-			<span class="icon icon32 icon-sign-blank jsTooltip" title="{lang}wcf.message.share.reddit{/lang}"></span>
-			<span class="invisible">{lang}wcf.message.share.reddit{/lang}</span>
+		</li>
+		<li class="jsShareReddit">
+			<a>
+				<span class="icon icon32 icon-sign-blank jsTooltip" title="{lang}wcf.message.share.reddit{/lang}"></span>
+				<span class="invisible">{lang}wcf.message.share.reddit{/lang}</span>
+			</a>
 			<span class="badge" style="display: none">0</span>
-		</a></li>
+		</li>
 	</ul>
 	
 	<script type="text/javascript">
