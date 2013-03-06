@@ -715,7 +715,7 @@ WCF.Message.QuickReply = Class.extend({
 	_failure: function(data) {
 		this._revertQuickReply(false);
 		
-		if (data === null) {
+		if (data === null || data.returnValues === undefined || data.returnValues.errorType === undefined) {
 			return true;
 		}
 		
@@ -725,7 +725,7 @@ WCF.Message.QuickReply = Class.extend({
 			$innerError = $('<small class="innerError" />').appendTo($messageBody);
 		}
 		
-		$innerError.html((data.returnValues && data.returnValues.errorType) ? data.returnValues.errorType : data.message);
+		$innerError.html(data.returnValues.errorType);
 		
 		return false;
 	},
