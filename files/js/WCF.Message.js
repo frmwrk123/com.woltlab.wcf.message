@@ -829,7 +829,7 @@ WCF.Message.InlineEditor = Class.extend({
 		this._dropdowns = { };
 		this._supportExtendedForm = (supportExtendedForm) ? true : false;
 		this._proxy = new WCF.Action.Proxy({
-			failure: $.proxy(this._cancel, this),
+			failure: $.proxy(this._failure, this),
 			showLoadingOverlay: false,
 			success: $.proxy(this._success, this)
 		});
@@ -927,6 +927,29 @@ WCF.Message.InlineEditor = Class.extend({
 	},
 	
 	/**
+	 * Handles errorneus editing requests.
+	 * 
+	 * @param	object		data
+	 */
+	_failure: function(data) {
+		this._revertEditor();
+		
+		if (data === null || data.returnValues === undefined || data.returnValues.errorType === undefined) {
+			return true;
+		}
+		
+		var $messageBody = this._container[this._activeElementID].find('.messageBody .messageInlineEditor');
+		var $innerError = $messageBody.children('small.innerError').empty();
+		if (!$innerError.length) {
+			$innerError = $('<small class="innerError" />').insertBefore($messageBody.children('.formSubmit'));
+		}
+		
+		$innerError.html(data.returnValues.errorType);
+		
+		return false;
+	},
+	
+	/**
 	 * Forces message options to stay visible if toggling dropdown menu.
 	 * 
 	 * @param	jQuery		dropdown
@@ -972,7 +995,9 @@ WCF.Message.InlineEditor = Class.extend({
 		}
 		
 		// restore message
-		$container.find('.messageBody').removeClass('jsMessageLoading').find('.messageText').html(this._cache);
+		var $messageBody = $container.find('.messageBody');
+		$messageBody.children('.icon-spinner').remove();
+		$messageBody.find('.messageText').html(this._cache);
 		
 		this._activeElementID = '';
 	},
@@ -1019,6 +1044,15 @@ WCF.Message.InlineEditor = Class.extend({
 			this._messageEditorIDPrefix + this._container[this._activeElementID].data('objectID'),
 			$saveButton
 		);
+	},
+	
+	/**
+	 * Reverts editor.
+	 */
+	_revertEditor: function() {
+		var $messageBody = this._container[this._activeElementID].find('.messageBody');
+		$messageBody.children('span.icon-spinner').remove();
+		$messageBody.find('.messageText').children().show();
 	},
 	
 	/**
