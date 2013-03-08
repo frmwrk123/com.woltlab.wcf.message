@@ -1770,7 +1770,8 @@ WCF.Message.Quote.Manager = Class.extend({
 		
 		// add 'delete marked' button
 		var $formSubmit = $('<div class="formSubmit" />').appendTo(this._dialog);
-		$('<button>' + WCF.Language.get('wcf.message.quote.deleteSelectedQuotes') + '</button>').click($.proxy(this._removeSelected, this)).appendTo($formSubmit);
+		$('<button>' + WCF.Language.get('wcf.message.quote.removeSelectedQuotes') + '</button>').click($.proxy(this._removeSelected, this)).appendTo($formSubmit);
+		$('<button>' + WCF.Language.get('wcf.message.quote.removeAllQuotes') + '</button>').click($.proxy(this._removeAll, this)).appendTo($formSubmit);
 		
 		// show dialog
 		this._dialog.wcfDialog({
@@ -1884,6 +1885,14 @@ WCF.Message.Quote.Manager = Class.extend({
 			
 			this._dialog.wcfDialog('close');
 		}
+	},
+	
+	/**
+	 * Removes all quotes.
+	 */
+	_removeAll: function() {
+		this._dialog.find('input.jsRemoveQuote').prop('checked', 'checked');
+		this._removeSelected();
 	},
 	
 	/**
