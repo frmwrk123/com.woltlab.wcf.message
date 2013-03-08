@@ -717,7 +717,11 @@ li:nth-child(2n+1) .message {
 	> ul > li {
 		display: inline-block;
 		
-		> a > .badge {
+		> a {
+			text-decoration: none;
+		}
+		
+		> .badge {
 			background-color: @wcfContainerBackgroundColor;
 			border: 1px solid @wcfContainerBorderColor;
 			color: @wcfColor;
@@ -757,20 +761,20 @@ li:nth-child(2n+1) .message {
 		}
 	}
 	
-	.jsButtonShareFacebook {
-		> .icon {
+	.jsShareFacebook {
+		> a > .icon {
 			color: rgb(59, 89, 152);
 		}
 	}
 	
-	.jsButtonShareTwitter {
-		> .icon {
+	.jsShareTwitter {
+		> a > .icon {
 			color: rgb(64, 153, 255);
 		}
 	}
 	
-	.jsButtonShareGoogle {
-		> .icon {
+	.jsShareGoogle {
+		> a > .icon {
 			color: rgb(211, 72, 54);
 		}
 	}
