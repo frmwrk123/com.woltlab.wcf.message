@@ -182,8 +182,10 @@ class QuickReplyManager extends SingletonFactory {
 			}
 			
 			// update visit time (messages shouldn't occur as new upon next visit)
-			$conversationAction = new $containerActionClassName(array(($this->container instanceof DatabaseObjectDecorator ? $this->container->getDecoratedObject() : $this->container)), 'markAsRead');
-			$conversationAction->executeAction();
+			if (ClassUtil::isInstanceOf($containerActionClassName, 'wcf\data\IVisitableObjectAction')) {
+				$containerAction = new $containerActionClassName(array(($this->container instanceof DatabaseObjectDecorator ? $this->container->getDecoratedObject() : $this->container)), 'markAsRead');
+				$containerAction->executeAction();
+			}
 			
 			return array(
 				'lastPostTime' => $message->time,
