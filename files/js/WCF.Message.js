@@ -532,7 +532,7 @@ WCF.Message.QuickReply = Class.extend({
 			success: $.proxy(this._success, this)
 		});
 		this._scroll = new WCF.Effect.Scroll();
-		this._notification = new WCF.System.Notification(WCF.Language.get('wcf.global.form.add.success'));
+		this._notification = new WCF.System.Notification(WCF.Language.get('wcf.global.success.add'));
 	},
 	
 	/**
@@ -833,7 +833,7 @@ WCF.Message.InlineEditor = Class.extend({
 			showLoadingOverlay: false,
 			success: $.proxy(this._success, this)
 		});
-		this._notification = new WCF.System.Notification(WCF.Language.get('wcf.global.form.edit.success'));
+		this._notification = new WCF.System.Notification(WCF.Language.get('wcf.global.success.edit'));
 		
 		this.initContainers();
 		
