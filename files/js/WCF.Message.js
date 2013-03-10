@@ -1076,6 +1076,8 @@ WCF.Message.InlineEditor = Class.extend({
 			}
 		});
 		this._proxy.sendRequest();
+		
+		this._hideEditor();
 	},
 	
 	/**
@@ -1134,8 +1136,6 @@ WCF.Message.InlineEditor = Class.extend({
 		$content.html(data.returnValues.message);
 		
 		this._activeElementID = '';
-		
-		this._hideEditor();
 		
 		this._notification.show();
 	},
