@@ -1078,8 +1078,6 @@ WCF.Message.InlineEditor = Class.extend({
 		this._proxy.sendRequest();
 		
 		this._hideEditor();
-		
-		this._notification.show();
 	},
 	
 	/**
@@ -1138,6 +1136,8 @@ WCF.Message.InlineEditor = Class.extend({
 		$content.html(data.returnValues.message);
 		
 		this._activeElementID = '';
+		
+		this._notification.show();
 	},
 	
 	/**
@@ -1770,7 +1770,8 @@ WCF.Message.Quote.Manager = Class.extend({
 		
 		// add 'delete marked' button
 		var $formSubmit = $('<div class="formSubmit" />').appendTo(this._dialog);
-		$('<button>' + WCF.Language.get('wcf.message.quote.deleteSelectedQuotes') + '</button>').click($.proxy(this._removeSelected, this)).appendTo($formSubmit);
+		$('<button>' + WCF.Language.get('wcf.message.quote.removeSelectedQuotes') + '</button>').click($.proxy(this._removeSelected, this)).appendTo($formSubmit);
+		$('<button>' + WCF.Language.get('wcf.message.quote.removeAllQuotes') + '</button>').click($.proxy(this._removeAll, this)).appendTo($formSubmit);
 		
 		// show dialog
 		this._dialog.wcfDialog({
@@ -1884,6 +1885,14 @@ WCF.Message.Quote.Manager = Class.extend({
 			
 			this._dialog.wcfDialog('close');
 		}
+	},
+	
+	/**
+	 * Removes all quotes.
+	 */
+	_removeAll: function() {
+		this._dialog.find('input.jsRemoveQuote').prop('checked', 'checked');
+		this._removeSelected();
 	},
 	
 	/**
@@ -2205,7 +2214,7 @@ WCF.Message.Share.Page = Class.extend({
 	_fetchReddit: function() {
 		this._fetchCount('http://www.reddit.com/api/info.json?url={pageURL}', $.proxy(function(data) {
 			if (data.data.children.length) {
-				self._ui.reddit.children('span.badge').show().text(data.data.children[0].data.score);
+				this._ui.reddit.children('span.badge').show().text(data.data.children[0].data.score);
 			}
 		}, this), 'jsonp');
 	}
