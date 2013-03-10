@@ -2214,7 +2214,7 @@ WCF.Message.Share.Page = Class.extend({
 	_fetchReddit: function() {
 		this._fetchCount('http://www.reddit.com/api/info.json?url={pageURL}', $.proxy(function(data) {
 			if (data.data.children.length) {
-				self._ui.reddit.children('span.badge').show().text(data.data.children[0].data.score);
+				this._ui.reddit.children('span.badge').show().text(data.data.children[0].data.score);
 			}
 		}, this), 'jsonp');
 	}
