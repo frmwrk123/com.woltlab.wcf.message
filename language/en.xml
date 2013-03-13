@@ -31,7 +31,7 @@
 		<item name="wcf.message.smilies.default"><![CDATA[Default]]></item>
 		<item name="wcf.message.button.extendedEdit"><![CDATA[More Options]]></item>
 		<item name="wcf.message.new"><![CDATA[New]]></item>
-		<item name="wcf.message.error.censoredWordsFound"><![CDATA[Message contains censored words: {implode from=$censoredWords key=censoredWord item=number}{$censoredWord}{if $number > 1} ({#$number}x){/if}{/implode}]]></item>
+		<item name="wcf.message.error.censoredWordsFound"><![CDATA[Message contains censored words: {implode from=$censoredWords key=censoredWord item=number}{$censoredWord}{if $number > 1} ({#$number}×){/if}{/implode}]]></item>
 		<item name="wcf.message.error.disallowedBBCodes"><![CDATA[Message contains disallowed BBCodes: {implode from=$disallowedBBCodes item=disallowedBBCode}{$disallowedBBCode}{/implode}]]></item>
 		<item name="wcf.message.error.tooLong"><![CDATA[Message is too long, must be below {#$maxTextLength} characters.]]></item>
 	</category>
