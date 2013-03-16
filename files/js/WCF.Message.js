@@ -2042,16 +2042,16 @@ WCF.Message.Share.Content = Class.extend({
 			}
 			
 			// permalink (plain text)
-			var $fieldset = $('<fieldset><legend><legend>' + WCF.Language.get('wcf.message.share.permalink') + '</legend></fieldset>').appendTo(this._dialog);
-			$('<input type="text" class="long" value="' + $link + '" readonly="readonly" />').appendTo($fieldset);
+			var $fieldset = $('<fieldset><legend><label for="__sharePermalink">' + WCF.Language.get('wcf.message.share.permalink') + '</label></legend></fieldset>').appendTo(this._dialog);
+			$('<input type="text" id="__sharePermalink" class="long" value="' + $link + '" readonly="readonly" />').appendTo($fieldset);
 			
 			// permalink (BBCode)
-			var $fieldset = $('<fieldset><legend><legend>' + WCF.Language.get('wcf.message.share.permalink.bbcode') + '</legend></fieldset>').appendTo(this._dialog);
-			$('<input type="text" class="long" value="[url]' + $link + '[/url]" readonly="readonly" />').appendTo($fieldset);
+			var $fieldset = $('<fieldset><legend><label for="__sharePermalinkBBCode">' + WCF.Language.get('wcf.message.share.permalink.bbcode') + '</label></legend></fieldset>').appendTo(this._dialog);
+			$('<input type="text" id="__sharePermalinkBBCode" class="long" value="[url]' + $link + '[/url]" readonly="readonly" />').appendTo($fieldset);
 			
 			// permalink (HTML)
-			var $fieldset = $('<fieldset><legend><legend>' + WCF.Language.get('wcf.message.share.permalink.html') + '</legend></fieldset>').appendTo(this._dialog);
-			$("<input type=\"text\" class=\"long\" value='&lt;a href=\"" + $link + "\"&gt;" + $link + "&lt;/a&gt;' readonly=\"readonly\" />").appendTo($fieldset);
+			var $fieldset = $('<fieldset><legend><label for="__sharePermalinkHTML">' + WCF.Language.get('wcf.message.share.permalink.html') + '</label></legend></fieldset>').appendTo(this._dialog);
+			$("<input type=\"text\" id=\"__sharePermalinkHTML\" class=\"long\" value='&lt;a href=\"" + $link + "\"&gt;" + $link + "&lt;/a&gt;' readonly=\"readonly\" />").appendTo($fieldset);
 			
 			this._cache[$key] = this._dialog.html();
 			
