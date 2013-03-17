@@ -295,7 +295,19 @@ abstract class MessageForm extends RecaptchaForm {
 		
 		// parse URLs
 		if ($this->preParse == 1) {
-			$this->text = PreParser::getInstance()->parse($this->text);
+			// BBCodes are enabled
+			if ($this->enableBBCodes) {
+				if ($this->allowedBBCodesPermission) {
+					$this->text = PreParser::getInstance()->parse($this->text, explode(',', WCF::getSession()->getPermission($this->allowedBBCodesPermission)));
+				}
+				else {
+					$this->text = PreParser::getInstance()->parse($this->text);
+				}
+			}
+			// BBCodes are disabled, thus no allowed BBCodes
+			else {
+				$this->text = PreParser::getInstance()->parse($this->text, array());
+			}
 		}
 	}
 	

@@ -140,7 +140,10 @@ WCF.Message.Preview = Class.extend({
 	 * @return	string
 	 */
 	_getMessage: function() {
-		if (this._messageField.data('ckeditorInstance')) {
+		if ($.browser.mobile) {
+			return this._messageField.val();
+		}
+		else if (this._messageField.data('ckeditorInstance')) {
 			var $ckEditor = this._messageField.ckeditorGet();
 			return $ckEditor.getData();
 		}
@@ -558,8 +561,15 @@ WCF.Message.QuickReply = Class.extend({
 	 * Saves message.
 	 */
 	_save: function() {
-		var $ckEditor = this._messageField.ckeditorGet();
-		var $message = $.trim($ckEditor.getData());
+		var $message = '';
+		
+		if ($.browser.mobile) {
+			$message = $.trim(this._messageField.val());
+		}
+		else {
+			var $ckEditor = this._messageField.ckeditorGet();
+			$message = $.trim($ckEditor.getData());
+		}
 		
 		// check if message is empty
 		var $innerError = this._messageField.parent().find('small.innerError');
@@ -618,8 +628,13 @@ WCF.Message.QuickReply = Class.extend({
 	_cancel: function() {
 		this._revertQuickReply(true);
 		
-		// revert ckEditor
-		this._messageField.ckeditorGet().setData('');
+		if ($.browser.mobile) {
+			this._messageField.val('');
+		}
+		else {
+			// revert CKEditor
+			this._messageField.ckeditorGet().setData('');
+		}
 	},
 	
 	/**
@@ -654,8 +669,15 @@ WCF.Message.QuickReply = Class.extend({
 			this._quoteManager.markQuotesForRemoval();
 		}
 		
-		var $ckEditor = this._messageField.ckeditorGet();
-		var $message = $ckEditor.getData();
+		var $message = '';
+		
+		if ($.browser.mobile) {
+			$message = this._messageField.val();
+		}
+		else {
+			var $ckEditor = this._messageField.ckeditorGet();
+			$message = $ckEditor.getData();
+		}
 		
 		new WCF.Action.Proxy({
 			autoSend: true,
@@ -690,8 +712,13 @@ WCF.Message.QuickReply = Class.extend({
 			// insert HTML
 			$('' + data.returnValues.template).insertBefore(this._container);
 			
-			// remove CKEditor contents
-			this._messageField.ckeditorGet().setData('');
+			if ($.browser.mobile) {
+				this._messageField.val('');
+			}
+			else {
+				// remove CKEditor contents
+				this._messageField.ckeditorGet().setData('');
+			}
 			
 			// update last post time
 			this._container.data('lastPostTime', data.returnValues.lastPostTime);
@@ -1061,7 +1088,15 @@ WCF.Message.InlineEditor = Class.extend({
 	_save: function() {
 		var $container = this._container[this._activeElementID];
 		var $objectID = $container.data('objectID');
-		var $ckEditor = $('#' + this._messageEditorIDPrefix + $objectID).ckeditorGet();
+		var $message = '';
+		
+		if ($.browser.mobile) {
+			$message = $('#' + this._messageEditorIDPrefix + $objectID).val();
+		}
+		else {
+			var $ckEditor = $('#' + this._messageEditorIDPrefix + $objectID).ckeditorGet();
+			$message = $ckEditor.getData();
+		}
 		
 		this._proxy.setOption('data', {
 			actionName: 'save',
@@ -1070,7 +1105,7 @@ WCF.Message.InlineEditor = Class.extend({
 			parameters: {
 				containerID: this._containerID,
 				data: {
-					message: $ckEditor.getData()
+					message: $message
 				},
 				objectID: $objectID
 			}
@@ -1086,9 +1121,15 @@ WCF.Message.InlineEditor = Class.extend({
 	_prepareExtended: function() {
 		var $container = this._container[this._activeElementID];
 		var $objectID = $container.data('objectID');
+		var $message = '';
 		
-		var $ckEditor = $('#' + this._messageEditorIDPrefix + $objectID).ckeditorGet();
-		var $message = $ckEditor.getData();
+		if ($.browser.mobile) {
+			$message = $('#' + this._messageEditorIDPrefix + $objectID).val();
+		}
+		else {
+			var $ckEditor = $('#' + this._messageEditorIDPrefix + $objectID).ckeditorGet();
+			$message = $ckEditor.getData();
+		}
 		
 		new WCF.Action.Proxy({
 			autoSend: true,
@@ -1128,8 +1169,11 @@ WCF.Message.InlineEditor = Class.extend({
 		var $content = $messageBody.find('.messageText');
 		
 		// remove editor
-		var $ckEditor = $('#' + this._messageEditorIDPrefix + $container.data('objectID')).ckeditorGet();
-		$ckEditor.destroy();
+		if (!$.browser.mobile) {
+			var $ckEditor = $('#' + this._messageEditorIDPrefix + $container.data('objectID')).ckeditorGet();
+			$ckEditor.destroy();
+		}
+		
 		$content.empty();
 		
 		// insert new message

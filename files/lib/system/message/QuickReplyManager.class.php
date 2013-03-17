@@ -23,6 +23,12 @@ use wcf\util\ClassUtil;
  */
 class QuickReplyManager extends SingletonFactory {
 	/**
+	 * list of allowed bbcodes
+	 * @var	array<string>
+	 */
+	public $allowedBBodes = null;
+	
+	/**
 	 * container object
 	 * @var	wcf\data\DatabaseObject
 	 */
@@ -77,6 +83,15 @@ class QuickReplyManager extends SingletonFactory {
 	 */
 	public function removeMessage($type, $objectID) {
 		WCF::getSession()->unregister('quickReply-'.$this->type.'-'.$objectID);
+	}
+	
+	/**
+	 * Sets the allowed bbcodes.
+	 * 
+	 * @param	array<string>		$allowedBBCodes
+	 */
+	public function setAllowedBBCodes(array $allowedBBCodes = null) {
+		$this->allowedBBodes = $allowedBBCodes;
 	}
 	
 	/**
@@ -148,7 +163,7 @@ class QuickReplyManager extends SingletonFactory {
 		$parameters['data']['username'] = WCF::getUser()->username;
 		
 		// pre-parse message text
-		$parameters['data']['message'] = PreParser::getInstance()->parse($parameters['data']['message']);
+		$parameters['data']['message'] = PreParser::getInstance()->parse($parameters['data']['message'], $this->allowedBBodes);
 		
 		$message = $object->create();
 		$tableAlias = call_user_func(array($message, 'getDatabaseTableAlias'));
