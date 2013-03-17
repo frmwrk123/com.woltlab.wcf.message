@@ -107,25 +107,27 @@
 }
 
 /* ### messages ### */
-.messageList {
-	.messageGroupStarter {
-		position: relative;
-		
-		> .message:after {
-			content: "\f005";
-			font-family: FontAwesome;
-			font-size: 14px;
-			display: block;
-			left: 4px;
-			position: absolute;
-			top: 2px;
+@media only screen and (min-device-width: 481px) {
+	.messageList {
+		.messageGroupStarter {
+			position: relative;
 			
-			.textShadow(@wcfSidebarBackgroundColor);
-		}
-		
-		> .message.messageSidebarOrientationRight:after {
-			left: auto;
-			right: 4px;
+			> .message:after {
+				content: "\f005";
+				font-family: FontAwesome;
+				font-size: 14px;
+				display: block;
+				left: 4px;
+				position: absolute;
+				top: 2px;
+				
+				.textShadow(@wcfSidebarBackgroundColor);
+			}
+			
+			> .message.messageSidebarOrientationRight:after {
+				left: auto;
+				right: 4px;
+			}
 		}
 	}
 }
@@ -400,7 +402,7 @@
 	display: block;
 	line-height: 1.5;
 	padding: @wcfGapMedium @wcfGapLarge 1px;
-	position: relative;
+	/*position: relative;*/
 	
 	> div:not(.messageFooter) {
 		border-top: 1px dotted @wcfContainerBorderColor;
@@ -794,4 +796,86 @@ li:nth-child(2n+1) .message {
 
 .cke_source {
 	padding: 8px !important;
+}
+
+@media only screen and (max-device-width: 480px) {
+	.message.messageSidebarOrientationLeft,
+	.message.messageSidebarOrientationRight {
+		.messageContent {
+			border: 0;
+			margin: 0;
+		}
+		
+		.messageSidebar {
+			float: none;
+		}
+		
+		.messageHeader {
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+	}
+	
+	.message .messageHeader .messageQuickOptions,
+	.message .messageBody .messageSignature,
+	.message .messageSidebar .userCredits {
+		display: none;
+	}	
+	
+	.message .messageSidebar {
+		padding: 7px;
+		text-align: left;
+		width: auto;
+		
+		> div {
+			margin-left: 40px;
+		}
+		
+		.userAvatar {
+			left: 7px;
+			position: absolute;
+			top: 0;
+			
+			img {
+				height: 32px !important;
+				width: 32px !important;
+			}
+			
+			> .badgeOnline {
+				display: none;
+			}
+		}
+		
+		.userTitle {
+			margin-top: -2px;
+		}
+	}
+	
+	/* reduce paddings */
+	.message .messageContent .messageHeader {
+		padding: 7px 7px 0;
+	}
+	
+	.message .messageBody {
+		padding: 7px;
+	}
+	
+	.message .messageBody > div:not(.messageFooter) {
+		padding: 7px 0;
+	}
+	
+	.message .messageBody > footer {
+		padding: 0;
+		position: absolute;
+		right: 7px;
+		top: 7px;
+	}
+	
+	.message .messageOptions nav {
+		opacity: 1;
+		position: static;
+		text-align: left;
+	}
 }
