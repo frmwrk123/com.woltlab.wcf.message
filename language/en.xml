@@ -13,11 +13,11 @@
 		<item name="wcf.message.settings.enableBBCodes.description"><![CDATA[Allows BBCode usage once enabled.]]></item>
 		<item name="wcf.message.settings.enableHtml"><![CDATA[Enable HTML]]></item>
 		<item name="wcf.message.settings.enableHtml.description"><![CDATA[Allows HTML usage once enabled.]]></item>
-		<item name="wcf.message.settings.enableSmilies"><![CDATA[Enable Smilies]]></item>
+		<item name="wcf.message.settings.enableSmilies"><![CDATA[Enable smilies]]></item>
 		<item name="wcf.message.settings.enableSmilies.description"><![CDATA[Smilies will be displayed as a smiley-image.]]></item>
-		<item name="wcf.message.settings.preParse"><![CDATA[Detect Links]]></item>
+		<item name="wcf.message.settings.preParse"><![CDATA[Detect links]]></item>
 		<item name="wcf.message.settings.preParse.description"><![CDATA[Links to webpages are automatically detected.]]></item>
-		<item name="wcf.message.settings.showSignature"><![CDATA[Show Signature]]></item>
+		<item name="wcf.message.settings.showSignature"><![CDATA[Show signature]]></item>
 		<item name="wcf.message.settings.showSignature.description"><![CDATA[Appends signature to this message, can be editted in your profile.]]></item>
 		<item name="wcf.message.share"><![CDATA[Share]]></item>
 		<item name="wcf.message.share.facebook"><![CDATA[Facebook]]></item>

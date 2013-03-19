@@ -733,6 +733,9 @@ WCF.Message.QuickReply = Class.extend({
 			if (this._quoteManager !== null) {
 				this._quoteManager.countQuotes();
 			}
+			
+			// force execution of DOMNodeInserted events
+			WCF.DOMNodeInsertedHandler.forceExecution();
 		}
 	},
 	
