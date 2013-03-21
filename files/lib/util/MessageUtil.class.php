@@ -21,8 +21,8 @@ class MessageUtil {
 	 * @return	string
 	 */
 	public static function stripCrap($text) {
-		// strip session links and security tokens
-		$text = Regex::compile('(?<=\?|&)[st]=[a-z0-9]{40}')->replace($text, '');
+		// strip session links, security tokens and access tokens	
+		$text = Regex::compile('(?<=\?|&)([st]=[a-f0-9]{40}|at=\d+-[a-f0-9]{40})')->replace($text, '');
 		
 		// convert html entities (utf-8)
 		$text = Regex::compile('&#(3[2-9]|[4-9][0-9]|\d{3,5});')->replace($text, new Callback(function ($matches) {
