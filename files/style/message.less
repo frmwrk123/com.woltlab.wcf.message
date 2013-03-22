@@ -107,7 +107,7 @@
 }
 
 /* ### messages ### */
-@media only screen and (min-device-width: 481px) {
+@media only screen and (min-width: 641px) {
 	.messageList {
 		.messageGroupStarter {
 			position: relative;
@@ -721,6 +721,10 @@ li:nth-child(2n+1) .message {
 		
 		> a {
 			text-decoration: none;
+			
+			> .icon {
+				height: 28px;
+			}
 		}
 		
 		> .badge {
@@ -780,6 +784,13 @@ li:nth-child(2n+1) .message {
 			color: rgb(211, 72, 54);
 		}
 	}
+	
+	.jsShareReddit {
+		> a > img {
+			vertical-align: -7px;
+			padding: 0 4px;
+		}
+	}
 }
 
 .contentNavigation > .messageShareButtons {
@@ -798,7 +809,7 @@ li:nth-child(2n+1) .message {
 	padding: 8px !important;
 }
 
-@media only screen and (max-device-width: 480px) {
+@media only screen and (max-width: 640px) {
 	.message.messageSidebarOrientationLeft,
 	.message.messageSidebarOrientationRight {
 		.messageContent {
