@@ -1,6 +1,7 @@
 <?php
 namespace wcf\data\bbcode;
 use wcf\data\attachment\GroupedAttachmentList;
+use wcf\data\object\type\ObjectTypeCache;
 use wcf\system\bbcode\AttachmentBBCode;
 use wcf\system\bbcode\MessageParser;
 use wcf\system\exception\UserInputException;
@@ -53,17 +54,34 @@ class MessagePreviewAction extends BBCodeAction {
 		if ($enableSmilies && !WCF::getSession()->getPermission('user.message.canUseSmilies')) $enableSmilies = 0;
 		
 		// get attachments
-		if (!empty($this->parameters['attachmentObjectType']) && WCF::getUser()->userID) {
+		if (!empty($this->parameters['attachmentObjectType'])) {
 			$attachmentList = new GroupedAttachmentList($this->parameters['attachmentObjectType']);
 			if (!empty($this->parameters['attachmentObjectID'])) {
 				$attachmentList->getConditionBuilder()->add('attachment.objectID = ?', array($this->parameters['attachmentObjectID']));
 				AttachmentBBCode::setObjectID($this->parameters['attachmentObjectID']);
+				
+				$objectType = ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $this->parameters['attachmentObjectType']);
+				$processor = $objectType->getProcessor();
+				if (!$processor->canDownload($this->parameters['attachmentObjectID']) && !$processor->canViewPreview($this->parameters['attachmentObjectID'])) {
+					if (WCF::getUser()->userID) {
+						$attachmentList->getConditionBuilder()->add('attachment.userID = ?', array(WCF::getUser()->userID));
+					}
+					else {
+						$attachmentList->getConditionBuilder()->add('attachment.userID IS NULL');
+					}
+				}
 			}
 			else {
 				$attachmentList->getConditionBuilder()->add('attachment.tmpHash = ?', array($this->parameters['tmpHash']));
+				
+				if (WCF::getUser()->userID) {
+					$attachmentList->getConditionBuilder()->add('attachment.userID = ?', array(WCF::getUser()->userID));
+				}
+				else {
+					$attachmentList->getConditionBuilder()->add('attachment.userID IS NULL');
+				}
 			}
-			// @todo: check permissions
-			$attachmentList->getConditionBuilder()->add('attachment.userID = ?', array(WCF::getUser()->userID));
+			
 			$attachmentList->readObjects();
 			AttachmentBBCode::setAttachmentList($attachmentList);
 		}
