@@ -18,7 +18,7 @@
 		<item name="wcf.message.settings.preParse"><![CDATA[Detect links]]></item>
 		<item name="wcf.message.settings.preParse.description"><![CDATA[Links to webpages are automatically detected.]]></item>
 		<item name="wcf.message.settings.showSignature"><![CDATA[Show signature]]></item>
-		<item name="wcf.message.settings.showSignature.description"><![CDATA[Appends signature to this message, can be editted in your profile.]]></item>
+		<item name="wcf.message.settings.showSignature.description"><![CDATA[Appends signature to this message, can be edited in your profile.]]></item>
 		<item name="wcf.message.share"><![CDATA[Share]]></item>
 		<item name="wcf.message.share.facebook"><![CDATA[Facebook]]></item>
 		<item name="wcf.message.share.google"><![CDATA[Google Plus]]></item>
